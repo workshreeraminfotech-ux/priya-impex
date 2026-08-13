@@ -2876,6 +2876,18 @@ img, video, iframe, canvas, svg {
 }
 
 @media (max-width: 768px) {
+  .d-none-mobile {
+    display: none !important;
+  }
+
+  /* Sleek Navbar Header Bar on Mobile */
+  .jrp-header-inner {
+    height: 70px !important;
+  }
+  .jrp-header-logo-img {
+    height: 52px !important;
+  }
+
   .container {
     padding-left: 16px !important;
     padding-right: 16px !important;
@@ -2898,11 +2910,11 @@ img, video, iframe, canvas, svg {
   /* Hero Section Mobile Typography & Spacing */
   .jrp-hero-section {
     min-height: auto !important;
-    padding: 36px 0 !important;
+    padding: 34px 0 !important;
   }
 
   .jrp-hero-section h1 {
-    font-size: 30px !important;
+    font-size: 28px !important;
     line-height: 1.2 !important;
     margin-bottom: 14px !important;
   }
@@ -2913,9 +2925,16 @@ img, video, iframe, canvas, svg {
     margin-bottom: 20px !important;
   }
 
-  .section-title h2 {
-    font-size: 28px !important;
+  /* UNIFORM SECTION HEADINGS FOR ALL SECTIONS ON MOBILE */
+  h2, .section-title h2, .work-process-header h2, .about-section h2, .testimonials-section h2, .certifications-section h2 {
+    font-size: 25px !important;
     line-height: 1.25 !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.3px !important;
+  }
+
+  h3, .footer-col h3 {
+    font-size: 17px !important;
   }
 
   .about-highlights-grid {
@@ -2966,5 +2985,6 @@ img, video, iframe, canvas, svg {
     justify-content: center !important;
   }
 }
+
 
 

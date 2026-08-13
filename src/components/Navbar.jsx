@@ -14,10 +14,10 @@ export default function Navbar({ activePage, onNavigate }) {
     <>
       <header className="jrp-header">
         <div className="container">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '98px' }}>
+          <div className="jrp-header-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '98px' }}>
             {/* Logo */}
             <a href="#" onClick={(e) => { e.preventDefault(); handleNav('home'); }} style={{ display: 'flex', alignItems: 'center' }}>
-              <img src="/logo.png" alt="Priya Impex" style={{ height: '78px', width: 'auto', objectFit: 'contain' }} />
+              <img src="/logo.png" alt="Priya Impex" className="jrp-header-logo-img" style={{ height: '78px', width: 'auto', objectFit: 'contain' }} />
             </a>
 
             {/* Desktop Navigation Menu — Clean links without hover popups */}
@@ -62,7 +62,7 @@ export default function Navbar({ activePage, onNavigate }) {
             {/* Actions: CTA + Mobile Toggle */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
               <button
-                className="btn btn-primary"
+                className="btn btn-primary d-none-mobile"
                 onClick={() => handleNav('contact')}
                 style={{ fontSize: '15px', padding: '12px 24px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
               >
