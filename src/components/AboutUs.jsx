@@ -8,7 +8,7 @@ export default function AboutUs() {
   return (
     <section className="about-section py-50" id="about" style={{ backgroundColor: '#FFFFFF', padding: '54px 0' }}>
       <div className="container">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '54px', alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '54px', alignItems: 'center' }}>
           
           {/* Left: User-Provided About Us Image */}
           <motion.div
@@ -16,7 +16,7 @@ export default function AboutUs() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            style={{ position: 'relative' }}
+            style={{ position: 'relative', width: '100%', maxWidth: '100%' }}
           >
             {/* Floating Experience Badge */}
             <div style={{
@@ -33,7 +33,8 @@ export default function AboutUs() {
               display: 'flex',
               alignItems: 'center',
               gap: '14px',
-              backdropFilter: 'blur(8px)'
+              backdropFilter: 'blur(8px)',
+              maxWidth: 'calc(100% - 40px)'
             }}>
               <span style={{ fontSize: '36px', fontWeight: 900, fontFamily: 'var(--font-h, Outfit, sans-serif)', color: '#F5C542', lineHeight: 1 }}>
                 <AnimatedCounter end={10} suffix="+" />
@@ -55,7 +56,8 @@ export default function AboutUs() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: '12px'
+              padding: '12px',
+              width: '100%'
             }}>
               <img
                 src={aboutUsImg}
@@ -108,7 +110,7 @@ export default function AboutUs() {
             </p>
 
             {/* Corporate Highlights Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '32px' }}>
+            <div className="about-highlights-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '32px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', fontWeight: 700, color: 'var(--black)', background: '#FFFDF7', padding: '12px 16px', borderRadius: '14px', border: '1px solid var(--border)' }}>
                 <ShieldCheck size={18} style={{ color: 'var(--gold)', flexShrink: 0 }} />
                 <span>ISO & APEDA Certified Exporter</span>
