@@ -1,0 +1,471 @@
+import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, ArrowRight, Eye, Sparkles, Filter, CheckCircle2 } from 'lucide-react';
+import { PRODUCT_CATEGORIES } from '../data/products';
+import { getProducts } from '../utils/adminStore';
+
+export default function ProductsPage({ onSelectProduct, onOpenQuote }) {
+  const [activeTab, setActiveTab] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const productsList = getProducts();
+
+  // Filter logic
+  const filteredProducts = useMemo(() => {
+    return productsList.filter(product => {
+      const matchesCategory = activeTab === 'All' || product.category === activeTab || product.cat === activeTab;
+      const matchesSearch = searchTerm.trim() === '' || 
+        product.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (product.desc && product.desc.toLowerCase().includes(searchTerm.toLowerCase()));
+      
+      return matchesCategory && matchesSearch;
+    });
+  }, [activeTab, searchTerm, productsList]);
+
+  // Counts for tabs
+  const categoryCounts = useMemo(() => {
+    const counts = { All: productsList.length };
+    productsList.forEach(p => {
+      const cat = p.category || p.cat;
+      counts[cat] = (counts[cat] || 0) + 1;
+    });
+    return counts;
+  }, [productsList]);
+
+  return (
+    <div style={{ backgroundColor: '#F8FAFC', minHeight: '100vh', paddingBottom: '100px' }}>
+      
+      {/* Dynamic Hero Section — Guaranteed Background Image Overlay */}
+      <section style={{
+        position: 'relative',
+        color: '#FFFFFF',
+        padding: '75px 0 65px',
+        overflow: 'hidden',
+        backgroundColor: '#1C1917'
+      }}>
+        {/* Background Image */}
+        <img 
+          src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1920&q=80" 
+          alt="Products Catalogue Background" 
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
+            zIndex: 0
+          }}
+        />
+        {/* Warm Golden Dark Overlay */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(180deg, rgba(42, 29, 8, 0.75) 0%, rgba(28, 25, 23, 0.88) 100%)',
+          zIndex: 1
+        }} />
+
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            style={{ maxWidth: '840px', margin: '0 auto', textAlign: 'center' }}
+          >
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              backgroundColor: 'rgba(255, 255, 255, 0.12)',
+              border: '1.5px solid #F5C542',
+              color: '#F5C542',
+              fontSize: '12px',
+              fontWeight: 800,
+              textTransform: 'uppercase',
+              letterSpacing: '2px',
+              padding: '6px 20px',
+              borderRadius: '100px',
+              marginBottom: '20px',
+              backdropFilter: 'blur(6px)'
+            }}>
+              <Sparkles size={14} style={{ color: '#F5C542' }} />
+              100% Pure Indian Commodity Exporter • {productsList.length} Products
+            </span>
+
+            <h1 style={{
+              fontFamily: 'var(--font-h, Outfit, sans-serif)',
+              fontSize: 'clamp(32px, 5vw, 54px)',
+              fontWeight: 900,
+              lineHeight: 1.15,
+              marginBottom: '20px',
+              letterSpacing: '-0.5px',
+              color: '#FFFFFF'
+            }}>
+              Explore Our Complete <br />
+              <span style={{ color: '#F5C542' }}>Agro Commodity Catalogue</span>
+            </h1>
+
+            <p style={{
+              fontSize: '17px',
+              color: 'rgba(255, 255, 255, 0.9)',
+              lineHeight: 1.6,
+              maxWidth: '720px',
+              margin: '0 auto 36px',
+              fontWeight: 500
+            }}>
+              High-purity Indian ground spices, whole spices, seed commodities & custom blends packed for global export markets.
+            </p>
+
+            {/* Quick Stats Bar */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '28px',
+              flexWrap: 'wrap',
+              fontSize: '14px',
+              color: '#FFFFFF',
+              fontWeight: 700
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255, 255, 255, 0.1)', padding: '8px 18px', borderRadius: '100px', border: '1px solid rgba(245, 197, 66, 0.3)' }}>
+                <CheckCircle2 size={16} style={{ color: '#F5C542' }} />
+                <span>APEDA & Spice Board Certified</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255, 255, 255, 0.1)', padding: '8px 18px', borderRadius: '100px', border: '1px solid rgba(245, 197, 66, 0.3)' }}>
+                <CheckCircle2 size={16} style={{ color: '#F5C542' }} />
+                <span>Custom Bulk Packaging</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255, 255, 255, 0.1)', padding: '8px 18px', borderRadius: '100px', border: '1px solid rgba(245, 197, 66, 0.3)' }}>
+                <CheckCircle2 size={16} style={{ color: '#F5C542' }} />
+                <span>Global Container Exports</span>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Main Catalog Content */}
+      <div className="container" style={{ marginTop: '-40px', position: 'relative', zIndex: 10 }}>
+        
+        {/* Search & Category Filter Controls */}
+        <div style={{
+          backgroundColor: '#FFFFFF',
+          borderRadius: '24px',
+          padding: '24px',
+          boxShadow: '0 20px 50px rgba(200, 148, 10, 0.08)',
+          border: '1.5px solid var(--border)',
+          marginBottom: '40px'
+        }}>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px'
+          }}>
+            {/* Search Input Bar */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              backgroundColor: '#FFFDF7',
+              border: '1.5px solid var(--border)',
+              borderRadius: '16px',
+              padding: '12px 20px'
+            }}>
+              <Search size={20} style={{ color: 'var(--gold)', flexShrink: 0 }} />
+              <input
+                type="text"
+                placeholder="Search products by name or category (e.g. Turmeric, Pepper, Cumin, Saffron...)"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{
+                  border: 'none',
+                  outline: 'none',
+                  backgroundColor: 'transparent',
+                  width: '100%',
+                  fontSize: '15px',
+                  fontWeight: 500,
+                  color: 'var(--navy)'
+                }}
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  style={{
+                    border: 'none',
+                    background: 'var(--gold-pale)',
+                    color: 'var(--gold-deep)',
+                    borderRadius: '50%',
+                    width: '24px',
+                    height: '24px',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    fontWeight: 800,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            {/* Category Tabs */}
+            <div style={{
+              display: 'flex',
+              gap: '10px',
+              flexWrap: 'wrap',
+              alignItems: 'center'
+            }}>
+              <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--navy)', display: 'flex', alignItems: 'center', gap: '6px', marginRight: '6px' }}>
+                <Filter size={14} style={{ color: 'var(--gold)' }} /> Categories:
+              </span>
+              {PRODUCT_CATEGORIES.map((cat) => {
+                const isActive = activeTab === cat;
+                const count = categoryCounts[cat] || 0;
+
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveTab(cat)}
+                    style={{
+                      padding: '8px 18px',
+                      borderRadius: '100px',
+                      fontSize: '13.5px',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      border: isActive ? '1.5px solid var(--gold)' : '1.5px solid var(--border)',
+                      background: isActive ? 'linear-gradient(135deg, #C8940A 0%, #D4AF37 100%)' : '#FFFFFF',
+                      color: isActive ? '#1C1917' : 'var(--navy)',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      transition: 'all 0.25s ease',
+                      boxShadow: isActive ? '0 4px 14px rgba(200, 148, 10, 0.3)' : 'none'
+                    }}
+                  >
+                    <span>{cat}</span>
+                    <span style={{
+                      backgroundColor: isActive ? 'rgba(28, 25, 23, 0.15)' : 'var(--gold-pale)',
+                      color: isActive ? '#1C1917' : 'var(--gold-deep)',
+                      fontSize: '11px',
+                      padding: '2px 8px',
+                      borderRadius: '100px',
+                      fontWeight: 800
+                    }}>
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Counter Info */}
+        <div style={{
+          display: 'flex',
+          justify: 'space-between',
+          alignItems: 'center',
+          marginBottom: '28px',
+          padding: '0 4px'
+        }}>
+          <p style={{ fontSize: '14.5px', color: 'var(--gray)', fontWeight: 600 }}>
+            Showing <strong style={{ color: 'var(--navy)' }}>{filteredProducts.length}</strong> of <strong style={{ color: 'var(--navy)' }}>{productsList.length}</strong> products
+            {activeTab !== 'All' && <span> in <strong>{activeTab}</strong></span>}
+          </p>
+
+          {(searchTerm || activeTab !== 'All') && (
+            <button
+              onClick={() => { setActiveTab('All'); setSearchTerm(''); }}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--gold-deep)',
+                fontSize: '13px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                textDecoration: 'underline'
+              }}
+            >
+              Reset Filters
+            </button>
+          )}
+        </div>
+
+        {/* Product Cards Grid */}
+        <motion.div
+          layout
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gap: '28px'
+          }}
+        >
+          <AnimatePresence>
+            {filteredProducts.map((product, idx) => (
+              <motion.div
+                key={product.id || idx}
+                layout
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.35, delay: (idx % 6) * 0.05 }}
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: '20px',
+                  overflow: 'hidden',
+                  border: '1.5px solid var(--border)',
+                  boxShadow: '0 8px 30px rgba(200, 148, 10, 0.06)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease',
+                  cursor: 'pointer'
+                }}
+                whileHover={{ y: -6, boxShadow: '0 16px 40px rgba(200, 148, 10, 0.2)', borderColor: 'var(--gold)' }}
+                onClick={() => onSelectProduct ? onSelectProduct(product) : null}
+              >
+                {/* Product Image — Object-Fit Contain (Uncropped) */}
+                <div style={{
+                  position: 'relative',
+                  height: '230px',
+                  backgroundColor: '#FFFFFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '20px',
+                  borderBottom: '1px solid var(--border)'
+                }}>
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    loading="lazy"
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                      objectFit: 'contain',
+                      transition: 'transform 0.4s ease'
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.06)'}
+                    onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  />
+
+                  {/* Category Badge */}
+                  <span style={{
+                    position: 'absolute',
+                    top: '12px',
+                    right: '12px',
+                    backgroundColor: 'var(--gold-pale)',
+                    color: 'var(--gold-deep)',
+                    fontSize: '11px',
+                    fontWeight: 800,
+                    padding: '4px 12px',
+                    borderRadius: '100px',
+                    border: '1px solid var(--gold-light)'
+                  }}>
+                    {product.category}
+                  </span>
+                </div>
+
+                {/* Body Content — Clean Product Name & Description */}
+                <div style={{
+                  padding: '22px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flex: 1
+                }}>
+                  <h3 style={{
+                    fontFamily: 'var(--font-h, Outfit, sans-serif)',
+                    fontSize: '19px',
+                    fontWeight: 800,
+                    color: 'var(--navy)',
+                    marginBottom: '10px',
+                    lineHeight: 1.3
+                  }}>
+                    {product.title}
+                  </h3>
+
+                  <p style={{
+                    fontSize: '13.5px',
+                    color: 'var(--gray)',
+                    lineHeight: 1.6,
+                    marginBottom: '20px',
+                    flex: 1,
+                    fontWeight: 500
+                  }}>
+                    {product.description || product.desc}
+                  </p>
+
+                  {/* Action Buttons */}
+                  <div style={{ display: 'flex', gap: '10px', marginTop: 'auto' }}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (onOpenQuote) onOpenQuote(product.title);
+                      }}
+                      className="btn btn-primary"
+                      style={{
+                        flex: 1,
+                        padding: '11px 16px',
+                        fontSize: '13.5px',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      <span>Request Quote</span>
+                      <ArrowRight size={14} />
+                    </button>
+                    
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (onSelectProduct) onSelectProduct(product);
+                      }}
+                      className="btn btn-outline"
+                      style={{
+                        padding: '11px 16px',
+                        fontSize: '13.5px',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      <Eye size={14} />
+                      <span>Details</span>
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Empty State */}
+        {filteredProducts.length === 0 && (
+          <div style={{
+            backgroundColor: '#FFFFFF',
+            borderRadius: '24px',
+            padding: '60px 20px',
+            textAlign: 'center',
+            border: '1.5px dashed var(--border)',
+            marginTop: '20px'
+          }}>
+            <h3 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--navy)', marginBottom: '8px' }}>
+              No products match "{searchTerm}"
+            </h3>
+            <p style={{ fontSize: '14px', color: 'var(--gray)', marginBottom: '20px' }}>
+              Try adjusting your search keyword or switching category tabs.
+            </p>
+            <button
+              onClick={() => { setActiveTab('All'); setSearchTerm(''); }}
+              className="btn btn-primary"
+              style={{
+                padding: '10px 24px',
+                fontSize: '14px'
+              }}
+            >
+              View All 38 Products
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
