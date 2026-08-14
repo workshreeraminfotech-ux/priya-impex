@@ -8,33 +8,16 @@ export default function AboutUs() {
   return (
     <section className="about-section py-50" id="about" style={{ backgroundColor: '#FFFFFF', padding: '54px 0' }}>
       <div className="container">
-        
-        {/* Top Header & Intro Story */}
-        <div style={{ maxWidth: '820px', marginBottom: '32px' }}>
-          <span className="eyebrow" style={{ marginBottom: '14px' }}>
-            PRIYA IMPEX • PREMIER INDIAN AGRO EXPORTS
-          </span>
-
-          <h2 style={{ fontSize: 'clamp(28px, 4vw, 38px)', fontWeight: 900, color: 'var(--navy)', lineHeight: 1.2, margin: '12px 0 16px', fontFamily: 'var(--font-h, Outfit, sans-serif)' }}>
-            Delivering Trust, <span style={{ color: 'var(--gold)' }}>Exporting Excellence</span>
-          </h2>
-
-          <p style={{ fontSize: '16.5px', color: '#475569', lineHeight: 1.65, margin: 0, fontWeight: 500 }}>
-            <strong>Priya Impex</strong> is a premier Indian merchant exporter based in <strong>Gujarat, India</strong>. We specialize in end-to-end sourcing, quality testing, lab certification, and international container freight logistics.
-          </p>
-        </div>
-
-        {/* 2-Column Grid: Photo on Left, Milestones & Highlights on Right */}
-        <div className="about-grid-wrapper" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '48px', alignItems: 'center' }}>
+        <div className="about-grid-wrapper">
           
-          {/* About Us Photo Container (Positioned right after Intro) */}
+          {/* Photo Column (Left on Laptop, Appears right after Intro on Phone) */}
           <motion.div
             className="about-image-col"
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            style={{ position: 'relative', width: '100%', maxWidth: '100%' }}
+            style={{ position: 'relative', width: '100%' }}
           >
             {/* Floating Experience Badge */}
             <div style={{
@@ -93,14 +76,32 @@ export default function AboutUs() {
             </div>
           </motion.div>
 
-          {/* Right: Milestone Card, Corporate Overview & Highlights */}
+          {/* Content Column (Right on Laptop, Flow on Phone) */}
           <motion.div
             className="about-content-col"
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
+            {/* Intro Lead Block */}
+            <div className="about-intro-lead-block">
+              <span className="eyebrow" style={{ marginBottom: '14px' }}>
+                PRIYA IMPEX • PREMIER INDIAN AGRO EXPORTS
+              </span>
+
+              <h2 style={{ fontSize: 'clamp(28px, 3.8vw, 38px)', fontWeight: 900, color: 'var(--navy)', lineHeight: 1.2, margin: '12px 0 16px', fontFamily: 'var(--font-h, Outfit, sans-serif)' }}>
+                Delivering Trust, <span style={{ color: 'var(--gold)' }}>Exporting Excellence</span>
+              </h2>
+
+              <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.65, marginBottom: '20px', fontWeight: 500 }}>
+                <strong>Priya Impex</strong> is a premier Indian merchant exporter based in <strong>Gujarat, India</strong>. We specialize in end-to-end sourcing, quality testing, lab certification, and international container freight logistics.
+              </p>
+            </div>
+
+            {/* Mobile Injected Photo Slot (Visible only on phone) */}
+            <div className="about-mobile-photo-placement" />
+
             {/* Malaysia Shipment Milestone Highlight Card */}
             <div style={{ background: 'linear-gradient(135deg, #2A1D08 0%, #4D3508 100%)', padding: '20px 22px', borderRadius: '18px', borderLeft: '5px solid #F5C542', borderTop: '1px solid rgba(245, 197, 66, 0.3)', marginBottom: '20px', color: '#fff', boxShadow: '0 8px 25px rgba(200, 148, 10, 0.15)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '15px', fontWeight: 800, color: '#F5C542', marginBottom: '6px' }}>

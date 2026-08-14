@@ -2,16 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logoImg from '../assets/logo.png';
 
-export default function Preloader() {
+export default function Preloader({ onFinish }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
+      if (onFinish) onFinish();
     }, 1800);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [onFinish]);
 
   return (
     <AnimatePresence>
@@ -24,7 +25,7 @@ export default function Preloader() {
             position: 'fixed',
             inset: 0,
             backgroundColor: '#FFFFFF',
-            zIndex: 99999,
+            zIndex: 99999999,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',

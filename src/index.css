@@ -3003,18 +3003,24 @@ img, video, iframe, canvas, svg {
     font-weight: 800 !important;
   }
 
-  /* About Us Flow Fix: Text first, then Photo */
+  /* About Us Flow: Only on Mobile (Text first, then Photo, then Milestone) */
   .about-grid-wrapper {
     display: flex !important;
     flex-direction: column !important;
-    gap: 32px !important;
+    gap: 20px !important;
   }
   .about-content-col {
+    display: contents !important;
+  }
+  .about-intro-lead-block {
     order: 1 !important;
   }
   .about-image-col {
     order: 2 !important;
-    margin-top: 10px !important;
+    margin: 10px 0 14px !important;
+  }
+  .about-content-col > *:not(.about-intro-lead-block) {
+    order: 3 !important;
   }
 
   .about-highlights-grid {
@@ -3308,6 +3314,17 @@ img, video, iframe, canvas, svg {
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
+}
+
+/* Base Desktop (Laptop) About Us: Side-by-Side 2 Columns */
+.about-grid-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 54px;
+  align-items: center;
+}
+.about-intro-lead-block {
+  margin-bottom: 0;
 }
 
 

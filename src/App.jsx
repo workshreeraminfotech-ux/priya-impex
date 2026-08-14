@@ -24,6 +24,7 @@ export default function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quoteProduct, setQuoteProduct] = useState('');
   const [isQuoteOpen, setIsQuoteOpen] = useState(false);
+  const [isPreloading, setIsPreloading] = useState(true);
 
   useEffect(() => {
     const checkAdminRoute = () => {
@@ -73,7 +74,7 @@ export default function App() {
 
   return (
     <div>
-      <Preloader />
+      <Preloader onFinish={() => setIsPreloading(false)} />
       <HeaderTop />
       <Navbar 
         activePage={activePage} 
@@ -123,7 +124,7 @@ export default function App() {
         onClose={() => setIsQuoteOpen(false)} 
       />
 
-      <WhatsAppFloat />
+      {!isPreloading && <WhatsAppFloat />}
     </div>
   );
 }
