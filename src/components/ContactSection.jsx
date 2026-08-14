@@ -103,14 +103,14 @@ export default function ContactSection() {
               <div className="contact-info-item">
                 <div className="ci-icon"><Phone size={18} /></div>
                 <div className="ci-text">
-                  <strong>+91 82007 12955</strong>
+                  <strong>+91 9328602931</strong>
                   <span>Mon–Sat, 9am – 6pm IST</span>
                 </div>
               </div>
               <div className="contact-info-item">
                 <div className="ci-icon"><Mail size={18} /></div>
                 <div className="ci-text">
-                  <strong>priyaimpex.export@gmail.com</strong>
+                  <strong>sales@priyaimpexs.com</strong>
                   <span>We reply within 24 hours</span>
                 </div>
               </div>

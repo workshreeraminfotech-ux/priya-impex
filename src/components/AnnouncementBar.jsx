@@ -6,13 +6,13 @@ export default function AnnouncementBar() {
     <div className="announcement-bar">
       <div className="container">
         <div className="announcement-left">
-          <a href="tel:+918200712955" className="announcement-item">
+          <a href="tel:+919328602931" className="announcement-item">
             <Phone size={14} color="var(--gold)" />
-            <span>+91 82007 12955</span>
+            <span>+91 9328602931</span>
           </a>
-          <a href="mailto:info@priyaimpex.com" className="announcement-item">
+          <a href="mailto:sales@priyaimpexs.com" className="announcement-item">
             <Mail size={14} color="var(--gold)" />
-            <span>info@priyaimpex.com</span>
+            <span>sales@priyaimpexs.com</span>
           </a>
         </div>
 
@@ -33,7 +33,7 @@ export default function AnnouncementBar() {
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon" title="Facebook">
               <Facebook size={14} />
             </a>
-            <a href="https://api.whatsapp.com/send?phone=918200712955&text=Hi%20Priya%20Impex!%20I%20would%20like%20to%20enquire%20about%20your%20export%20commodities." target="_blank" rel="noopener noreferrer" className="social-icon" title="Business WhatsApp">
+            <a href="https://api.whatsapp.com/send?phone=919328602931&text=Hi%20Priya%20Impex!%20I%20would%20like%20to%20enquire%20about%20your%20export%20commodities." target="_blank" rel="noopener noreferrer" className="social-icon" title="Business WhatsApp">
               <MessageCircle size={14} />
             </a>
           </div>

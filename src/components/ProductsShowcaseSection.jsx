@@ -13,7 +13,7 @@ const TOP_6_EXPORT_IDS = [
   'ginger-powder'
 ];
 
-export default function ProductsShowcaseSection({ onSelectProduct, onOpenQuote }) {
+export default function ProductsShowcaseSection({ onSelectProduct, onOpenQuote, onNavigate }) {
   const allProducts = getProducts();
   // Get featured / top products
   let topExportProducts = TOP_6_EXPORT_IDS.map(id => allProducts.find(p => p.id === id)).filter(Boolean);
@@ -71,7 +71,8 @@ export default function ProductsShowcaseSection({ onSelectProduct, onOpenQuote }
                   justifyContent: 'center', 
                   padding: '20px',
                   borderBottom: '1px solid var(--border)',
-                  position: 'relative'
+                  position: 'relative',
+                  cursor: 'pointer'
                 }}
                 onClick={() => onSelectProduct ? onSelectProduct(item) : null}
               >
@@ -129,20 +130,15 @@ export default function ProductsShowcaseSection({ onSelectProduct, onOpenQuote }
         </div>
 
         {/* View All Products CTA Link */}
-        <div style={{ textCenter: 'center', textAlign: 'center', marginTop: '48px' }}>
-          <a
-            href="#products"
-            onClick={(e) => {
-              e.preventDefault();
-              const el = document.getElementById('products');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
+        <div style={{ textAlign: 'center', marginTop: '48px' }}>
+          <button
+            onClick={() => onNavigate ? onNavigate('products') : null}
             className="btn btn-primary"
-            style={{ padding: '14px 32px', fontSize: '15px', display: 'inline-flex' }}
+            style={{ padding: '14px 32px', fontSize: '15px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
           >
             <span>Explore All 38 Commodity Products</span>
             <ArrowRight size={18} />
-          </a>
+          </button>
         </div>
 
       </div>

@@ -54,7 +54,7 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { font-family: var(--font-b); color: var(--black); background: var(--white); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+body { font-family: var(--font-b); color: var(--black); background: var(--white); -webkit-font-smoothing: antialiased; overflow-x: clip; }
 a { text-decoration: none; color: inherit; }
 ul { list-style: none; }
 img { display: block; max-width: 100%; }
@@ -999,9 +999,10 @@ button, input, select, textarea { font: inherit; }
 .jrp-header {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 9999;
   background: #ffffff;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 @media (min-width: 992px) {
@@ -1100,22 +1101,24 @@ button, input, select, textarea { font: inherit; }
 /* Hero Section Video Style */
 .jrp-hero-section {
   position: relative;
-  min-height: 460px;
+  min-height: 580px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 60px 0;
+  padding: 78px 0 82px;
   overflow: hidden;
-  background: var(--navy-dark);
+  background: #070b14;
   color: #ffffff;
+  margin-top: 0 !important;
+  clear: both;
 }
 
 .hero-video-bg {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
   object-fit: cover;
   z-index: 1;
 }
@@ -1125,8 +1128,8 @@ button, input, select, textarea { font: inherit; }
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(15, 33, 71, 0.25) 0%,
-    rgba(15, 33, 71, 0.38) 100%
+    rgba(8, 14, 28, 0.42) 0%,
+    rgba(8, 14, 28, 0.65) 100%
   );
   z-index: 2;
 }
@@ -1137,6 +1140,46 @@ button, input, select, textarea { font: inherit; }
   max-width: 850px;
   margin: 0 auto;
   text-align: center;
+}
+
+/* Horizontal Seeds Showcase Scroll Styling (Hidden Scrollbar Line) */
+.seeds-horizontal-scroll-track::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.seeds-horizontal-scroll-track {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+/* Certifications Auto Horizontal Marquee */
+@keyframes certsMarqueeScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.certs-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: certsMarqueeScroll 28s linear infinite;
+}
+
+.certs-marquee-wrapper:hover .certs-marquee-track {
+  animation-play-state: paused;
+}
+
+.cert-photo-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--gold) !important;
+  box-shadow: 0 12px 28px rgba(200, 148, 10, 0.2) !important;
+}
+.cert-photo-card:hover img {
+  transform: scale(1.08);
 }
 
 .jrp-hero-badge {
@@ -2100,10 +2143,10 @@ button, input, select, textarea { font: inherit; }
    COUNTER STATS SECTION — REDESIGN
    ====================================================================== */
 .counter-stats-redesign-section {
-  padding: 44px 0;
-  background: #F8FAFC;
-  border-top: 1px solid #E2E8F0;
-  border-bottom: 1px solid #E2E8F0;
+  padding: 0 0 54px;
+  background: #FFFFFF;
+  border-top: none;
+  border-bottom: none;
 }
 
 .counter-stats-grid {
@@ -2113,10 +2156,10 @@ button, input, select, textarea { font: inherit; }
 }
 
 .counter-card-v2 {
-  background: var(--gray-light);
+  background: #F8FAFC;
   border-radius: 20px;
   padding: 28px 22px;
-  border: 1px solid var(--border);
+  border: 1px solid #E2E8F0;
   transition: var(--transition);
 }
 
@@ -2852,18 +2895,23 @@ button, input, select, textarea { font: inherit; }
    MOBILE OVERFLOW & HORIZONTAL SCROLL PREVENTATIVE STYLES
    ====================================================================== */
 html, body {
-  width: 100% !important;
-  max-width: 100vw !important;
-  overflow-x: hidden !important;
-  position: relative !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: clip;
+  position: relative;
+  margin: 0;
+  padding: 0;
 }
 
-#root, main, .home-page, .about-page, .products-page, .blog-page, .contact-page {
-  width: 100% !important;
-  max-width: 100% !important;
-  overflow-x: hidden !important;
+#root {
+  width: 100%;
+  max-width: 100%;
+}
+
+main, .home-page, .about-page, .products-page, .blog-page, .contact-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 *, *::before, *::after {
@@ -2884,7 +2932,7 @@ img, video, iframe, canvas, svg {
   .jrp-header {
     position: sticky !important;
     top: 0 !important;
-    z-index: 1000 !important;
+    z-index: 9999 !important;
     background: #ffffff !important;
     box-shadow: 0 4px 20px rgba(11, 34, 64, 0.12) !important;
     width: 100% !important;
@@ -2893,12 +2941,13 @@ img, video, iframe, canvas, svg {
 
   /* Prominent Big Logo & Header Bar on Mobile */
   .jrp-header-inner {
-    height: 86px !important;
+    height: 92px !important;
   }
   .jrp-header-logo-img {
-    height: 72px !important;
-    max-height: 72px !important;
+    height: 78px !important;
+    max-height: 78px !important;
     width: auto !important;
+    filter: contrast(1.08) drop-shadow(0 2px 6px rgba(0,0,0,0.06)) !important;
   }
 
   .container {

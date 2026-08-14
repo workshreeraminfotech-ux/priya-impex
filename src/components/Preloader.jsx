@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import logoImg from '../assets/logo.png';
 
 export default function Preloader() {
   const [loading, setLoading] = useState(true);
@@ -45,7 +46,7 @@ export default function Preloader() {
             }}
           >
             <motion.img
-              src="/logo.png"
+              src={logoImg}
               alt="Priya Impex"
               animate={{ scale: [1, 1.04, 1] }}
               transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}

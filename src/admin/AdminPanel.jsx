@@ -617,33 +617,61 @@ export default function AdminPanel() {
         {/* TAB 3: CERTIFICATES MANAGER */}
         {activeTab === 'certs' && (
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
-              <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#002147', margin: 0 }}>Official Certificates</h3>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
+              <div>
+                <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#002147', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Award size={22} />
+                  <span>Official Certificates & Approvals ({certs.length})</span>
+                </h3>
+                <span style={{ fontSize: '13px', color: '#475569' }}>These certificate photos scroll automatically on the website's Trusted & Govt. Authorized section.</span>
+              </div>
               <button
                 onClick={openAddCert}
-                style={{ backgroundColor: '#002147', color: '#FFFFFF', border: 'none', padding: '12px 24px', borderRadius: '100px', fontWeight: 800, fontSize: '14.5px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                style={{ backgroundColor: '#002147', color: '#FFFFFF', border: 'none', padding: '12px 24px', borderRadius: '100px', fontWeight: 800, fontSize: '14.5px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 14px rgba(0, 33, 71, 0.15)' }}
               >
                 <Plus size={18} />
-                <span>Add Certificate</span>
+                <span>Add Certificate Photo</span>
               </button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
               {certs.map((c, idx) => (
-                <div key={c.id || idx} style={{ backgroundColor: '#FFFFFF', borderRadius: '24px', border: '1.5px solid #CBD5E1', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ height: '60px', width: '120px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '12px', padding: '4px' }}>
-                      <img src={c.logo} alt={c.name} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
-                    </div>
-                    <span style={{ fontSize: '11px', fontWeight: 800, background: '#F1F5F9', color: '#002147', padding: '4px 10px', borderRadius: '100px', border: '1px solid #CBD5E1' }}>{c.code}</span>
+                <div key={c.id || idx} style={{ backgroundColor: '#FFFFFF', borderRadius: '24px', border: '1.5px solid #CBD5E1', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', boxShadow: '0 4px 16px rgba(0,33,71,0.04)' }}>
+                  
+                  {/* Certificate Photo Display Area (Supports Vertical & Horizontal) */}
+                  <div style={{ height: '160px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F8FAFC', border: '1.5px solid #E2E8F0', borderRadius: '16px', padding: '12px', position: 'relative' }}>
+                    {c.logo ? (
+                      <img src={c.logo} alt={c.name} style={{ maxHeight: '100%', maxWidth: '100%', width: 'auto', height: 'auto', objectFit: 'contain' }} />
+                    ) : (
+                      <span style={{ color: '#94A3B8', fontSize: '13px', fontWeight: 600 }}>No Certificate Photo</span>
+                    )}
                   </div>
+
                   <div>
-                    <h4 style={{ fontSize: '17px', fontWeight: 800, color: '#002147', marginBottom: '4px' }}>{c.name}</h4>
-                    <p style={{ fontSize: '13px', color: '#475569', margin: 0 }}>{c.tag}</p>
+                    <h4 style={{ fontSize: '18px', fontWeight: 800, color: '#002147', marginBottom: '4px' }}>{c.name}</h4>
+                    <p style={{ fontSize: '13px', color: '#475569', margin: 0 }}>{c.tag || 'Official Authorized Certificate'}</p>
                   </div>
-                  <div style={{ marginTop: 'auto', paddingTop: '14px', borderTop: '1px solid #F1F5F9', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-                    <button onClick={() => openEditCert(c)} style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1', color: '#002147', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 700, fontSize: '12px' }}>Edit</button>
-                    <button onClick={() => handleDeleteCert(c.id, c.name)} style={{ backgroundColor: '#FEF2F2', border: '1px solid #FCA5A5', color: '#991B1B', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 700, fontSize: '12px' }}>Delete</button>
+
+                  <div style={{ marginTop: 'auto', paddingTop: '14px', borderTop: '1px solid #F1F5F9', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
+                    {/* Quick Direct Upload Photo */}
+                    <label style={{ backgroundColor: '#F0F9FF', border: '1px solid #BAE6FD', color: '#0369A1', padding: '8px 14px', borderRadius: '8px', cursor: 'pointer', fontWeight: 700, fontSize: '12px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                      <Upload size={14} /> Upload Photo
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        style={{ display: 'none' }} 
+                        onChange={(e) => handleImageFileChange(e, (url) => {
+                          const updated = updateCertificate({ ...c, logo: url });
+                          setCertsState(updated);
+                          showNotification(`Certificate photo for "${c.name}" updated!`);
+                        })} 
+                      />
+                    </label>
+
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button onClick={() => openEditCert(c)} style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1', color: '#002147', padding: '8px 14px', borderRadius: '8px', cursor: 'pointer', fontWeight: 700, fontSize: '12px' }}>Edit</button>
+                      <button onClick={() => handleDeleteCert(c.id, c.name)} style={{ backgroundColor: '#FEF2F2', border: '1px solid #FCA5A5', color: '#991B1B', padding: '8px 14px', borderRadius: '8px', cursor: 'pointer', fontWeight: 700, fontSize: '12px' }}>Delete</button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -1102,11 +1130,11 @@ export default function AdminPanel() {
 
             <form onSubmit={handleSaveCert} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#002147', marginBottom: '6px' }}>Certificate Title *</label>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#002147', marginBottom: '6px' }}>Certificate Name / Authority *</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. APEDA Certified Exporter"
+                  placeholder="e.g. APEDA Certified Exporter, US FDA, Spices Board..."
                   value={certForm.name}
                   onChange={(e) => setCertForm({ ...certForm, name: e.target.value })}
                   style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', border: '1.5px solid #CBD5E1', fontSize: '14px', boxSizing: 'border-box' }}
@@ -1114,21 +1142,10 @@ export default function AdminPanel() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#002147', marginBottom: '6px' }}>Code / Seal Badge</label>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#002147', marginBottom: '6px' }}>Short Description / Details</label>
                 <input
                   type="text"
-                  placeholder="e.g. APEDA / GOVT"
-                  value={certForm.code}
-                  onChange={(e) => setCertForm({ ...certForm, code: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', border: '1.5px solid #CBD5E1', fontSize: '14px', boxSizing: 'border-box' }}
-                />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#002147', marginBottom: '6px' }}>Issuing Authority / Details</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Agricultural & Processed Food Products Export Authority"
+                  placeholder="e.g. Ministry of Commerce & Industry, Govt of India"
                   value={certForm.tag}
                   onChange={(e) => setCertForm({ ...certForm, tag: e.target.value })}
                   style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', border: '1.5px solid #CBD5E1', fontSize: '14px', boxSizing: 'border-box' }}
@@ -1136,25 +1153,41 @@ export default function AdminPanel() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#002147', marginBottom: '6px' }}>Logo Image (URL or Upload)</label>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#002147', marginBottom: '6px' }}>Certificate Photo / Logo *</label>
+                
+                {/* Visual Photo Upload Dropzone */}
+                <div style={{ border: '2px dashed #CBD5E1', borderRadius: '16px', padding: '20px', textAlign: 'center', background: '#F8FAFC', position: 'relative' }}>
+                  {certForm.logo ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                      <div style={{ height: '90px', width: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#FFFFFF', border: '1.5px solid #E2E8F0', borderRadius: '14px', padding: '8px' }}>
+                        <img src={certForm.logo} alt="Preview" style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
+                      </div>
+                      <label style={{ backgroundColor: '#002147', color: '#FFFFFF', padding: '8px 18px', borderRadius: '100px', cursor: 'pointer', fontWeight: 700, fontSize: '12.5px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <Upload size={14} /> Change Photo
+                        <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImageFileChange(e, (url) => setCertForm({ ...certForm, logo: url }))} />
+                      </label>
+                    </div>
+                  ) : (
+                    <div>
+                      <Upload size={32} style={{ color: '#94A3B8', marginBottom: '8px' }} />
+                      <p style={{ margin: '0 0 10px', fontSize: '13.5px', color: '#475569', fontWeight: 600 }}>Upload Certificate Image (PNG, JPG, SVG, WebP)</p>
+                      <label style={{ backgroundColor: '#002147', color: '#FFFFFF', padding: '9px 22px', borderRadius: '100px', cursor: 'pointer', fontWeight: 800, fontSize: '13px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <Upload size={15} /> Select Certificate Photo
+                        <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImageFileChange(e, (url) => setCertForm({ ...certForm, logo: url }))} />
+                      </label>
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ marginTop: '10px' }}>
                   <input
                     type="text"
-                    placeholder="Paste Logo Image URL or select file"
+                    placeholder="Or paste external image URL..."
                     value={certForm.logo}
                     onChange={(e) => setCertForm({ ...certForm, logo: e.target.value })}
-                    style={{ flex: 1, padding: '10px 14px', borderRadius: '12px', border: '1.5px solid #CBD5E1', fontSize: '14px' }}
+                    style={{ width: '100%', padding: '8px 12px', borderRadius: '10px', border: '1px solid #CBD5E1', fontSize: '13px', boxSizing: 'border-box' }}
                   />
-                  <label style={{ backgroundColor: '#F1F5F9', border: '1.5px solid #CBD5E1', padding: '10px 16px', borderRadius: '12px', cursor: 'pointer', fontWeight: 700, fontSize: '13px', color: '#002147', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                    <Upload size={15} /> Upload
-                    <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImageFileChange(e, (url) => setCertForm({ ...certForm, logo: url }))} />
-                  </label>
                 </div>
-                {certForm.logo && (
-                  <div style={{ marginTop: '10px', height: '50px', width: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F8FAFC', border: '1px solid #CBD5E1', borderRadius: '10px' }}>
-                    <img src={certForm.logo} alt="Preview" style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
-                  </div>
-                )}
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '16px' }}>

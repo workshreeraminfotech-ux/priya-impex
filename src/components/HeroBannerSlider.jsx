@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowRight, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
 import heroBgVideo from '../assets/hero-bg.mp4';
 
@@ -9,14 +9,17 @@ export default function HeroBannerSlider({ onOpenQuote, onNavigate }) {
       className="jrp-hero-section" 
       style={{ 
         position: 'relative', 
-        minHeight: '460px', 
+        minHeight: '580px', 
         display: 'flex',
         alignItems: 'center',
         overflow: 'hidden', 
-        background: 'linear-gradient(135deg, #1C1917 0%, #2A1D08 40%, #4D3508 100%)' 
+        background: '#070b14',
+        marginTop: 0,
+        clear: 'both',
+        padding: '78px 0 82px'
       }}
     >
-      {/* Background Video — Enhanced & Highlighted */}
+      {/* Background Video — Highlighted & Clear with Natural Tone */}
       <video 
         className="hero-video-bg" 
         autoPlay 
@@ -30,88 +33,139 @@ export default function HeroBannerSlider({ onOpenQuote, onNavigate }) {
           width: '100%', 
           height: '100%', 
           objectFit: 'cover', 
-          opacity: 0.85,
-          filter: 'brightness(1.05) contrast(1.1) saturate(1.1)',
+          opacity: 0.92,
+          filter: 'brightness(1.04) contrast(1.12) saturate(1.05)',
           zIndex: 1 
         }}
       >
         <source src={heroBgVideo} type="video/mp4" />
       </video>
 
-      {/* Warm Golden Amber Overlay Vignette */}
+      {/* Clean Subtle Dark Gradient Overlay */}
       <div 
         className="hero-video-overlay" 
         style={{ 
           position: 'absolute', 
           inset: 0, 
-          background: 'linear-gradient(180deg, rgba(42, 29, 8, 0.65) 0%, rgba(28, 25, 23, 0.75) 50%, rgba(77, 53, 8, 0.85) 100%)', 
+          background: 'linear-gradient(180deg, rgba(7, 11, 20, 0.42) 0%, rgba(7, 11, 20, 0.58) 55%, rgba(5, 8, 16, 0.82) 100%)', 
           zIndex: 2 
         }}
       ></div>
 
-      <div className="container" style={{ position: 'relative', zIndex: 3, padding: '44px 24px' }}>
-        <div style={{ maxWidth: '780px' }}>
+      <div className="container" style={{ position: 'relative', zIndex: 3 }}>
+        <div style={{ maxWidth: '820px' }}>
           
-          {/* Global Brand Certification Pill */}
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '16px' }}>
-            <motion.div 
-              initial={{ opacity: 0, y: -15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: 'rgba(42, 29, 8, 0.92)', border: '1.5px solid #F5C542', backdropFilter: 'blur(8px)', padding: '6px 18px', borderRadius: '100px' }}
+          {/* Top Tagline Badge */}
+          <motion.div 
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ marginBottom: '20px' }}
+          >
+            <span 
+              style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '8px', 
+                background: 'rgba(7, 16, 32, 0.82)', 
+                border: '1px solid rgba(200, 148, 10, 0.65)', 
+                backdropFilter: 'blur(10px)', 
+                padding: '6px 16px', 
+                borderRadius: '100px', 
+                fontSize: '13px', 
+                fontWeight: 700, 
+                color: '#F5C542',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.25)'
+              }}
             >
-              <span className="badge-dot" style={{ background: '#F5C542' }}></span>
-              <span style={{ fontSize: '12.5px', fontWeight: 800, color: '#F5C542', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                PRIYA IMPEX • DELIVERING TRUST, EXPORTING EXCELLENCE
-              </span>
-            </motion.div>
-          </div>
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e', display: 'inline-block', boxShadow: '0 0 8px #22c55e' }}></span>
+              <span>Delivering Trust, Exporting Excellence</span>
+            </span>
+          </motion.div>
 
-          {/* Hero Headline */}
+          {/* Main Hero Heading */}
           <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            style={{ fontFamily: 'var(--font-h)', fontSize: '44px', fontWeight: 900, color: '#ffffff', lineHeight: 1.14, marginBottom: '16px', textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}
+            style={{ 
+              fontFamily: 'var(--font-h)', 
+              fontSize: 'clamp(34px, 5.2vw, 50px)', 
+              fontWeight: 900, 
+              color: '#ffffff', 
+              lineHeight: 1.16, 
+              marginBottom: '18px', 
+              letterSpacing: '-0.5px',
+              textShadow: '0 4px 24px rgba(0,0,0,0.6)' 
+            }}
           >
-            Priya Impex — Global Import & Export <br />
-            <span style={{ background: 'linear-gradient(135deg, #FFFFFF 0%, #F59E0B 50%, #D4AF37 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Agro Commodity Specialist
+            Premium Indian Spices & <br />
+            <span style={{ background: 'linear-gradient(135deg, #FFFFFF 0%, #F5C542 50%, #D4AF37 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Agro Commodities Exporter
             </span>
           </motion.h1>
 
-          {/* Hero Paragraph */}
+          {/* Subtitle / Paragraph */}
           <motion.p 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            style={{ fontSize: '16.5px', color: 'rgba(255,255,255,0.92)', lineHeight: 1.58, marginBottom: '24px', maxWidth: '660px', textShadow: '0 2px 10px rgba(0,0,0,0.4)' }}
+            style={{ 
+              fontSize: 'clamp(15px, 1.8vw, 17.5px)', 
+              color: 'rgba(255,255,255,0.92)', 
+              lineHeight: 1.62, 
+              marginBottom: '32px', 
+              maxWidth: '680px', 
+              textShadow: '0 2px 10px rgba(0,0,0,0.45)' 
+            }}
           >
-            Priya Impex is a premier Indian merchant exporter delivering premium whole spices, ground powders, seeds, and agro commodities worldwide. From full container shipments to Malaysia & beyond, we guarantee 100% purity, speed, and export excellence.
+            Direct sourcing from Gujarat & India's top growing regions. Supplying premium whole spices, ground powders, oil seeds, and agro products with 100% purity and fast worldwide port dispatch.
           </motion.p>
 
-          {/* Action CTAs */}
+          {/* CTA Action Buttons */}
           <motion.div 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}
           >
             <button 
               className="btn btn-primary" 
               onClick={() => onNavigate ? onNavigate('contact') : null}
-              style={{ padding: '13px 30px', fontSize: '15px', display: 'inline-flex', alignItems: 'center', gap: '10px', boxShadow: '0 10px 30px rgba(0,0,0,0.4)' }}
+              style={{ 
+                padding: '14px 28px', 
+                fontSize: '15px', 
+                fontWeight: 700,
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '8px', 
+                boxShadow: '0 8px 24px rgba(200, 148, 10, 0.35)',
+                borderRadius: '8px'
+              }}
             >
-              <span>Request Container Quote</span>
-              <ArrowUpRight size={18} />
+              <span>Request Quote / CIF Price</span>
+              <ArrowRight size={18} />
             </button>
 
             <button 
               className="btn-outline" 
               onClick={() => onNavigate ? onNavigate('products') : null}
-              style={{ color: '#ffffff', borderColor: 'var(--gold)', padding: '12px 26px', fontSize: '15px', backdropFilter: 'blur(6px)', background: 'rgba(255,255,255,0.08)' }}
+              style={{ 
+                color: '#ffffff', 
+                borderColor: 'rgba(255,255,255,0.35)', 
+                background: 'rgba(255,255,255,0.1)', 
+                backdropFilter: 'blur(8px)',
+                padding: '13px 24px', 
+                fontSize: '15px', 
+                fontWeight: 600,
+                borderRadius: '8px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
             >
-              Explore Product Catalog
+              <FileText size={16} color="var(--gold)" />
+              <span>Explore Products</span>
             </button>
           </motion.div>
 

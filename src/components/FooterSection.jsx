@@ -1,5 +1,6 @@
 import React from 'react';
 import { Facebook, Instagram, Linkedin, MessageCircle, ChevronRight, Mail, MapPin, Phone, ArrowUpRight } from 'lucide-react';
+import logoImg from '../assets/logo.png';
 
 export default function FooterSection({ onNavigate }) {
   return (
@@ -12,7 +13,7 @@ export default function FooterSection({ onNavigate }) {
               className="footer-logo-wrap" 
               onClick={() => { if (onNavigate) onNavigate('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             >
-              <img src="/logo.png" alt="Priya Impex" />
+              <img src={logoImg} alt="Priya Impex" />
             </div>
             <p className="footer-bio-text">
               Priya Impex is a premier Indian exporter of high-grade food & agricultural products. Delivering trust, exporting excellence directly to global markets.
@@ -97,13 +98,13 @@ export default function FooterSection({ onNavigate }) {
                 <MapPin size={18} className="contact-icon" />
                 <span>Rajkot, Gujarat-360004, INDIA</span>
               </div>
-              <a href="tel:+918200712955" className="footer-contact-item item-link">
+              <a href="tel:+919328602931" className="footer-contact-item item-link">
                 <Phone size={18} className="contact-icon" />
-                <span>+91 82007 12955</span>
+                <span>+91 9328602931</span>
               </a>
-              <a href="mailto:info@priyaimpex.com" className="footer-contact-item item-link">
+              <a href="mailto:sales@priyaimpexs.com" className="footer-contact-item item-link">
                 <Mail size={18} className="contact-icon" />
-                <span>info@priyaimpex.com</span>
+                <span>sales@priyaimpexs.com</span>
               </a>
             </div>
           </div>

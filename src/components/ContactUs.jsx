@@ -52,7 +52,7 @@ export default function ContactUs() {
                 </div>
                 <div>
                   <strong style={{ display: 'block', fontSize: 14, color: '#fff' }}>Phone / WhatsApp:</strong>
-                  <a href="tel:+918200712955" style={{ fontSize: 15, color: 'rgba(255, 255, 255, 0.85)' }}>+91 82007 12955</a>
+                  <a href="tel:+919328602931" style={{ fontSize: 15, color: 'rgba(255, 255, 255, 0.85)' }}>+91 9328602931</a>
                 </div>
               </div>
 

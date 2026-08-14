@@ -1,15 +1,16 @@
 import React from 'react';
 import { Instagram, Linkedin, Facebook, MessageCircle } from 'lucide-react';
+import logoImg from '../assets/logo.png';
 
 export default function Footer() {
   return (
-    <footer className="site-footer">
+    <footer className="footer" style={{ background: '#0B2240', color: '#fff', padding: '60px 0 20px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
       <div className="container">
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1.5fr', gap: '40px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '40px', marginBottom: '40px' }}>
           <div className="footer-brand">
-            <a href="#">
-              <img src="/logo.png" alt="Priya Impex Logo" style={{ height: '60px', width: 'auto', objectFit: 'contain' }} />
-            </a>
+            <div style={{ marginBottom: '20px' }}>
+              <img src={logoImg} alt="Priya Impex Logo" style={{ height: '60px', width: 'auto', objectFit: 'contain' }} />
+            </div>
             <p style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.75)', margin: '16px 0 20px', lineHeight: 1.6 }}>
               Priya Impex is a premier Indian exporter of high-grade agro commodities, spices, seeds, and food products. Delivering trust, exporting excellence globally.
             </p>
@@ -23,8 +24,8 @@ export default function Footer() {
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon" title="Facebook">
                 <Facebook size={15} />
               </a>
-              <a href="https://api.whatsapp.com/send?phone=918200712955&text=Hi%20Priya%20Impex!" target="_blank" rel="noopener noreferrer" className="social-icon" title="Business WhatsApp">
-                <MessageCircle size={15} />
+              <a href="https://api.whatsapp.com/send?phone=919328602931&text=Hi%20Priya%20Impex!" target="_blank" rel="noopener noreferrer" className="social-icon" title="Business WhatsApp">
+                <MessageCircle size={14} />
               </a>
             </div>
           </div>
@@ -52,12 +53,12 @@ export default function Footer() {
 
           <div>
             <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '20px' }}>Connect Desk</h4>
-            <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.75)', marginBottom: '8px' }}>
-              <strong>Phone / WhatsApp:</strong> +91 82007 12955
-            </p>
-            <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.75)', marginBottom: '8px' }}>
-              <strong>Email:</strong> info@priyaimpex.com
-            </p>
+            <div className="footer-contact">
+              <strong>Phone / WhatsApp:</strong> +91 9328602931
+            </div>
+            <div className="footer-contact">
+              <strong>Email:</strong> sales@priyaimpexs.com
+            </div>
             <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.75)' }}>
               <strong>Location:</strong> Rajkot, Gujarat (India)
             </p>

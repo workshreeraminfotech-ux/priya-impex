@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, X, ArrowRight, MapPin, Mail, Phone } from 'lucide-react';
+import logoImg from '../assets/logo.png';
 
 export default function Navbar({ activePage, onNavigate }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -14,10 +15,21 @@ export default function Navbar({ activePage, onNavigate }) {
     <>
       <header className="jrp-header">
         <div className="container">
-          <div className="jrp-header-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '98px' }}>
+          <div className="jrp-header-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '104px' }}>
             {/* Logo */}
-            <a href="#" onClick={(e) => { e.preventDefault(); handleNav('home'); }} style={{ display: 'flex', alignItems: 'center' }}>
-              <img src="/logo.png" alt="Priya Impex" className="jrp-header-logo-img" style={{ height: '78px', width: 'auto', objectFit: 'contain' }} />
+            <a href="#" onClick={(e) => { e.preventDefault(); handleNav('home'); }} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+              <img 
+                src={logoImg} 
+                alt="Priya Impex" 
+                className="jrp-header-logo-img" 
+                style={{ 
+                  height: '88px', 
+                  width: 'auto', 
+                  objectFit: 'contain',
+                  filter: 'contrast(1.08) drop-shadow(0 2px 8px rgba(0,0,0,0.06))',
+                  display: 'block'
+                }} 
+              />
             </a>
 
             {/* Desktop Navigation Menu — Clean links without hover popups */}
@@ -89,7 +101,7 @@ export default function Navbar({ activePage, onNavigate }) {
           <div className="jrp-offcanvas-overlay" onClick={() => setMobileOpen(false)} />
           <div className="jrp-offcanvas">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '30px' }}>
-              <img src="/logo.png" alt="Priya Impex" style={{ height: '54px', width: 'auto', objectFit: 'contain' }} />
+              <img src={logoImg} alt="Priya Impex" style={{ height: '68px', width: 'auto', objectFit: 'contain', filter: 'contrast(1.08)' }} />
               <button onClick={() => setMobileOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--navy)' }}>
                 <X size={24} />
               </button>
@@ -114,11 +126,11 @@ export default function Navbar({ activePage, onNavigate }) {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <Mail size={16} style={{ color: 'var(--gold)' }} />
-                  <span>info@priyaimpex.com</span>
+                  <span>sales@priyaimpexs.com</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <Phone size={16} style={{ color: 'var(--gold)' }} />
-                  <span>+91 82007 12955</span>
+                  <span>+91 9328602931</span>
                 </div>
               </div>
 

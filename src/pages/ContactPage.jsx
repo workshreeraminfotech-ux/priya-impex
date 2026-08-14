@@ -8,16 +8,16 @@ const countryCodes = ['+91', '+1', '+44', '+971', '+65', '+27', '+49', '+61', '+
 const contactCards = [
   {
     icon: Phone, label: 'Phone / WhatsApp',
-    value: '+91 82007 12955',
+    value: '+91 9328602931',
     sub: 'Mon–Sat, 9AM – 6PM IST',
-    href: 'tel:+918200712955',
+    href: 'tel:+919328602931',
     color: '#C8940A'
   },
   {
     icon: Mail, label: 'Email Address',
-    value: 'priyaimpex.export@gmail.com',
+    value: 'sales@priyaimpexs.com',
     sub: 'We reply within 24 hours',
-    href: 'mailto:priyaimpex.export@gmail.com',
+    href: 'mailto:sales@priyaimpexs.com',
     color: '#D4AF37'
   },
   {
@@ -285,7 +285,7 @@ export default function ContactPage() {
                   Chat directly with our export team on WhatsApp for the fastest response!
                 </p>
                 <a
-                  href="https://api.whatsapp.com/send?phone=918200712955&text=Hi%20Priya%20Impex!%20I%20would%20like%20to%20enquire%20about%20your%20products."
+                  href="https://api.whatsapp.com/send?phone=919328602931&text=Hi%20Priya%20Impex!%20I%20would%20like%20to%20enquire%20about%20your%20products."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-primary"
