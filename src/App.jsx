@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import FooterSection from './components/FooterSection';
 import QuickViewModal from './components/QuickViewModal';
 import QuoteModal from './components/QuoteModal';
+import WhatsAppFloat from './components/WhatsAppFloat';
 
 import AdminPanel from './admin/AdminPanel';
 
@@ -121,6 +122,8 @@ export default function App() {
         initialProduct={quoteProduct} 
         onClose={() => setIsQuoteOpen(false)} 
       />
+
+      <WhatsAppFloat />
     </div>
   );
 }

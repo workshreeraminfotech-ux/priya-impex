@@ -8,10 +8,11 @@ export default function AboutUs() {
   return (
     <section className="about-section py-50" id="about" style={{ backgroundColor: '#FFFFFF', padding: '54px 0' }}>
       <div className="container">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '54px', alignItems: 'center' }}>
+        <div className="about-grid-wrapper" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '54px', alignItems: 'center' }}>
           
           {/* Left: User-Provided About Us Image */}
           <motion.div
+            className="about-image-col"
             initial={{ opacity: 0, x: -35 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -77,6 +78,7 @@ export default function AboutUs() {
 
           {/* Right: Corporate Story & Business Overview */}
           <motion.div
+            className="about-content-col"
             initial={{ opacity: 0, x: 35 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}

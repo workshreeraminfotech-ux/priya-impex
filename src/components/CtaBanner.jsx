@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, MessageCircle, ShieldCheck, Globe2, Sparkles } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Globe2, Sparkles, MessageCircle } from 'lucide-react';
 
 export default function CtaBanner({ onOpenQuote, onNavigate }) {
   return (
@@ -8,11 +8,10 @@ export default function CtaBanner({ onOpenQuote, onNavigate }) {
       <div className="container">
         <motion.div
           className="cta-banner-card"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          style={{ background: 'linear-gradient(135deg, #07152E 0%, #0B1F42 100%)', border: '1px solid rgba(138,158,167,0.3)', borderRadius: '28px', padding: '48px' }}
+          transition={{ duration: 0.6 }}
         >
           <div className="cta-banner-grid">
             {/* Left Image Showcase */}
@@ -21,36 +20,38 @@ export default function CtaBanner({ onOpenQuote, onNavigate }) {
                 src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80"
                 alt="Connect with Priya Impex"
               />
-              <div className="cta-image-floating-tag" style={{ background: 'rgba(7,21,46,0.9)', color: '#ffffff', border: '1px solid var(--gold)' }}>
-                <Sparkles size={16} color="var(--gold-light)" />
+              <div className="cta-image-floating-tag">
+                <Sparkles size={15} color="#F5C542" />
                 <span>Delivering Trust, Exporting Excellence</span>
               </div>
             </div>
 
             {/* Right Content & Actions */}
             <div className="cta-banner-content">
-              <h2 style={{ fontSize: '38px', fontWeight: 900, color: '#ffffff', lineHeight: 1.2, marginBottom: '16px', fontFamily: 'var(--font-h)' }}>
-                Connect With Us Today for <span style={{ color: 'var(--gold-light)' }}>Bulk Container Exports</span>
+              <h2 className="cta-banner-title">
+                Connect With Us Today for <span style={{ color: 'var(--gold)' }}>Bulk Container Exports</span>
               </h2>
 
-              <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '16px', lineHeight: 1.6, marginBottom: '24px' }}>
+              <p className="cta-banner-desc">
                 Partner with Priya Impex for premium spices, oil seeds, herbs, and agricultural produce delivered to your port with guaranteed purity and complete export compliance.
               </p>
 
               <div className="cta-features-pill-row">
                 <span className="cta-pill-item">
-                  <ShieldCheck size={14} color="var(--accent-cyan)" /> ISO & APEDA Certified
+                  <ShieldCheck size={14} color="#F5C542" />
+                  <span>ISO & APEDA Certified</span>
                 </span>
                 <span className="cta-pill-item">
-                  <ShieldCheck size={14} color="var(--accent-cyan)" /> Worldwide Port Dispatch
+                  <ShieldCheck size={14} color="#F5C542" />
+                  <span>Worldwide Port Dispatch</span>
                 </span>
               </div>
 
               <div className="cta-actions-row">
                 <button 
-                  className="btn btn-silver" 
+                  className="btn btn-primary" 
                   onClick={() => onOpenQuote ? onOpenQuote() : (onNavigate && onNavigate('contact'))} 
-                  style={{ padding: '14px 32px', fontSize: '15px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                  style={{ padding: '14px 28px', fontSize: '14.5px', display: 'inline-flex', alignItems: 'center', gap: '8px', borderRadius: '10px' }}
                 >
                   <span>Request Container Quote</span>
                   <ArrowRight size={17} />
@@ -58,8 +59,8 @@ export default function CtaBanner({ onOpenQuote, onNavigate }) {
 
                 <button
                   onClick={() => onNavigate && onNavigate('contact')}
-                  className="btn-outline-white"
-                  style={{ padding: '12px 26px', fontSize: '14px', display: 'inline-flex', alignItems: 'center', gap: '8px', borderRadius: '100px', border: '1.5px solid rgba(255,255,255,0.4)', color: '#ffffff', backgroundColor: 'transparent', cursor: 'pointer' }}
+                  className="btn-outline"
+                  style={{ padding: '13px 24px', fontSize: '14px', display: 'inline-flex', alignItems: 'center', gap: '8px', borderRadius: '10px', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.4)', backgroundColor: 'rgba(255,255,255,0.06)' }}
                 >
                   <Globe2 size={16} />
                   <span>Contact Export Desk</span>

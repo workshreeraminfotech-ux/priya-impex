@@ -30,7 +30,8 @@ export default function MainSeedsShowcase({ onSelectProduct, onOpenQuote, onNavi
 
   const handleScroll = (direction) => {
     if (scrollContainerRef.current) {
-      const scrollAmount = 340;
+      const cardEl = scrollContainerRef.current.querySelector('.seeds-showcase-card');
+      const scrollAmount = cardEl ? cardEl.offsetWidth + 18 : 310;
       scrollContainerRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth'
@@ -45,11 +46,14 @@ export default function MainSeedsShowcase({ onSelectProduct, onOpenQuote, onNavi
     const interval = setInterval(() => {
       if (scrollContainerRef.current) {
         const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+        const cardEl = scrollContainerRef.current.querySelector('.seeds-showcase-card');
+        const scrollAmount = cardEl ? cardEl.offsetWidth + 18 : 310;
+
         // If reached end, scroll smoothly back to start, else scroll next card
-        if (scrollLeft + clientWidth >= scrollWidth - 15) {
+        if (scrollLeft + clientWidth >= scrollWidth - 25) {
           scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
         } else {
-          scrollContainerRef.current.scrollBy({ left: 340, behavior: 'smooth' });
+          scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         }
       }
     }, 2800);
@@ -116,22 +120,19 @@ export default function MainSeedsShowcase({ onSelectProduct, onOpenQuote, onNavi
           {seedProducts.map((item, idx) => (
             <motion.div
               key={item.id || idx}
+              className="seeds-showcase-card"
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.35, delay: (idx % 4) * 0.05 }}
               style={{
-                minWidth: '310px',
-                maxWidth: '330px',
-                flex: '0 0 auto',
-                scrollSnapAlign: 'start',
-                background: '#FFFFFF',
                 borderRadius: '22px',
                 overflow: 'hidden',
                 boxShadow: '0 8px 24px rgba(11, 34, 64, 0.06)',
                 display: 'flex',
                 flexDirection: 'column',
                 border: '1.5px solid #E8DFCE',
+                background: '#FFFFFF',
                 transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
               }}
               whileHover={{ y: -6, boxShadow: '0 16px 36px rgba(200, 148, 10, 0.2)', borderColor: 'var(--gold)' }}
