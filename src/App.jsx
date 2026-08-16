@@ -9,8 +9,6 @@ import WhatsAppFloat from './components/WhatsAppFloat';
 
 import AdminPanel from './admin/AdminPanel';
 
-import Preloader from './components/Preloader';
-
 // Pages
 import Home from './pages/Home';
 import AboutPage from './pages/AboutPage';
@@ -24,7 +22,6 @@ export default function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quoteProduct, setQuoteProduct] = useState('');
   const [isQuoteOpen, setIsQuoteOpen] = useState(false);
-  const [isPreloading, setIsPreloading] = useState(true);
 
   useEffect(() => {
     const checkAdminRoute = () => {
@@ -74,7 +71,6 @@ export default function App() {
 
   return (
     <div>
-      <Preloader onFinish={() => setIsPreloading(false)} />
       <HeaderTop />
       <Navbar 
         activePage={activePage} 
@@ -124,7 +120,7 @@ export default function App() {
         onClose={() => setIsQuoteOpen(false)} 
       />
 
-      {!isPreloading && <WhatsAppFloat />}
+      <WhatsAppFloat />
     </div>
   );
 }
