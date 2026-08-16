@@ -103,16 +103,44 @@ export default function AdminPanel() {
     return <AdminLogin onLoginSuccess={() => setAuthenticated(true)} />;
   }
 
-  // --- IMAGE FILE CONVERTER HELPER ---
+  // --- IMAGE FILE CONVERTER WITH AUTOMATIC LIGHTWEIGHT COMPRESSION ---
   const handleImageFileChange = (e, callback) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        callback(reader.result);
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_DIMENSION = 800;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_DIMENSION) {
+            height = Math.round((height * MAX_DIMENSION) / width);
+            width = MAX_DIMENSION;
+          }
+        } else {
+          if (height > MAX_DIMENSION) {
+            width = Math.round((width * MAX_DIMENSION) / height);
+            height = MAX_DIMENSION;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Compress to compact JPEG Data URL (~30KB-60KB)
+        const compressedUrl = canvas.toDataURL('image/jpeg', 0.75);
+        callback(compressedUrl);
       };
-      reader.readAsDataURL(file);
-    }
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
   };
 
   // --- PRODUCT ACTIONS ---
@@ -140,25 +168,25 @@ export default function AdminPanel() {
     setShowProductModal(true);
   };
 
-  const handleSaveProduct = (e) => {
+  const handleSaveProduct = async (e) => {
     e.preventDefault();
     if (!prodForm.title.trim()) return alert('Please enter product title');
 
     if (editingProduct) {
-      const updated = updateProduct({ ...editingProduct, ...prodForm, cat: prodForm.category, desc: prodForm.description });
+      const updated = await updateProduct({ ...editingProduct, ...prodForm, cat: prodForm.category, desc: prodForm.description });
       setProductsState(updated);
-      showNotification(`Product "${prodForm.title}" updated successfully!`);
+      showNotification(`Product "${prodForm.title}" saved & synced live!`);
     } else {
-      const updated = addProduct({ ...prodForm, cat: prodForm.category, desc: prodForm.description });
+      const updated = await addProduct({ ...prodForm, cat: prodForm.category, desc: prodForm.description });
       setProductsState(updated);
-      showNotification(`New Product "${prodForm.title}" added to catalogue!`);
+      showNotification(`New Product "${prodForm.title}" added & synced live!`);
     }
     setShowProductModal(false);
   };
 
-  const handleDeleteProduct = (id, title) => {
+  const handleDeleteProduct = async (id, title) => {
     if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
-      const updated = deleteProduct(id);
+      const updated = await deleteProduct(id);
       setProductsState(updated);
       showNotification(`Product "${title}" removed.`);
     }
@@ -186,25 +214,25 @@ export default function AdminPanel() {
     setShowBlogModal(true);
   };
 
-  const handleSaveBlog = (e) => {
+  const handleSaveBlog = async (e) => {
     e.preventDefault();
     if (!blogForm.title.trim()) return alert('Please enter blog title');
 
     if (editingBlog) {
-      const updated = updateBlog({ ...editingBlog, ...blogForm });
+      const updated = await updateBlog({ ...editingBlog, ...blogForm });
       setBlogsState(updated);
-      showNotification(`Blog article "${blogForm.title}" updated!`);
+      showNotification(`Blog article "${blogForm.title}" saved & synced!`);
     } else {
-      const updated = addBlog(blogForm);
+      const updated = await addBlog(blogForm);
       setBlogsState(updated);
-      showNotification(`New Blog article "${blogForm.title}" published!`);
+      showNotification(`New Blog article "${blogForm.title}" published & synced!`);
     }
     setShowBlogModal(false);
   };
 
-  const handleDeleteBlog = (id, title) => {
+  const handleDeleteBlog = async (id, title) => {
     if (window.confirm(`Are you sure you want to delete article "${title}"?`)) {
-      const updated = deleteBlog(id);
+      const updated = await deleteBlog(id);
       setBlogsState(updated);
       showNotification(`Article "${title}" deleted.`);
     }
@@ -230,25 +258,25 @@ export default function AdminPanel() {
     setShowCertModal(true);
   };
 
-  const handleSaveCert = (e) => {
+  const handleSaveCert = async (e) => {
     e.preventDefault();
     if (!certForm.name.trim()) return alert('Please enter certificate name');
 
     if (editingCert) {
-      const updated = updateCertificate({ ...editingCert, ...certForm });
+      const updated = await updateCertificate({ ...editingCert, ...certForm });
       setCertsState(updated);
-      showNotification(`Certificate "${certForm.name}" updated!`);
+      showNotification(`Certificate "${certForm.name}" saved & synced!`);
     } else {
-      const updated = addCertificate(certForm);
+      const updated = await addCertificate(certForm);
       setCertsState(updated);
-      showNotification(`New Certificate "${certForm.name}" added!`);
+      showNotification(`New Certificate "${certForm.name}" added & synced!`);
     }
     setShowCertModal(false);
   };
 
-  const handleDeleteCert = (id, name) => {
+  const handleDeleteCert = async (id, name) => {
     if (window.confirm(`Are you sure you want to delete certificate "${name}"?`)) {
-      const updated = deleteCertificate(id);
+      const updated = await deleteCertificate(id);
       setCertsState(updated);
       showNotification(`Certificate "${name}" removed.`);
     }

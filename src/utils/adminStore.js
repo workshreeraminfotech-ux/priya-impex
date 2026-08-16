@@ -198,7 +198,7 @@ export function saveProducts(productsList) {
   notifyStoreUpdate();
 }
 
-export function addProduct(newProd) {
+export async function addProduct(newProd) {
   const list = getProducts();
   const prodWithId = {
     ...newProd,
@@ -210,14 +210,16 @@ export function addProduct(newProd) {
   // Cloud async sync
   try {
     if (isFirebaseConfigured()) {
-      saveCloudProduct(prodWithId);
+      await saveCloudProduct(prodWithId);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('Cloud addProduct error:', e);
+  }
 
   return updated;
 }
 
-export function updateProduct(updatedProd) {
+export async function updateProduct(updatedProd) {
   const list = getProducts();
   const updated = list.map(p => (p.id === updatedProd.id ? { ...p, ...updatedProd } : p));
   saveProducts(updated);
@@ -225,14 +227,16 @@ export function updateProduct(updatedProd) {
   // Cloud async sync
   try {
     if (isFirebaseConfigured()) {
-      saveCloudProduct(updatedProd);
+      await saveCloudProduct(updatedProd);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('Cloud updateProduct error:', e);
+  }
 
   return updated;
 }
 
-export function deleteProduct(id) {
+export async function deleteProduct(id) {
   const list = getProducts();
   const updated = list.filter(p => p.id !== id);
   saveProducts(updated);
@@ -240,9 +244,11 @@ export function deleteProduct(id) {
   // Cloud async sync
   try {
     if (isFirebaseConfigured()) {
-      deleteCloudProduct(id);
+      await deleteCloudProduct(id);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('Cloud deleteProduct error:', e);
+  }
 
   return updated;
 }
@@ -272,7 +278,7 @@ export function saveBlogs(blogsList) {
   notifyStoreUpdate();
 }
 
-export function addBlog(newBlog) {
+export async function addBlog(newBlog) {
   const list = getBlogs();
   const blogWithId = {
     ...newBlog,
@@ -285,14 +291,16 @@ export function addBlog(newBlog) {
   // Cloud async sync
   try {
     if (isFirebaseConfigured()) {
-      saveCloudBlog(blogWithId);
+      await saveCloudBlog(blogWithId);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('Cloud addBlog error:', e);
+  }
 
   return updated;
 }
 
-export function updateBlog(updatedBlog) {
+export async function updateBlog(updatedBlog) {
   const list = getBlogs();
   const updated = list.map(b => (b.id === updatedBlog.id ? { ...b, ...updatedBlog } : b));
   saveBlogs(updated);
@@ -300,14 +308,16 @@ export function updateBlog(updatedBlog) {
   // Cloud async sync
   try {
     if (isFirebaseConfigured()) {
-      saveCloudBlog(updatedBlog);
+      await saveCloudBlog(updatedBlog);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('Cloud updateBlog error:', e);
+  }
 
   return updated;
 }
 
-export function deleteBlog(id) {
+export async function deleteBlog(id) {
   const list = getBlogs();
   const updated = list.filter(b => b.id !== id);
   saveBlogs(updated);
@@ -315,9 +325,11 @@ export function deleteBlog(id) {
   // Cloud async sync
   try {
     if (isFirebaseConfigured()) {
-      deleteCloudBlog(id);
+      await deleteCloudBlog(id);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('Cloud deleteBlog error:', e);
+  }
 
   return updated;
 }
@@ -347,7 +359,7 @@ export function saveCertificates(certsList) {
   notifyStoreUpdate();
 }
 
-export function addCertificate(newCert) {
+export async function addCertificate(newCert) {
   const list = getCertificates();
   const certWithId = {
     ...newCert,
@@ -359,14 +371,16 @@ export function addCertificate(newCert) {
   // Cloud async sync
   try {
     if (isFirebaseConfigured()) {
-      saveCloudCertificate(certWithId);
+      await saveCloudCertificate(certWithId);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('Cloud addCertificate error:', e);
+  }
 
   return updated;
 }
 
-export function updateCertificate(updatedCert) {
+export async function updateCertificate(updatedCert) {
   const list = getCertificates();
   const updated = list.map(c => (c.id === updatedCert.id ? { ...c, ...updatedCert } : c));
   saveCertificates(updated);
@@ -374,14 +388,16 @@ export function updateCertificate(updatedCert) {
   // Cloud async sync
   try {
     if (isFirebaseConfigured()) {
-      saveCloudCertificate(updatedCert);
+      await saveCloudCertificate(updatedCert);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('Cloud updateCertificate error:', e);
+  }
 
   return updated;
 }
 
-export function deleteCertificate(id) {
+export async function deleteCertificate(id) {
   const list = getCertificates();
   const updated = list.filter(c => c.id !== id);
   saveCertificates(updated);
@@ -389,9 +405,11 @@ export function deleteCertificate(id) {
   // Cloud async sync
   try {
     if (isFirebaseConfigured()) {
-      deleteCloudCertificate(id);
+      await deleteCloudCertificate(id);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('Cloud deleteCertificate error:', e);
+  }
 
   return updated;
 }
@@ -452,7 +470,7 @@ export function saveEnquiries(enquiriesList) {
   notifyStoreUpdate();
 }
 
-export function addEnquiry(enquiryData) {
+export async function addEnquiry(enquiryData) {
   const list = getEnquiries();
   const newEnquiry = {
     id: `enq-${Date.now()}`,
@@ -474,14 +492,16 @@ export function addEnquiry(enquiryData) {
   // Cloud async sync
   try {
     if (isFirebaseConfigured()) {
-      saveCloudEnquiry(newEnquiry);
+      await saveCloudEnquiry(newEnquiry);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('Cloud addEnquiry error:', e);
+  }
 
   return updated;
 }
 
-export function updateEnquiryStatus(id, status) {
+export async function updateEnquiryStatus(id, status) {
   const list = getEnquiries();
   const updated = list.map(e => (e.id === id ? { ...e, status } : e));
   saveEnquiries(updated);
@@ -490,14 +510,16 @@ export function updateEnquiryStatus(id, status) {
   try {
     if (isFirebaseConfigured()) {
       const item = updated.find(e => e.id === id);
-      if (item) saveCloudEnquiry(item);
+      if (item) await saveCloudEnquiry(item);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('Cloud updateEnquiryStatus error:', e);
+  }
 
   return updated;
 }
 
-export function deleteEnquiry(id) {
+export async function deleteEnquiry(id) {
   const list = getEnquiries();
   const updated = list.filter(e => e.id !== id);
   saveEnquiries(updated);
@@ -505,9 +527,11 @@ export function deleteEnquiry(id) {
   // Cloud async sync
   try {
     if (isFirebaseConfigured()) {
-      deleteCloudEnquiry(id);
+      await deleteCloudEnquiry(id);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('Cloud deleteEnquiry error:', e);
+  }
 
   return updated;
 }
