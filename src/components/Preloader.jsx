@@ -2,90 +2,191 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logoImg from '../assets/logo.png';
 
-export default function Preloader({ onFinish }) {
+export default function Preloader({ minDuration = 1800, onFinish }) {
   const [loading, setLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-      if (onFinish) onFinish();
-    }, 1200);
+    // Smooth progress counter from 0 to 100
+    const startTime = Date.now();
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const pct = Math.min(Math.round((elapsed / minDuration) * 100), 100);
+      setProgress(pct);
 
-    return () => clearTimeout(timer);
-  }, []);
+      if (elapsed >= minDuration) {
+        clearInterval(interval);
+        setTimeout(() => {
+          setLoading(false);
+          if (onFinish) onFinish();
+        }, 200);
+      }
+    }, 25);
+
+    return () => clearInterval(interval);
+  }, [minDuration, onFinish]);
 
   return (
     <AnimatePresence>
       {loading && (
         <motion.div
+          key="preloader"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
+          exit={{ opacity: 0, scale: 1.02 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           style={{
             position: 'fixed',
-            inset: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100vw',
+            height: '100vh',
             backgroundColor: '#FFFFFF',
             zIndex: 99999999,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '20px'
+            padding: '24px',
+            userSelect: 'none',
+            overflow: 'hidden'
           }}
         >
-          {/* Animated Logo Container */}
+          {/* Subtle background glow circle for depth */}
+          <div
+            style={{
+              position: 'absolute',
+              width: '420px',
+              height: '420px',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(200, 148, 10, 0.05) 0%, rgba(255,255,255,0) 70%)',
+              pointerEvents: 'none'
+            }}
+          />
+
+          {/* Logo & Content Box */}
           <motion.div
-            initial={{ scale: 0.85, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
+            initial={{ opacity: 0, y: 15, scale: 0.94 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              textAlign: 'center'
+              position: 'relative',
+              zIndex: 2
             }}
           >
-            <motion.img
-              src={logoImg}
-              alt="Priya Impex"
-              animate={{ scale: [1, 1.04, 1] }}
-              transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-              style={{
-                height: '110px',
-                width: 'auto',
-                maxWidth: '280px',
-                objectFit: 'contain',
-                marginBottom: '24px'
+            {/* Logo Image */}
+            <motion.div
+              animate={{ 
+                scale: [1, 1.02, 1] 
               }}
-            />
-
-            {/* Subtle Progress Bar */}
-            <div
+              transition={{ 
+                duration: 2.4, 
+                repeat: Infinity, 
+                ease: 'easeInOut' 
+              }}
               style={{
-                width: '160px',
-                height: '3.5px',
-                backgroundColor: '#E2E8F0',
-                borderRadius: '100px',
-                overflow: 'hidden',
-                position: 'relative'
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '32px'
               }}
             >
-              <motion.div
-                initial={{ width: '0%' }}
-                animate={{ width: '100%' }}
-                transition={{ duration: 1.6, ease: 'easeInOut' }}
+              <img
+                src={logoImg}
+                alt="Priya Impex Logo"
                 style={{
-                  height: '100%',
-                  background: 'linear-gradient(135deg, #C8940A 0%, #D4AF37 100%)',
-                  borderRadius: '100px'
+                  height: '95px',
+                  width: 'auto',
+                  maxWidth: '280px',
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 4px 16px rgba(0,0,0,0.06))'
                 }}
               />
+            </motion.div>
+
+            {/* Progress Bar Track */}
+            <div
+              style={{
+                width: '220px',
+                height: '4px',
+                backgroundColor: '#F1F5F9',
+                borderRadius: '999px',
+                overflow: 'hidden',
+                position: 'relative',
+                boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.04)'
+              }}
+            >
+              {/* Animated Filling Line */}
+              <div
+                style={{
+                  height: '100%',
+                  width: `${progress}%`,
+                  background: 'linear-gradient(90deg, #B8860B 0%, #D4AF37 50%, #F5D061 100%)',
+                  borderRadius: '999px',
+                  boxShadow: '0 0 12px rgba(212, 175, 55, 0.6)',
+                  transition: 'width 0.05s linear',
+                  position: 'relative'
+                }}
+              >
+                {/* Glowing head of progress line */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    backgroundColor: '#FFF',
+                    boxShadow: '0 0 8px 2px rgba(212, 175, 55, 0.9)'
+                  }}
+                />
+              </div>
             </div>
 
-            <span style={{ fontSize: '11px', fontWeight: 800, color: '#8C96A0', letterSpacing: '2px', textTransform: 'uppercase', marginTop: '16px' }}>
-              Pioneering Indian Agro Exports
-            </span>
+            {/* Subtitle / Status */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              style={{
+                marginTop: '18px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '220px'
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '10.5px',
+                  fontWeight: 700,
+                  letterSpacing: '1.8px',
+                  textTransform: 'uppercase',
+                  color: '#64748B',
+                  fontFamily: 'inherit'
+                }}
+              >
+                Loading
+              </span>
+              <span
+                style={{
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  letterSpacing: '0.5px',
+                  color: '#C8940A',
+                  fontFamily: 'monospace'
+                }}
+              >
+                {progress}%
+              </span>
+            </motion.div>
           </motion.div>
         </motion.div>
       )}

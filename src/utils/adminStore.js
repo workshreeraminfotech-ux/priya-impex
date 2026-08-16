@@ -100,6 +100,11 @@ export async function syncFromCloud() {
         localStorage.setItem('marvex_products', JSON.stringify(cloudProds));
         changed = true;
       } catch (e) {}
+    } else {
+      // Auto-seed cloud collections on first setup
+      try {
+        syncAllToCloud(INITIAL_PRODUCTS, INITIAL_BLOGS, INITIAL_CERTS);
+      } catch (e) {}
     }
     if (cloudBlogs && Array.isArray(cloudBlogs) && cloudBlogs.length > 0) {
       try {

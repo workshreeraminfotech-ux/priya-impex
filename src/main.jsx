@@ -20,14 +20,27 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ padding: '40px 20px', textAlign: 'center', fontFamily: 'sans-serif' }}>
-          <h2 style={{ color: '#002147' }}>Priya Impex</h2>
-          <p style={{ color: '#64748B' }}>Application encountered a temporary error.</p>
+        <div style={{ padding: '40px 20px', textAlign: 'center', fontFamily: 'sans-serif', backgroundColor: '#F8FAFC', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <h2 style={{ color: '#002147', marginBottom: '8px' }}>Priya Impex</h2>
+          <p style={{ color: '#64748B', maxWidth: '500px', fontSize: '14px', lineHeight: 1.5 }}>
+            Application encountered a temporary error.
+          </p>
+          <div style={{ backgroundColor: '#FEF2F2', border: '1px solid #FCA5A5', color: '#991B1B', padding: '14px 20px', borderRadius: '12px', maxWidth: '650px', width: '100%', margin: '16px 0', textAlign: 'left', fontSize: '13px', fontFamily: 'monospace', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
+            {String(this.state.error?.stack || this.state.error?.message || this.state.error)}
+          </div>
           <button 
-            onClick={() => { localStorage.clear(); window.location.reload(); }}
-            style={{ backgroundColor: '#002147', color: '#fff', padding: '12px 24px', borderRadius: '100px', border: 'none', cursor: 'pointer', fontWeight: 700 }}
+            onClick={() => {
+              try {
+                localStorage.removeItem('marvex_products');
+                localStorage.removeItem('marvex_blogs');
+                localStorage.removeItem('marvex_certs');
+                localStorage.removeItem('marvex_enquiries');
+              } catch(e) {}
+              window.location.reload();
+            }}
+            style={{ backgroundColor: '#002147', color: '#fff', padding: '12px 28px', borderRadius: '100px', border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: '14px', boxShadow: '0 4px 14px rgba(0,33,71,0.2)' }}
           >
-            Clear Cache & Reload
+            Clear Browser Cache & Reload
           </button>
         </div>
       );

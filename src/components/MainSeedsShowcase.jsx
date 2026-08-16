@@ -1,17 +1,20 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { ArrowRight, Eye, ShieldCheck, MapPin, Sparkles, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useStoreProducts } from '../utils/useStore';
 
 export default function MainSeedsShowcase({ onSelectProduct, onOpenQuote, onNavigate }) {
-  const allProducts = useStoreProducts();
+  const storeProds = useStoreProducts();
+  const allProducts = Array.isArray(storeProds) ? storeProds : [];
   const scrollContainerRef = useRef(null);
   const [isPaused, setIsPaused] = useState(false);
 
   // All seed products & seed spices
   const seedProducts = allProducts.filter(p => {
-    const title = (p.title || '').toLowerCase();
-    const cat = (p.category || p.cat || '').toLowerCase();
-    const id = (p.id || '').toLowerCase();
+    if (!p) return false;
+    const title = String(p.title || '').toLowerCase();
+    const cat = String(p.category || p.cat || '').toLowerCase();
+    const id = String(p.id || '').toLowerCase();
     return (
       cat.includes('seed') || 
       title.includes('seed') || 

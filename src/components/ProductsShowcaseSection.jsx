@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { ArrowRight, Eye } from 'lucide-react';
 import { useStoreProducts } from '../utils/useStore';
 
@@ -13,9 +14,10 @@ const TOP_6_EXPORT_IDS = [
 ];
 
 export default function ProductsShowcaseSection({ onSelectProduct, onOpenQuote, onNavigate }) {
-  const allProducts = useStoreProducts();
-  // Get featured / top products
-  let topExportProducts = TOP_6_EXPORT_IDS.map(id => allProducts.find(p => p.id === id)).filter(Boolean);
+  const storeProds = useStoreProducts();
+  const allProducts = Array.isArray(storeProds) ? storeProds : [];
+  // Get featured / top products safely
+  let topExportProducts = TOP_6_EXPORT_IDS.map(id => allProducts.find(p => p && p.id === id)).filter(Boolean);
   if (topExportProducts.length < 6) {
     topExportProducts = allProducts.slice(0, 6);
   }

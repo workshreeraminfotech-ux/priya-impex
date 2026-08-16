@@ -10,24 +10,29 @@ export default function ProductsPage({ onSelectProduct, onOpenQuote }) {
 
   const productsList = useStoreProducts();
 
-  // Filter logic
+  // Filter logic safely
   const filteredProducts = useMemo(() => {
-    return productsList.filter(product => {
-      const matchesCategory = activeTab === 'All' || product.category === activeTab || product.cat === activeTab;
+    return (productsList || []).filter(product => {
+      if (!product) return false;
+      const title = String(product.title || product.name || '');
+      const desc = String(product.description || product.desc || '');
+      const cat = String(product.category || product.cat || '');
+
+      const matchesCategory = activeTab === 'All' || cat === activeTab;
       const matchesSearch = searchTerm.trim() === '' || 
-        product.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-        (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (product.desc && product.desc.toLowerCase().includes(searchTerm.toLowerCase()));
+        title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        desc.toLowerCase().includes(searchTerm.toLowerCase());
       
       return matchesCategory && matchesSearch;
     });
   }, [activeTab, searchTerm, productsList]);
 
-  // Counts for tabs
+  // Counts for tabs safely
   const categoryCounts = useMemo(() => {
-    const counts = { All: productsList.length };
-    productsList.forEach(p => {
-      const cat = p.category || p.cat;
+    const counts = { All: (productsList || []).length };
+    (productsList || []).forEach(p => {
+      if (!p) return;
+      const cat = p.category || p.cat || 'Other';
       counts[cat] = (counts[cat] || 0) + 1;
     });
     return counts;

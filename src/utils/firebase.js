@@ -1,5 +1,5 @@
-// Firebase Cloud Database & Real-Time Sync Utility
-// Allows Priya Impex Admin Panel changes to persist globally for all devices and visitors.
+// Firebase Cloud Database & Live Real-Time Sync Utility
+// Priya Impex — Seamless 2-Way Global Real-Time Sync
 
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { 
@@ -9,13 +9,30 @@ import {
   doc, 
   setDoc, 
   deleteDoc, 
-  writeBatch
+  writeBatch,
+  onSnapshot
 } from 'firebase/firestore';
 
 const CONFIG_STORAGE_KEY = 'priya_firebase_config';
 
-// 1. Get Firebase Configuration from LocalStorage or Environment Variables safely
+// 1. Permanent Default Firebase Config (or loaded from LocalStorage / Env)
+export const DEFAULT_FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCSoPp5B_fdMA3cS_nGocEuG1R-LXbBB2U",
+  authDomain: "priya-impex.firebaseapp.com",
+  projectId: "priya-impex",
+  storageBucket: "priya-impex.firebasestorage.app",
+  messagingSenderId: "332734321481",
+  appId: "1:332734321481:web:0946464974857da4004098",
+  measurementId: "G-M7KKNEVFY7"
+};
+
 export function getFirebaseConfig() {
+  // 1. Check Hardcoded / Env Config
+  if (DEFAULT_FIREBASE_CONFIG.apiKey && DEFAULT_FIREBASE_CONFIG.projectId) {
+    return DEFAULT_FIREBASE_CONFIG;
+  }
+
+  // 2. Check localStorage
   try {
     if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem(CONFIG_STORAGE_KEY);
@@ -24,24 +41,6 @@ export function getFirebaseConfig() {
         if (parsed && parsed.apiKey && parsed.projectId) {
           return parsed;
         }
-      }
-    }
-  } catch (e) {
-    console.warn('Failed to parse saved Firebase config', e);
-  }
-
-  try {
-    if (typeof import.meta !== 'undefined' && import.meta.env) {
-      const envConfig = {
-        apiKey: import.meta.env.VITE_FIREBASE_API_KEY || '',
-        authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || '',
-        projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || '',
-        storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || '',
-        messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '',
-        appId: import.meta.env.VITE_FIREBASE_APP_ID || ''
-      };
-      if (envConfig.apiKey && envConfig.projectId) {
-        return envConfig;
       }
     }
   } catch (e) {}
@@ -57,9 +56,7 @@ export function saveFirebaseConfig(config) {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config));
     }
-  } catch (e) {
-    console.error('Failed to save config to localStorage', e);
-  }
+  } catch (e) {}
   return initFirebase(true);
 }
 
@@ -83,6 +80,7 @@ export function isFirebaseConfigured() {
 // 2. Initialize Firebase App & Firestore
 let firebaseApp = null;
 let firestoreDb = null;
+let unsubscribers = [];
 
 export function initFirebase(forceReinit = false) {
   try {
@@ -98,6 +96,10 @@ export function initFirebase(forceReinit = false) {
     }
 
     firestoreDb = getFirestore(firebaseApp);
+
+    // Setup Live Real-Time Listeners automatically
+    setupRealtimeListeners(firestoreDb);
+
     return firestoreDb;
   } catch (error) {
     console.warn('Firebase initialization error:', error);
@@ -116,9 +118,96 @@ export function getDb() {
   }
 }
 
-// --- CLOUD FIRESTORE HELPERS ---
+// Helper: Broadcast store update event to all components
+function notifyStoreUpdate() {
+  try {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('priya_store_updated'));
+    }
+  } catch (e) {}
+}
 
-// 3. Products
+// 3. Real-Time onSnapshot Listeners (Automatic 0-refresh Live Sync)
+export function setupRealtimeListeners(db) {
+  if (!db || typeof window === 'undefined') return;
+
+  // Clear previous listeners if any
+  unsubscribers.forEach(unsub => {
+    try { unsub(); } catch(e) {}
+  });
+  unsubscribers = [];
+
+  try {
+    // 1. Live Products Listener
+    const unsubProds = onSnapshot(collection(db, 'products'), (snapshot) => {
+      if (!snapshot.empty) {
+        const items = [];
+        snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
+        try {
+          localStorage.setItem('marvex_products', JSON.stringify(items));
+        } catch(e) {}
+        notifyStoreUpdate();
+      }
+    }, (err) => console.warn('Products live sync notice:', err.message));
+    unsubscribers.push(unsubProds);
+
+    // 2. Live Blogs Listener
+    const unsubBlogs = onSnapshot(collection(db, 'blogs'), (snapshot) => {
+      if (!snapshot.empty) {
+        const items = [];
+        snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
+        try {
+          localStorage.setItem('marvex_blogs', JSON.stringify(items));
+        } catch(e) {}
+        notifyStoreUpdate();
+      }
+    }, (err) => console.warn('Blogs live sync notice:', err.message));
+    unsubscribers.push(unsubBlogs);
+
+    // 3. Live Certificates Listener
+    const unsubCerts = onSnapshot(collection(db, 'certificates'), (snapshot) => {
+      if (!snapshot.empty) {
+        const items = [];
+        snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
+        try {
+          localStorage.setItem('marvex_certs', JSON.stringify(items));
+        } catch(e) {}
+        notifyStoreUpdate();
+      }
+    }, (err) => console.warn('Certs live sync notice:', err.message));
+    unsubscribers.push(unsubCerts);
+
+    // 4. Live Enquiries Listener
+    const unsubEnqs = onSnapshot(collection(db, 'enquiries'), (snapshot) => {
+      if (!snapshot.empty) {
+        const items = [];
+        snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
+        items.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+        try {
+          localStorage.setItem('marvex_enquiries', JSON.stringify(items));
+        } catch(e) {}
+        notifyStoreUpdate();
+      }
+    }, (err) => console.warn('Enquiries live sync notice:', err.message));
+    unsubscribers.push(unsubEnqs);
+
+  } catch (err) {
+    console.warn('Real-time listener setup error:', err);
+  }
+}
+
+// Auto-trigger setup on module load
+if (typeof window !== 'undefined') {
+  setTimeout(() => {
+    try {
+      getDb();
+    } catch(e) {}
+  }, 500);
+}
+
+// --- CLOUD FIRESTORE DIRECT ACTIONS ---
+
+// Products
 export async function fetchCloudProducts() {
   try {
     const db = getDb();
@@ -126,12 +215,9 @@ export async function fetchCloudProducts() {
     const snapshot = await getDocs(collection(db, 'products'));
     if (snapshot.empty) return null;
     const items = [];
-    snapshot.forEach(docSnap => {
-      items.push({ id: docSnap.id, ...docSnap.data() });
-    });
+    snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
     return items;
   } catch (err) {
-    console.warn('Error fetching cloud products:', err);
     return null;
   }
 }
@@ -145,7 +231,7 @@ export async function saveCloudProduct(product) {
     await setDoc(docRef, { ...product, id: docId, updatedAt: new Date().toISOString() }, { merge: true });
     return true;
   } catch (err) {
-    console.warn('Error saving cloud product:', err);
+    console.warn('Direct cloud save error:', err);
     return false;
   }
 }
@@ -158,12 +244,11 @@ export async function deleteCloudProduct(productId) {
     await deleteDoc(docRef);
     return true;
   } catch (err) {
-    console.warn('Error deleting cloud product:', err);
     return false;
   }
 }
 
-// 4. Blogs
+// Blogs
 export async function fetchCloudBlogs() {
   try {
     const db = getDb();
@@ -171,12 +256,9 @@ export async function fetchCloudBlogs() {
     const snapshot = await getDocs(collection(db, 'blogs'));
     if (snapshot.empty) return null;
     const items = [];
-    snapshot.forEach(docSnap => {
-      items.push({ id: docSnap.id, ...docSnap.data() });
-    });
+    snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
     return items;
   } catch (err) {
-    console.warn('Error fetching cloud blogs:', err);
     return null;
   }
 }
@@ -190,7 +272,6 @@ export async function saveCloudBlog(blog) {
     await setDoc(docRef, { ...blog, id: docId, updatedAt: new Date().toISOString() }, { merge: true });
     return true;
   } catch (err) {
-    console.warn('Error saving cloud blog:', err);
     return false;
   }
 }
@@ -203,12 +284,11 @@ export async function deleteCloudBlog(blogId) {
     await deleteDoc(docRef);
     return true;
   } catch (err) {
-    console.warn('Error deleting cloud blog:', err);
     return false;
   }
 }
 
-// 5. Certificates
+// Certificates
 export async function fetchCloudCertificates() {
   try {
     const db = getDb();
@@ -216,12 +296,9 @@ export async function fetchCloudCertificates() {
     const snapshot = await getDocs(collection(db, 'certificates'));
     if (snapshot.empty) return null;
     const items = [];
-    snapshot.forEach(docSnap => {
-      items.push({ id: docSnap.id, ...docSnap.data() });
-    });
+    snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
     return items;
   } catch (err) {
-    console.warn('Error fetching cloud certs:', err);
     return null;
   }
 }
@@ -235,7 +312,6 @@ export async function saveCloudCertificate(cert) {
     await setDoc(docRef, { ...cert, id: docId, updatedAt: new Date().toISOString() }, { merge: true });
     return true;
   } catch (err) {
-    console.warn('Error saving cloud cert:', err);
     return false;
   }
 }
@@ -248,12 +324,11 @@ export async function deleteCloudCertificate(certId) {
     await deleteDoc(docRef);
     return true;
   } catch (err) {
-    console.warn('Error deleting cloud cert:', err);
     return false;
   }
 }
 
-// 6. Enquiries
+// Enquiries
 export async function fetchCloudEnquiries() {
   try {
     const db = getDb();
@@ -261,13 +336,10 @@ export async function fetchCloudEnquiries() {
     const snapshot = await getDocs(collection(db, 'enquiries'));
     if (snapshot.empty) return null;
     const items = [];
-    snapshot.forEach(docSnap => {
-      items.push({ id: docSnap.id, ...docSnap.data() });
-    });
+    snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
     items.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
     return items;
   } catch (err) {
-    console.warn('Error fetching cloud enquiries:', err);
     return null;
   }
 }
@@ -281,7 +353,6 @@ export async function saveCloudEnquiry(enquiry) {
     await setDoc(docRef, { ...enquiry, id: docId }, { merge: true });
     return true;
   } catch (err) {
-    console.warn('Error saving cloud enquiry:', err);
     return false;
   }
 }
@@ -294,15 +365,14 @@ export async function deleteCloudEnquiry(enquiryId) {
     await deleteDoc(docRef);
     return true;
   } catch (err) {
-    console.warn('Error deleting cloud enquiry:', err);
     return false;
   }
 }
 
-// 7. Bulk Sync / Migrate to Cloud Database
+// Bulk initial migrate
 export async function syncAllToCloud(productsList, blogsList, certsList) {
   const db = getDb();
-  if (!db) throw new Error('Cloud database is not connected.');
+  if (!db) return false;
 
   const batch = writeBatch(db);
 

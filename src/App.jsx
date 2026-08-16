@@ -6,6 +6,7 @@ import FooterSection from './components/FooterSection';
 import QuickViewModal from './components/QuickViewModal';
 import QuoteModal from './components/QuoteModal';
 import WhatsAppFloat from './components/WhatsAppFloat';
+import Preloader from './components/Preloader';
 
 import AdminPanel from './admin/AdminPanel';
 
@@ -121,6 +122,7 @@ export default function App() {
       />
 
       <WhatsAppFloat />
+      <Preloader />
     </div>
   );
 }

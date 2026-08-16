@@ -9,11 +9,14 @@ export default function BlogPage() {
 
   const blogsList = useStoreBlogs();
 
-  const filtered = blogsList.filter(b =>
-    b.title.toLowerCase().includes(search.toLowerCase()) ||
-    b.cat.toLowerCase().includes(search.toLowerCase()) ||
-    b.excerpt.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = (Array.isArray(blogsList) ? blogsList : []).filter(b => {
+    if (!b) return false;
+    const title = String(b.title || '').toLowerCase();
+    const cat = String(b.cat || b.category || '').toLowerCase();
+    const excerpt = String(b.excerpt || '').toLowerCase();
+    const s = search.toLowerCase();
+    return title.includes(s) || cat.includes(s) || excerpt.includes(s);
+  });
 
   return (
     <div style={{ backgroundColor: '#F8FAFC', minHeight: '100vh', paddingBottom: '80px' }}>
