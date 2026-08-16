@@ -1,8 +1,24 @@
 // Centralized Dynamic Data & Admin Store — Priya Impex
-// Persists Products, Blogs, and Certificates dynamically in localStorage
+// Dual-Layer Storage: Fast Local Cache + Real-Time Global Cloud Firestore Database
 
 import { PRODUCTS as INITIAL_PRODUCTS, PRODUCT_CATEGORIES } from '../data/products';
 import { BLOGS as INITIAL_BLOGS } from '../data/blogs';
+import {
+  isFirebaseConfigured,
+  fetchCloudProducts,
+  saveCloudProduct,
+  deleteCloudProduct,
+  fetchCloudBlogs,
+  saveCloudBlog,
+  deleteCloudBlog,
+  fetchCloudCertificates,
+  saveCloudCertificate,
+  deleteCloudCertificate,
+  fetchCloudEnquiries,
+  saveCloudEnquiry,
+  deleteCloudEnquiry,
+  syncAllToCloud
+} from './firebase';
 
 import apedaLogo from '../assets/certificate/apeda.png';
 import spicesBoardLogo from '../assets/certificate/spices board.png';
@@ -56,13 +72,68 @@ const INITIAL_CERTS = [
   }
 ];
 
+// Helper: Broadcast store update event to all components
+function notifyStoreUpdate() {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('priya_store_updated'));
+  }
+}
+
+// Background Cloud Sync on load
+export async function syncFromCloud() {
+  if (!isFirebaseConfigured()) return false;
+
+  try {
+    const [cloudProds, cloudBlogs, cloudCerts, cloudEnqs] = await Promise.all([
+      fetchCloudProducts(),
+      fetchCloudBlogs(),
+      fetchCloudCertificates(),
+      fetchCloudEnquiries()
+    ]);
+
+    let changed = false;
+
+    if (cloudProds && cloudProds.length > 0) {
+      localStorage.setItem('marvex_products', JSON.stringify(cloudProds));
+      changed = true;
+    }
+    if (cloudBlogs && cloudBlogs.length > 0) {
+      localStorage.setItem('marvex_blogs', JSON.stringify(cloudBlogs));
+      changed = true;
+    }
+    if (cloudCerts && cloudCerts.length > 0) {
+      localStorage.setItem('marvex_certs', JSON.stringify(cloudCerts));
+      changed = true;
+    }
+    if (cloudEnqs && cloudEnqs.length > 0) {
+      localStorage.setItem('marvex_enquiries', JSON.stringify(cloudEnqs));
+      changed = true;
+    }
+
+    if (changed) {
+      notifyStoreUpdate();
+    }
+    return true;
+  } catch (err) {
+    console.error('Failed to sync from cloud database:', err);
+    return false;
+  }
+}
+
+// Auto-trigger sync on script load
+if (typeof window !== 'undefined') {
+  setTimeout(() => {
+    syncFromCloud();
+  }, 500);
+}
+
 // --- AUTHENTICATION ---
 export function isAdminLoggedIn() {
   return sessionStorage.getItem('marvex_admin_auth') === 'true';
 }
 
 export function loginAdmin(username, password) {
-  if ((username === 'admin' || username === 'marvex') && (password === 'admin123' || password === 'marvex2026#')) {
+  if ((username === 'admin' || username === 'marvex' || username === 'priya') && (password === 'admin123' || password === 'marvex2026#' || password === 'priya2026#')) {
     sessionStorage.setItem('marvex_admin_auth', 'true');
     return { success: true };
   }
@@ -88,6 +159,7 @@ export function getProducts() {
 
 export function saveProducts(productsList) {
   localStorage.setItem('marvex_products', JSON.stringify(productsList));
+  notifyStoreUpdate();
 }
 
 export function addProduct(newProd) {
@@ -98,6 +170,12 @@ export function addProduct(newProd) {
   };
   const updated = [prodWithId, ...list];
   saveProducts(updated);
+
+  // Cloud async sync
+  if (isFirebaseConfigured()) {
+    saveCloudProduct(prodWithId);
+  }
+
   return updated;
 }
 
@@ -105,6 +183,12 @@ export function updateProduct(updatedProd) {
   const list = getProducts();
   const updated = list.map(p => (p.id === updatedProd.id ? { ...p, ...updatedProd } : p));
   saveProducts(updated);
+
+  // Cloud async sync
+  if (isFirebaseConfigured()) {
+    saveCloudProduct(updatedProd);
+  }
+
   return updated;
 }
 
@@ -112,6 +196,12 @@ export function deleteProduct(id) {
   const list = getProducts();
   const updated = list.filter(p => p.id !== id);
   saveProducts(updated);
+
+  // Cloud async sync
+  if (isFirebaseConfigured()) {
+    deleteCloudProduct(id);
+  }
+
   return updated;
 }
 
@@ -130,6 +220,7 @@ export function getBlogs() {
 
 export function saveBlogs(blogsList) {
   localStorage.setItem('marvex_blogs', JSON.stringify(blogsList));
+  notifyStoreUpdate();
 }
 
 export function addBlog(newBlog) {
@@ -141,6 +232,12 @@ export function addBlog(newBlog) {
   };
   const updated = [blogWithId, ...list];
   saveBlogs(updated);
+
+  // Cloud async sync
+  if (isFirebaseConfigured()) {
+    saveCloudBlog(blogWithId);
+  }
+
   return updated;
 }
 
@@ -148,6 +245,12 @@ export function updateBlog(updatedBlog) {
   const list = getBlogs();
   const updated = list.map(b => (b.id === updatedBlog.id ? { ...b, ...updatedBlog } : b));
   saveBlogs(updated);
+
+  // Cloud async sync
+  if (isFirebaseConfigured()) {
+    saveCloudBlog(updatedBlog);
+  }
+
   return updated;
 }
 
@@ -155,6 +258,12 @@ export function deleteBlog(id) {
   const list = getBlogs();
   const updated = list.filter(b => b.id !== id);
   saveBlogs(updated);
+
+  // Cloud async sync
+  if (isFirebaseConfigured()) {
+    deleteCloudBlog(id);
+  }
+
   return updated;
 }
 
@@ -173,6 +282,7 @@ export function getCertificates() {
 
 export function saveCertificates(certsList) {
   localStorage.setItem('marvex_certs', JSON.stringify(certsList));
+  notifyStoreUpdate();
 }
 
 export function addCertificate(newCert) {
@@ -183,6 +293,12 @@ export function addCertificate(newCert) {
   };
   const updated = [...list, certWithId];
   saveCertificates(updated);
+
+  // Cloud async sync
+  if (isFirebaseConfigured()) {
+    saveCloudCertificate(certWithId);
+  }
+
   return updated;
 }
 
@@ -190,6 +306,12 @@ export function updateCertificate(updatedCert) {
   const list = getCertificates();
   const updated = list.map(c => (c.id === updatedCert.id ? { ...c, ...updatedCert } : c));
   saveCertificates(updated);
+
+  // Cloud async sync
+  if (isFirebaseConfigured()) {
+    saveCloudCertificate(updatedCert);
+  }
+
   return updated;
 }
 
@@ -197,6 +319,12 @@ export function deleteCertificate(id) {
   const list = getCertificates();
   const updated = list.filter(c => c.id !== id);
   saveCertificates(updated);
+
+  // Cloud async sync
+  if (isFirebaseConfigured()) {
+    deleteCloudCertificate(id);
+  }
+
   return updated;
 }
 
@@ -246,6 +374,7 @@ export function getEnquiries() {
 
 export function saveEnquiries(enquiriesList) {
   localStorage.setItem('marvex_enquiries', JSON.stringify(enquiriesList));
+  notifyStoreUpdate();
 }
 
 export function addEnquiry(enquiryData) {
@@ -266,6 +395,12 @@ export function addEnquiry(enquiryData) {
   };
   const updated = [newEnquiry, ...list];
   saveEnquiries(updated);
+
+  // Cloud async sync
+  if (isFirebaseConfigured()) {
+    saveCloudEnquiry(newEnquiry);
+  }
+
   return updated;
 }
 
@@ -273,6 +408,13 @@ export function updateEnquiryStatus(id, status) {
   const list = getEnquiries();
   const updated = list.map(e => (e.id === id ? { ...e, status } : e));
   saveEnquiries(updated);
+
+  // Cloud async sync
+  if (isFirebaseConfigured()) {
+    const item = updated.find(e => e.id === id);
+    if (item) saveCloudEnquiry(item);
+  }
+
   return updated;
 }
 
@@ -280,6 +422,12 @@ export function deleteEnquiry(id) {
   const list = getEnquiries();
   const updated = list.filter(e => e.id !== id);
   saveEnquiries(updated);
+
+  // Cloud async sync
+  if (isFirebaseConfigured()) {
+    deleteCloudEnquiry(id);
+  }
+
   return updated;
 }
 

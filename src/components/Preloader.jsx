@@ -9,10 +9,10 @@ export default function Preloader({ onFinish }) {
     const timer = setTimeout(() => {
       setLoading(false);
       if (onFinish) onFinish();
-    }, 1800);
+    }, 1200);
 
     return () => clearTimeout(timer);
-  }, [onFinish]);
+  }, []);
 
   return (
     <AnimatePresence>

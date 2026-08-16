@@ -1,10 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { ArrowRight, Eye, ShieldCheck, MapPin, Sparkles, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { getProducts } from '../utils/adminStore';
+import { useStoreProducts } from '../utils/useStore';
 
 export default function MainSeedsShowcase({ onSelectProduct, onOpenQuote, onNavigate }) {
-  const allProducts = getProducts();
+  const allProducts = useStoreProducts();
   const scrollContainerRef = useRef(null);
   const [isPaused, setIsPaused] = useState(false);
 

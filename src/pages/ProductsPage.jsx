@@ -2,13 +2,13 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ArrowRight, Eye, Sparkles, Filter, CheckCircle2 } from 'lucide-react';
 import { PRODUCT_CATEGORIES } from '../data/products';
-import { getProducts } from '../utils/adminStore';
+import { useStoreProducts } from '../utils/useStore';
 
 export default function ProductsPage({ onSelectProduct, onOpenQuote }) {
   const [activeTab, setActiveTab] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const productsList = getProducts();
+  const productsList = useStoreProducts();
 
   // Filter logic
   const filteredProducts = useMemo(() => {

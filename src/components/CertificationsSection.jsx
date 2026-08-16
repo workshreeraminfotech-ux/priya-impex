@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Sparkles, X, Eye, ShieldCheck } from 'lucide-react';
-import { getCertificates } from '../utils/adminStore';
+import { useStoreCertificates } from '../utils/useStore';
 
 export default function CertificationsSection({ bgColor = '#F8FAFC' }) {
-  const certs = getCertificates();
+  const certs = useStoreCertificates();
   const [selectedCert, setSelectedCert] = useState(null);
 
   // Duplicate for seamless continuous infinite marquee

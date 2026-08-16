@@ -15,7 +15,7 @@ export default function Navbar({ activePage, onNavigate }) {
     <>
       <header className="jrp-header">
         <div className="container">
-          <div className="jrp-header-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '104px' }}>
+          <div className="jrp-header-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '88px' }}>
             {/* Logo */}
             <a href="#" onClick={(e) => { e.preventDefault(); handleNav('home'); }} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
               <img 
@@ -23,7 +23,7 @@ export default function Navbar({ activePage, onNavigate }) {
                 alt="Priya Impex" 
                 className="jrp-header-logo-img" 
                 style={{ 
-                  height: '88px', 
+                  height: '74px', 
                   width: 'auto', 
                   objectFit: 'contain',
                   filter: 'contrast(1.08) drop-shadow(0 2px 8px rgba(0,0,0,0.06))',
@@ -101,7 +101,7 @@ export default function Navbar({ activePage, onNavigate }) {
           <div className="jrp-offcanvas-overlay" onClick={() => setMobileOpen(false)} />
           <div className="jrp-offcanvas">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '30px' }}>
-              <img src={logoImg} alt="Priya Impex" style={{ height: '68px', width: 'auto', objectFit: 'contain', filter: 'contrast(1.08)' }} />
+              <img src={logoImg} alt="Priya Impex" style={{ height: '60px', width: 'auto', objectFit: 'contain', filter: 'contrast(1.08)' }} />
               <button onClick={() => setMobileOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--navy)' }}>
                 <X size={24} />
               </button>

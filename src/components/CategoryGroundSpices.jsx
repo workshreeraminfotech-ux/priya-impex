@@ -1,10 +1,10 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import { getProducts } from '../utils/adminStore';
+import { useStoreProducts } from '../utils/useStore';
 
 export default function CategoryGroundSpices({ onSelectProduct }) {
-  // Find ground spices from central database
-  const groundSpices = getProducts().filter(p => p.category === 'Ground Spices' || p.cat === 'Ground Spices').slice(0, 4);
+  // Find featured ground spices from central database
+  const groundSpices = useStoreProducts().filter(p => p.category === 'Ground Spices' || p.cat === 'Ground Spices').slice(0, 4);
 
   return (
     <div className="products-outer ph-cat py-48">

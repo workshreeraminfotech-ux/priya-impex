@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Clock, ArrowRight, X, Sparkles } from 'lucide-react';
-import { getBlogs } from '../utils/adminStore';
+import { useStoreBlogs } from '../utils/useStore';
 
 export default function BlogPage() {
   const [search, setSearch] = useState('');
   const [activeArticle, setActiveArticle] = useState(null);
 
-  const blogsList = getBlogs();
+  const blogsList = useStoreBlogs();
 
   const filtered = blogsList.filter(b =>
     b.title.toLowerCase().includes(search.toLowerCase()) ||

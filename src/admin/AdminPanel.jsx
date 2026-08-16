@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   Package, FileText, Award, LogOut, Plus, Trash2, Edit3, Search, 
   CheckCircle2, X, Upload, ShieldCheck, ExternalLink, RefreshCw,
-  Inbox, MessageSquare, Mail, Phone, Clock, Globe, AlertCircle, Download
+  Inbox, MessageSquare, Mail, Phone, Clock, Globe, AlertCircle, Download,
+  Cloud, Database, Server, Zap, Check, Copy, HelpCircle, ArrowRight
 } from 'lucide-react';
 import AdminLogin from './AdminLogin';
 import { 
@@ -10,14 +11,31 @@ import {
   getProducts, addProduct, updateProduct, deleteProduct,
   getBlogs, addBlog, updateBlog, deleteBlog,
   getCertificates, addCertificate, updateCertificate, deleteCertificate,
-  getEnquiries, updateEnquiryStatus, deleteEnquiry, exportEnquiriesCSV
+  getEnquiries, updateEnquiryStatus, deleteEnquiry, exportEnquiriesCSV,
+  syncFromCloud
 } from '../utils/adminStore';
+import {
+  getFirebaseConfig, saveFirebaseConfig, clearFirebaseConfig, isFirebaseConfigured, syncAllToCloud
+} from '../utils/firebase';
 import { PRODUCT_CATEGORIES } from '../data/products';
 
 export default function AdminPanel() {
   const [authenticated, setAuthenticated] = useState(isAdminLoggedIn());
-  const [activeTab, setActiveTab] = useState('products'); // 'products' | 'blogs' | 'certs' | 'enquiries'
+  const [activeTab, setActiveTab] = useState('products'); // 'products' | 'blogs' | 'certs' | 'enquiries' | 'cloud_database'
   const [toast, setToast] = useState('');
+
+  // Cloud Database Sync State
+  const [cloudConnected, setCloudConnected] = useState(isFirebaseConfigured());
+  const [fbConfig, setFbConfig] = useState(getFirebaseConfig() || {
+    apiKey: '',
+    authDomain: '',
+    projectId: '',
+    storageBucket: '',
+    messagingSenderId: '',
+    appId: ''
+  });
+  const [rawConfigInput, setRawConfigInput] = useState('');
+  const [isSyncingCloud, setIsSyncingCloud] = useState(false);
 
   // Stores
   const [products, setProductsState] = useState(getProducts());
@@ -54,13 +72,121 @@ export default function AdminPanel() {
     name: '', code: '', tag: '', logo: ''
   });
 
-  // Sync state on load
+  // Sync state on load & listen for global updates
   useEffect(() => {
     setProductsState(getProducts());
     setBlogsState(getBlogs());
     setCertsState(getCertificates());
     setEnquiriesState(getEnquiries());
+    setCloudConnected(isFirebaseConfigured());
+
+    const handleStoreUpdate = () => {
+      setProductsState(getProducts());
+      setBlogsState(getBlogs());
+      setCertsState(getCertificates());
+      setEnquiriesState(getEnquiries());
+    };
+
+    window.addEventListener('priya_store_updated', handleStoreUpdate);
+    return () => window.removeEventListener('priya_store_updated', handleStoreUpdate);
   }, [authenticated]);
+
+  // --- CLOUD DATABASE (FIREBASE) HANDLERS ---
+  const handleSaveFirebaseConfig = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    try {
+      let configToSave = { ...fbConfig };
+      if (rawConfigInput.trim()) {
+        const text = rawConfigInput.trim();
+        const apiKeyMatch = text.match(/apiKey:\s*["']([^"']+)["']/);
+        const projectIdMatch = text.match(/projectId:\s*["']([^"']+)["']/);
+        const authDomainMatch = text.match(/authDomain:\s*["']([^"']+)["']/);
+        const storageBucketMatch = text.match(/storageBucket:\s*["']([^"']+)["']/);
+        const messagingSenderIdMatch = text.match(/messagingSenderId:\s*["']([^"']+)["']/);
+        const appIdMatch = text.match(/appId:\s*["']([^"']+)["']/);
+
+        if (apiKeyMatch && projectIdMatch) {
+          configToSave = {
+            apiKey: apiKeyMatch[1],
+            projectId: projectIdMatch[1],
+            authDomain: authDomainMatch ? authDomainMatch[1] : '',
+            storageBucket: storageBucketMatch ? storageBucketMatch[1] : '',
+            messagingSenderId: messagingSenderIdMatch ? messagingSenderIdMatch[1] : '',
+            appId: appIdMatch ? appIdMatch[1] : ''
+          };
+        } else {
+          try {
+            const clean = text
+              .replace(/const\s+firebaseConfig\s*=\s*/g, '')
+              .replace(/;\s*$/g, '')
+              .replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2":')
+              .replace(/'/g, '"');
+            const parsed = JSON.parse(clean);
+            if (parsed && parsed.apiKey && parsed.projectId) {
+              configToSave = parsed;
+            } else {
+              throw new Error('Missing apiKey or projectId in pasted config.');
+            }
+          } catch (pe) {
+            throw new Error('Could not parse Firebase config. Please fill the fields directly.');
+          }
+        }
+      }
+
+      if (!configToSave.apiKey || !configToSave.projectId) {
+        alert('Please provide at least API Key and Project ID.');
+        return;
+      }
+
+      saveFirebaseConfig(configToSave);
+      setFbConfig(configToSave);
+      setCloudConnected(true);
+      setRawConfigInput('');
+      showNotification('✅ Firebase Cloud Database Connected successfully!');
+      syncFromCloud();
+    } catch (err) {
+      alert('Error saving Firebase config: ' + err.message);
+    }
+  };
+
+  const handleDisconnectFirebase = () => {
+    if (window.confirm('Disconnect Cloud Database? Website will run in Local Storage mode.')) {
+      clearFirebaseConfig();
+      setCloudConnected(false);
+      showNotification('Cloud Database disconnected.');
+    }
+  };
+
+  const handleSyncAllToCloud = async () => {
+    if (!isFirebaseConfigured()) {
+      alert('Please connect your Firebase configuration first.');
+      return;
+    }
+    setIsSyncingCloud(true);
+    try {
+      await syncAllToCloud(products, blogs, certs);
+      showNotification('🚀 All Products, Blogs & Certs pushed to Cloud Database permanently!');
+    } catch (err) {
+      alert('Cloud Sync Error: ' + err.message);
+    } finally {
+      setIsSyncingCloud(false);
+    }
+  };
+
+  const handleRefreshCloud = async () => {
+    setIsSyncingCloud(true);
+    const ok = await syncFromCloud();
+    setProductsState(getProducts());
+    setBlogsState(getBlogs());
+    setCertsState(getCertificates());
+    setEnquiriesState(getEnquiries());
+    setIsSyncingCloud(false);
+    if (ok) {
+      showNotification('✅ Synced latest data from Cloud Database.');
+    } else {
+      showNotification('No cloud data found or offline.');
+    }
+  };
 
   // --- ENQUIRY ACTIONS ---
   const handleToggleEnquiryStatus = (id, currentStatus) => {
@@ -496,9 +622,126 @@ export default function AdminPanel() {
                 <Award size={17} />
                 <span>Manage Certificates ({certs.length})</span>
               </button>
+
+              <button
+                onClick={() => setActiveTab('cloud_database')}
+                style={{
+                  padding: '12px 22px',
+                  borderRadius: '100px',
+                  backgroundColor: activeTab === 'cloud_database' ? (cloudConnected ? '#0F766E' : '#7C2D12') : 'transparent',
+                  color: activeTab === 'cloud_database' ? '#FFFFFF' : (cloudConnected ? '#0F766E' : '#9A3412'),
+                  border: activeTab === 'cloud_database' ? 'none' : (cloudConnected ? '1.5px solid #99F6E4' : '1.5px solid #FDBA74'),
+                  fontWeight: 800,
+                  fontSize: '14px',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                <Cloud size={17} />
+                <span>{cloudConnected ? '🟢 Cloud Database (Active)' : '☁️ Cloud Database Setup'}</span>
+              </button>
             </div>
           );
         })()}
+
+        {/* Global Cloud Sync Status Banner */}
+        <div style={{
+          backgroundColor: cloudConnected ? '#F0FDF4' : '#FFFBEB',
+          border: cloudConnected ? '1.5px solid #86EFAC' : '1.5px solid #FDE68A',
+          borderRadius: '18px',
+          padding: '16px 20px',
+          marginBottom: '28px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '12px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '10px',
+              backgroundColor: cloudConnected ? '#DCFCE7' : '#FEF3C7',
+              color: cloudConnected ? '#15803D' : '#D97706',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Cloud size={20} />
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <strong style={{ fontSize: '14.5px', color: cloudConnected ? '#166534' : '#92400E' }}>
+                  {cloudConnected ? 'Global Cloud Database (Firebase) Connected' : 'Cloud Database Not Configured (Local Storage Mode)'}
+                </strong>
+                <span style={{
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  padding: '2px 8px',
+                  borderRadius: '100px',
+                  backgroundColor: cloudConnected ? '#BBF7D0' : '#FED7AA',
+                  color: cloudConnected ? '#14532D' : '#7C2D12'
+                }}>
+                  {cloudConnected ? 'ALL DEVICES SYNCED' : 'LOCAL DEVICE ONLY'}
+                </span>
+              </div>
+              <p style={{ margin: '2px 0 0', fontSize: '13px', color: cloudConnected ? '#15803D' : '#B45309' }}>
+                {cloudConnected 
+                  ? 'All changes made here are permanently saved to Cloud Firestore and instantly visible to all visitors on any device.'
+                  : 'Changes are currently saved only on this browser. Connect free Firebase Cloud Database to sync across all devices permanently.'
+                }
+              </p>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '8px' }}>
+            {cloudConnected ? (
+              <button
+                onClick={handleRefreshCloud}
+                disabled={isSyncingCloud}
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  color: '#166534',
+                  border: '1.5px solid #86EFAC',
+                  padding: '8px 16px',
+                  borderRadius: '100px',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <RefreshCw size={14} className={isSyncingCloud ? 'spin' : ''} />
+                <span>{isSyncingCloud ? 'Syncing...' : 'Refresh from Cloud'}</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => setActiveTab('cloud_database')}
+                style={{
+                  backgroundColor: '#D97706',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  padding: '8px 18px',
+                  borderRadius: '100px',
+                  fontSize: '13px',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <Zap size={14} />
+                <span>Connect Firebase (2 Min)</span>
+              </button>
+            )}
+          </div>
+        </div>
 
         {/* TAB 1: PRODUCTS MANAGER */}
         {activeTab === 'products' && (
@@ -903,6 +1146,355 @@ export default function AdminPanel() {
             </div>
           );
         })()}
+
+        {/* TAB 6: CLOUD DATABASE (FIREBASE) MANAGER */}
+        {activeTab === 'cloud_database' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+            
+            {/* Header & Status Card */}
+            <div style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '24px',
+              padding: '28px',
+              border: '1.5px solid #CBD5E1',
+              boxShadow: '0 8px 24px rgba(0,33,71,0.04)'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', borderBottom: '1.5px solid #F1F5F9', paddingBottom: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                  <div style={{
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '14px',
+                    backgroundColor: cloudConnected ? '#DCFCE7' : '#FEF3C7',
+                    color: cloudConnected ? '#15803D' : '#D97706',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <Database size={26} />
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#002147', margin: 0 }}>
+                      Google Firebase Cloud Database & Real-Time Sync
+                    </h3>
+                    <span style={{ fontSize: '13.5px', color: '#475569' }}>
+                      Persists Products, Blogs, Certifications and Enquiries permanently for all users globally.
+                    </span>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{
+                    padding: '8px 18px',
+                    borderRadius: '100px',
+                    fontSize: '13px',
+                    fontWeight: 800,
+                    backgroundColor: cloudConnected ? '#DCFCE7' : '#FEE2E2',
+                    color: cloudConnected ? '#166534' : '#991B1B',
+                    border: cloudConnected ? '1.5px solid #86EFAC' : '1.5px solid #FCA5A5',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: cloudConnected ? '#16A34A' : '#DC2626', display: 'inline-block' }} />
+                    {cloudConnected ? 'Live Cloud Connected' : 'Disconnected / Local Mode'}
+                  </span>
+
+                  {cloudConnected && (
+                    <button
+                      onClick={handleDisconnectFirebase}
+                      style={{
+                        backgroundColor: '#FEF2F2',
+                        color: '#991B1B',
+                        border: '1.5px solid #FCA5A5',
+                        padding: '8px 16px',
+                        borderRadius: '100px',
+                        fontSize: '13px',
+                        fontWeight: 700,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Disconnect
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Action Banner: Sync All Local Data to Cloud */}
+              {cloudConnected && (
+                <div style={{
+                  marginTop: '20px',
+                  backgroundColor: '#F0FDF4',
+                  borderRadius: '16px',
+                  padding: '18px 22px',
+                  border: '1.5px solid #BBF7D0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: '14px'
+                }}>
+                  <div>
+                    <strong style={{ fontSize: '15px', color: '#166534', display: 'block' }}>
+                      🚀 One-Click Catalog Cloud Sync (Recommended)
+                    </strong>
+                    <span style={{ fontSize: '13px', color: '#15803D' }}>
+                      Push all current {products.length} Products, {blogs.length} Blogs, and {certs.length} Certifications to Cloud Firestore so new visitors see them instantly.
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={handleSyncAllToCloud}
+                    disabled={isSyncingCloud}
+                    style={{
+                      backgroundColor: '#16A34A',
+                      color: '#FFFFFF',
+                      border: 'none',
+                      padding: '12px 24px',
+                      borderRadius: '100px',
+                      fontWeight: 800,
+                      fontSize: '14px',
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      boxShadow: '0 4px 14px rgba(22, 163, 74, 0.3)'
+                    }}
+                  >
+                    <Upload size={16} />
+                    <span>{isSyncingCloud ? 'Uploading to Cloud...' : 'Upload All Catalog to Cloud'}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Configuration Form & Quick Paste */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px' }}>
+              
+              {/* Left Column: Config Form */}
+              <div style={{ backgroundColor: '#FFFFFF', borderRadius: '24px', padding: '28px', border: '1.5px solid #CBD5E1', boxShadow: '0 8px 24px rgba(0,33,71,0.04)' }}>
+                <h4 style={{ fontSize: '17px', fontWeight: 800, color: '#002147', marginTop: 0, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Server size={18} />
+                  <span>Firebase Credentials</span>
+                </h4>
+                <p style={{ fontSize: '13px', color: '#475569', marginBottom: '20px' }}>
+                  Paste the full Firebase config snippet below, or enter the individual keys.
+                </p>
+
+                {/* Quick Paste Area */}
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#002147', marginBottom: '6px' }}>
+                    Quick Paste Config Snippet
+                  </label>
+                  <textarea
+                    rows={4}
+                    placeholder={`Paste your firebaseConfig object here, e.g.:
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  projectId: "priya-impex-..."
+};`}
+                    value={rawConfigInput}
+                    onChange={(e) => setRawConfigInput(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      borderRadius: '12px',
+                      border: '1.5px solid #CBD5E1',
+                      fontSize: '12.5px',
+                      fontFamily: 'monospace',
+                      boxSizing: 'border-box',
+                      backgroundColor: '#F8FAFC'
+                    }}
+                  />
+                  <span style={{ fontSize: '11.5px', color: '#475569', marginTop: '4px', display: 'block' }}>
+                    You can paste directly from the Firebase Console without formatting.
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '20px 0' }}>
+                  <div style={{ flex: 1, height: '1px', backgroundColor: '#E2E8F0' }} />
+                  <span style={{ fontSize: '12px', fontWeight: 800, color: '#94A3B8' }}>OR ENTER MANUALLY</span>
+                  <div style={{ flex: 1, height: '1px', backgroundColor: '#E2E8F0' }} />
+                </div>
+
+                <form onSubmit={handleSaveFirebaseConfig} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#002147', marginBottom: '4px' }}>API Key *</label>
+                    <input
+                      type="text"
+                      placeholder="AIzaSy..."
+                      value={fbConfig.apiKey || ''}
+                      onChange={(e) => setFbConfig({ ...fbConfig, apiKey: e.target.value })}
+                      style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #CBD5E1', fontSize: '13px', boxSizing: 'border-box' }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#002147', marginBottom: '4px' }}>Project ID *</label>
+                    <input
+                      type="text"
+                      placeholder="priya-impex-12345"
+                      value={fbConfig.projectId || ''}
+                      onChange={(e) => setFbConfig({ ...fbConfig, projectId: e.target.value })}
+                      style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #CBD5E1', fontSize: '13px', boxSizing: 'border-box' }}
+                    />
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#002147', marginBottom: '4px' }}>Auth Domain</label>
+                      <input
+                        type="text"
+                        placeholder="project.firebaseapp.com"
+                        value={fbConfig.authDomain || ''}
+                        onChange={(e) => setFbConfig({ ...fbConfig, authDomain: e.target.value })}
+                        style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #CBD5E1', fontSize: '13px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#002147', marginBottom: '4px' }}>Storage Bucket</label>
+                      <input
+                        type="text"
+                        placeholder="project.appspot.com"
+                        value={fbConfig.storageBucket || ''}
+                        onChange={(e) => setFbConfig({ ...fbConfig, storageBucket: e.target.value })}
+                        style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #CBD5E1', fontSize: '13px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#002147', marginBottom: '4px' }}>Messaging Sender ID</label>
+                      <input
+                        type="text"
+                        placeholder="1234567890"
+                        value={fbConfig.messagingSenderId || ''}
+                        onChange={(e) => setFbConfig({ ...fbConfig, messagingSenderId: e.target.value })}
+                        style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #CBD5E1', fontSize: '13px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#002147', marginBottom: '4px' }}>App ID</label>
+                      <input
+                        type="text"
+                        placeholder="1:123456:web:abcd..."
+                        value={fbConfig.appId || ''}
+                        onChange={(e) => setFbConfig({ ...fbConfig, appId: e.target.value })}
+                        style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1.5px solid #CBD5E1', fontSize: '13px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: '12px' }}>
+                    <button
+                      type="submit"
+                      style={{
+                        width: '100%',
+                        backgroundColor: '#002147',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        padding: '14px',
+                        borderRadius: '12px',
+                        fontWeight: 800,
+                        fontSize: '15px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px'
+                      }}
+                    >
+                      <Check size={18} />
+                      <span>Save & Connect Firebase Database</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* Right Column: Step-by-Step 2-Minute Setup Guide */}
+              <div style={{ backgroundColor: '#FFFFFF', borderRadius: '24px', padding: '28px', border: '1.5px solid #CBD5E1', boxShadow: '0 8px 24px rgba(0,33,71,0.04)' }}>
+                <h4 style={{ fontSize: '17px', fontWeight: 800, color: '#002147', marginTop: 0, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <HelpCircle size={18} />
+                  <span>How to get Free Firebase Keys (2 Minutes)</span>
+                </h4>
+                <p style={{ fontSize: '13px', color: '#475569', marginBottom: '20px' }}>
+                  Google Firebase is completely free and takes 2 minutes to create:
+                </p>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <div style={{ width: '26px', height: '26px', borderRadius: '50%', backgroundColor: '#002147', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800, flexShrink: 0 }}>
+                      1
+                    </div>
+                    <div>
+                      <strong style={{ fontSize: '13.5px', color: '#002147', display: 'block' }}>Open Firebase Console</strong>
+                      <span style={{ fontSize: '12.5px', color: '#475569' }}>
+                        Go to <a href="https://console.firebase.google.com" target="_blank" rel="noreferrer" style={{ color: '#0369A1', fontWeight: 700 }}>console.firebase.google.com</a> and sign in with your Google account.
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <div style={{ width: '26px', height: '26px', borderRadius: '50%', backgroundColor: '#002147', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800, flexShrink: 0 }}>
+                      2
+                    </div>
+                    <div>
+                      <strong style={{ fontSize: '13.5px', color: '#002147', display: 'block' }}>Create a New Project</strong>
+                      <span style={{ fontSize: '12.5px', color: '#475569' }}>
+                        Click <strong>"Add project"</strong>, enter project name (e.g. <code>priya-impex</code>), and click Continue.
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <div style={{ width: '26px', height: '26px', borderRadius: '50%', backgroundColor: '#002147', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800, flexShrink: 0 }}>
+                      3
+                    </div>
+                    <div>
+                      <strong style={{ fontSize: '13.5px', color: '#002147', display: 'block' }}>Create Firestore Database</strong>
+                      <span style={{ fontSize: '12.5px', color: '#475569' }}>
+                        In left sidebar, click <strong>"Firestore Database"</strong> → Click <strong>"Create database"</strong> → Select <strong>"Start in test mode"</strong> → Click Enable.
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <div style={{ width: '26px', height: '26px', borderRadius: '50%', backgroundColor: '#002147', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800, flexShrink: 0 }}>
+                      4
+                    </div>
+                    <div>
+                      <strong style={{ fontSize: '13.5px', color: '#002147', display: 'block' }}>Register Web App & Copy Keys</strong>
+                      <span style={{ fontSize: '12.5px', color: '#475569' }}>
+                        Click the <strong>Web icon (&lt;/&gt;)</strong> on Project Overview, register app, and copy the <code>firebaseConfig</code> object snippet.
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <div style={{ width: '26px', height: '26px', borderRadius: '50%', backgroundColor: '#002147', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800, flexShrink: 0 }}>
+                      5
+                    </div>
+                    <div>
+                      <strong style={{ fontSize: '13.5px', color: '#002147', display: 'block' }}>Paste Here & Click Save</strong>
+                      <span style={{ fontSize: '12.5px', color: '#475569' }}>
+                        Paste in the box on the left, click <strong>Save & Connect</strong>, then click <strong>Upload All Catalog</strong>. You are done!
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ marginTop: '24px', backgroundColor: '#F8FAFC', padding: '16px', borderRadius: '14px', border: '1px solid #E2E8F0' }}>
+                  <span style={{ fontSize: '12px', color: '#475569', lineHeight: 1.5, display: 'block' }}>
+                    💡 <strong>Pro Tip:</strong> You can also set these keys in a <code>.env</code> file (e.g. <code>VITE_FIREBASE_API_KEY</code>, <code>VITE_FIREBASE_PROJECT_ID</code>).
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        )}
 
       </div>
 

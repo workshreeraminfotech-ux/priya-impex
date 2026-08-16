@@ -1,10 +1,10 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import { getProducts } from '../utils/adminStore';
+import { useStoreProducts } from '../utils/useStore';
 
 export default function CategoryWholeSpices({ onSelectProduct }) {
   // Find featured whole spices from central database
-  const wholeSpices = getProducts().filter(p => p.category === 'Whole Spices' || p.cat === 'Whole Spices').slice(0, 4);
+  const wholeSpices = useStoreProducts().filter(p => p.category === 'Whole Spices' || p.cat === 'Whole Spices').slice(0, 4);
 
   return (
     <div className="products-outer ph-cat py-48">

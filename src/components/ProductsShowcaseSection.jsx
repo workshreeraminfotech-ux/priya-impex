@@ -1,7 +1,6 @@
 import React from 'react';
 import { ArrowRight, Eye } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { getProducts } from '../utils/adminStore';
+import { useStoreProducts } from '../utils/useStore';
 
 // Top 6 most exported spices from India
 const TOP_6_EXPORT_IDS = [
@@ -14,7 +13,7 @@ const TOP_6_EXPORT_IDS = [
 ];
 
 export default function ProductsShowcaseSection({ onSelectProduct, onOpenQuote, onNavigate }) {
-  const allProducts = getProducts();
+  const allProducts = useStoreProducts();
   // Get featured / top products
   let topExportProducts = TOP_6_EXPORT_IDS.map(id => allProducts.find(p => p.id === id)).filter(Boolean);
   if (topExportProducts.length < 6) {
