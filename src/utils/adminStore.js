@@ -74,16 +74,18 @@ const INITIAL_CERTS = [
 
 // Helper: Broadcast store update event to all components
 function notifyStoreUpdate() {
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('priya_store_updated'));
-  }
+  try {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('priya_store_updated'));
+    }
+  } catch (e) {}
 }
 
 // Background Cloud Sync on load
 export async function syncFromCloud() {
-  if (!isFirebaseConfigured()) return false;
-
   try {
+    if (!isFirebaseConfigured()) return false;
+
     const [cloudProds, cloudBlogs, cloudCerts, cloudEnqs] = await Promise.all([
       fetchCloudProducts(),
       fetchCloudBlogs(),
@@ -93,21 +95,29 @@ export async function syncFromCloud() {
 
     let changed = false;
 
-    if (cloudProds && cloudProds.length > 0) {
-      localStorage.setItem('marvex_products', JSON.stringify(cloudProds));
-      changed = true;
+    if (cloudProds && Array.isArray(cloudProds) && cloudProds.length > 0) {
+      try {
+        localStorage.setItem('marvex_products', JSON.stringify(cloudProds));
+        changed = true;
+      } catch (e) {}
     }
-    if (cloudBlogs && cloudBlogs.length > 0) {
-      localStorage.setItem('marvex_blogs', JSON.stringify(cloudBlogs));
-      changed = true;
+    if (cloudBlogs && Array.isArray(cloudBlogs) && cloudBlogs.length > 0) {
+      try {
+        localStorage.setItem('marvex_blogs', JSON.stringify(cloudBlogs));
+        changed = true;
+      } catch (e) {}
     }
-    if (cloudCerts && cloudCerts.length > 0) {
-      localStorage.setItem('marvex_certs', JSON.stringify(cloudCerts));
-      changed = true;
+    if (cloudCerts && Array.isArray(cloudCerts) && cloudCerts.length > 0) {
+      try {
+        localStorage.setItem('marvex_certs', JSON.stringify(cloudCerts));
+        changed = true;
+      } catch (e) {}
     }
-    if (cloudEnqs && cloudEnqs.length > 0) {
-      localStorage.setItem('marvex_enquiries', JSON.stringify(cloudEnqs));
-      changed = true;
+    if (cloudEnqs && Array.isArray(cloudEnqs) && cloudEnqs.length > 0) {
+      try {
+        localStorage.setItem('marvex_enquiries', JSON.stringify(cloudEnqs));
+        changed = true;
+      } catch (e) {}
     }
 
     if (changed) {
@@ -115,50 +125,71 @@ export async function syncFromCloud() {
     }
     return true;
   } catch (err) {
-    console.error('Failed to sync from cloud database:', err);
+    console.warn('Failed to sync from cloud database:', err);
     return false;
   }
 }
 
-// Auto-trigger sync on script load
+// Auto-trigger sync on script load safely
 if (typeof window !== 'undefined') {
   setTimeout(() => {
-    syncFromCloud();
-  }, 500);
+    try {
+      syncFromCloud();
+    } catch (e) {}
+  }, 1000);
 }
 
 // --- AUTHENTICATION ---
 export function isAdminLoggedIn() {
-  return sessionStorage.getItem('marvex_admin_auth') === 'true';
+  try {
+    return typeof sessionStorage !== 'undefined' && sessionStorage.getItem('marvex_admin_auth') === 'true';
+  } catch (e) {
+    return false;
+  }
 }
 
 export function loginAdmin(username, password) {
   if ((username === 'admin' || username === 'marvex' || username === 'priya') && (password === 'admin123' || password === 'marvex2026#' || password === 'priya2026#')) {
-    sessionStorage.setItem('marvex_admin_auth', 'true');
+    try {
+      if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.setItem('marvex_admin_auth', 'true');
+      }
+    } catch (e) {}
     return { success: true };
   }
   return { success: false, message: 'Invalid Admin Username or Password' };
 }
 
 export function logoutAdmin() {
-  sessionStorage.removeItem('marvex_admin_auth');
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.removeItem('marvex_admin_auth');
+    }
+  } catch (e) {}
 }
 
 // --- PRODUCTS STORE ---
 export function getProducts() {
-  const saved = localStorage.getItem('marvex_products');
-  if (saved) {
-    try {
-      return JSON.parse(saved);
-    } catch (e) {
-      console.error('Failed to parse saved products', e);
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem('marvex_products');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
     }
+  } catch (e) {
+    console.warn('Failed to parse saved products', e);
   }
-  return INITIAL_PRODUCTS;
+  return INITIAL_PRODUCTS || [];
 }
 
 export function saveProducts(productsList) {
-  localStorage.setItem('marvex_products', JSON.stringify(productsList));
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('marvex_products', JSON.stringify(productsList));
+    }
+  } catch (e) {}
   notifyStoreUpdate();
 }
 
@@ -172,9 +203,11 @@ export function addProduct(newProd) {
   saveProducts(updated);
 
   // Cloud async sync
-  if (isFirebaseConfigured()) {
-    saveCloudProduct(prodWithId);
-  }
+  try {
+    if (isFirebaseConfigured()) {
+      saveCloudProduct(prodWithId);
+    }
+  } catch (e) {}
 
   return updated;
 }
@@ -185,9 +218,11 @@ export function updateProduct(updatedProd) {
   saveProducts(updated);
 
   // Cloud async sync
-  if (isFirebaseConfigured()) {
-    saveCloudProduct(updatedProd);
-  }
+  try {
+    if (isFirebaseConfigured()) {
+      saveCloudProduct(updatedProd);
+    }
+  } catch (e) {}
 
   return updated;
 }
@@ -198,28 +233,37 @@ export function deleteProduct(id) {
   saveProducts(updated);
 
   // Cloud async sync
-  if (isFirebaseConfigured()) {
-    deleteCloudProduct(id);
-  }
+  try {
+    if (isFirebaseConfigured()) {
+      deleteCloudProduct(id);
+    }
+  } catch (e) {}
 
   return updated;
 }
 
 // --- BLOGS STORE ---
 export function getBlogs() {
-  const saved = localStorage.getItem('marvex_blogs');
-  if (saved) {
-    try {
-      return JSON.parse(saved);
-    } catch (e) {
-      console.error('Failed to parse saved blogs', e);
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem('marvex_blogs');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
     }
+  } catch (e) {
+    console.warn('Failed to parse saved blogs', e);
   }
-  return INITIAL_BLOGS;
+  return INITIAL_BLOGS || [];
 }
 
 export function saveBlogs(blogsList) {
-  localStorage.setItem('marvex_blogs', JSON.stringify(blogsList));
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('marvex_blogs', JSON.stringify(blogsList));
+    }
+  } catch (e) {}
   notifyStoreUpdate();
 }
 
@@ -234,9 +278,11 @@ export function addBlog(newBlog) {
   saveBlogs(updated);
 
   // Cloud async sync
-  if (isFirebaseConfigured()) {
-    saveCloudBlog(blogWithId);
-  }
+  try {
+    if (isFirebaseConfigured()) {
+      saveCloudBlog(blogWithId);
+    }
+  } catch (e) {}
 
   return updated;
 }
@@ -247,9 +293,11 @@ export function updateBlog(updatedBlog) {
   saveBlogs(updated);
 
   // Cloud async sync
-  if (isFirebaseConfigured()) {
-    saveCloudBlog(updatedBlog);
-  }
+  try {
+    if (isFirebaseConfigured()) {
+      saveCloudBlog(updatedBlog);
+    }
+  } catch (e) {}
 
   return updated;
 }
@@ -260,28 +308,37 @@ export function deleteBlog(id) {
   saveBlogs(updated);
 
   // Cloud async sync
-  if (isFirebaseConfigured()) {
-    deleteCloudBlog(id);
-  }
+  try {
+    if (isFirebaseConfigured()) {
+      deleteCloudBlog(id);
+    }
+  } catch (e) {}
 
   return updated;
 }
 
 // --- CERTIFICATES STORE ---
 export function getCertificates() {
-  const saved = localStorage.getItem('marvex_certs');
-  if (saved) {
-    try {
-      return JSON.parse(saved);
-    } catch (e) {
-      console.error('Failed to parse saved certs', e);
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem('marvex_certs');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
     }
+  } catch (e) {
+    console.warn('Failed to parse saved certs', e);
   }
-  return INITIAL_CERTS;
+  return INITIAL_CERTS || [];
 }
 
 export function saveCertificates(certsList) {
-  localStorage.setItem('marvex_certs', JSON.stringify(certsList));
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('marvex_certs', JSON.stringify(certsList));
+    }
+  } catch (e) {}
   notifyStoreUpdate();
 }
 
@@ -295,9 +352,11 @@ export function addCertificate(newCert) {
   saveCertificates(updated);
 
   // Cloud async sync
-  if (isFirebaseConfigured()) {
-    saveCloudCertificate(certWithId);
-  }
+  try {
+    if (isFirebaseConfigured()) {
+      saveCloudCertificate(certWithId);
+    }
+  } catch (e) {}
 
   return updated;
 }
@@ -308,9 +367,11 @@ export function updateCertificate(updatedCert) {
   saveCertificates(updated);
 
   // Cloud async sync
-  if (isFirebaseConfigured()) {
-    saveCloudCertificate(updatedCert);
-  }
+  try {
+    if (isFirebaseConfigured()) {
+      saveCloudCertificate(updatedCert);
+    }
+  } catch (e) {}
 
   return updated;
 }
@@ -321,9 +382,11 @@ export function deleteCertificate(id) {
   saveCertificates(updated);
 
   // Cloud async sync
-  if (isFirebaseConfigured()) {
-    deleteCloudCertificate(id);
-  }
+  try {
+    if (isFirebaseConfigured()) {
+      deleteCloudCertificate(id);
+    }
+  } catch (e) {}
 
   return updated;
 }
@@ -361,19 +424,26 @@ const INITIAL_ENQUIRIES = [
 ];
 
 export function getEnquiries() {
-  const saved = localStorage.getItem('marvex_enquiries');
-  if (saved) {
-    try {
-      return JSON.parse(saved);
-    } catch (e) {
-      console.error('Failed to parse saved enquiries', e);
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem('marvex_enquiries');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
     }
+  } catch (e) {
+    console.warn('Failed to parse saved enquiries', e);
   }
-  return INITIAL_ENQUIRIES;
+  return INITIAL_ENQUIRIES || [];
 }
 
 export function saveEnquiries(enquiriesList) {
-  localStorage.setItem('marvex_enquiries', JSON.stringify(enquiriesList));
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('marvex_enquiries', JSON.stringify(enquiriesList));
+    }
+  } catch (e) {}
   notifyStoreUpdate();
 }
 
@@ -397,9 +467,11 @@ export function addEnquiry(enquiryData) {
   saveEnquiries(updated);
 
   // Cloud async sync
-  if (isFirebaseConfigured()) {
-    saveCloudEnquiry(newEnquiry);
-  }
+  try {
+    if (isFirebaseConfigured()) {
+      saveCloudEnquiry(newEnquiry);
+    }
+  } catch (e) {}
 
   return updated;
 }
@@ -410,10 +482,12 @@ export function updateEnquiryStatus(id, status) {
   saveEnquiries(updated);
 
   // Cloud async sync
-  if (isFirebaseConfigured()) {
-    const item = updated.find(e => e.id === id);
-    if (item) saveCloudEnquiry(item);
-  }
+  try {
+    if (isFirebaseConfigured()) {
+      const item = updated.find(e => e.id === id);
+      if (item) saveCloudEnquiry(item);
+    }
+  } catch (e) {}
 
   return updated;
 }
@@ -424,9 +498,11 @@ export function deleteEnquiry(id) {
   saveEnquiries(updated);
 
   // Cloud async sync
-  if (isFirebaseConfigured()) {
-    deleteCloudEnquiry(id);
-  }
+  try {
+    if (isFirebaseConfigured()) {
+      deleteCloudEnquiry(id);
+    }
+  } catch (e) {}
 
   return updated;
 }

@@ -9,39 +9,42 @@ import {
   doc, 
   setDoc, 
   deleteDoc, 
-  getDoc,
   writeBatch
 } from 'firebase/firestore';
 
 const CONFIG_STORAGE_KEY = 'priya_firebase_config';
 
-// 1. Get Firebase Configuration from LocalStorage or Environment Variables
+// 1. Get Firebase Configuration from LocalStorage or Environment Variables safely
 export function getFirebaseConfig() {
-  const saved = localStorage.getItem(CONFIG_STORAGE_KEY);
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
-      if (parsed && parsed.apiKey && parsed.projectId) {
-        return parsed;
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem(CONFIG_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.apiKey && parsed.projectId) {
+          return parsed;
+        }
       }
-    } catch (e) {
-      console.error('Failed to parse saved Firebase config', e);
     }
+  } catch (e) {
+    console.warn('Failed to parse saved Firebase config', e);
   }
 
-  // Fallback to Vite Env
-  const envConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY || '',
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || '',
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || '',
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || '',
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '',
-    appId: import.meta.env.VITE_FIREBASE_APP_ID || ''
-  };
-
-  if (envConfig.apiKey && envConfig.projectId) {
-    return envConfig;
-  }
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta.env) {
+      const envConfig = {
+        apiKey: import.meta.env.VITE_FIREBASE_API_KEY || '',
+        authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || '',
+        projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || '',
+        storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || '',
+        messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '',
+        appId: import.meta.env.VITE_FIREBASE_APP_ID || ''
+      };
+      if (envConfig.apiKey && envConfig.projectId) {
+        return envConfig;
+      }
+    }
+  } catch (e) {}
 
   return null;
 }
@@ -50,18 +53,31 @@ export function saveFirebaseConfig(config) {
   if (!config || !config.apiKey || !config.projectId) {
     throw new Error('Invalid Firebase config. apiKey and projectId are required.');
   }
-  localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config));
-  // Reset app instance to reinitialize with new config
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config));
+    }
+  } catch (e) {
+    console.error('Failed to save config to localStorage', e);
+  }
   return initFirebase(true);
 }
 
 export function clearFirebaseConfig() {
-  localStorage.removeItem(CONFIG_STORAGE_KEY);
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem(CONFIG_STORAGE_KEY);
+    }
+  } catch (e) {}
 }
 
 export function isFirebaseConfigured() {
-  const cfg = getFirebaseConfig();
-  return !!(cfg && cfg.apiKey && cfg.projectId);
+  try {
+    const cfg = getFirebaseConfig();
+    return !!(cfg && cfg.apiKey && cfg.projectId);
+  } catch (e) {
+    return false;
+  }
 }
 
 // 2. Initialize Firebase App & Firestore
@@ -84,26 +100,29 @@ export function initFirebase(forceReinit = false) {
     firestoreDb = getFirestore(firebaseApp);
     return firestoreDb;
   } catch (error) {
-    console.error('Firebase initialization error:', error);
+    console.warn('Firebase initialization error:', error);
     return null;
   }
 }
 
 export function getDb() {
-  if (!firestoreDb) {
-    return initFirebase();
+  try {
+    if (!firestoreDb) {
+      return initFirebase();
+    }
+    return firestoreDb;
+  } catch (e) {
+    return null;
   }
-  return firestoreDb;
 }
 
 // --- CLOUD FIRESTORE HELPERS ---
 
 // 3. Products
 export async function fetchCloudProducts() {
-  const db = getDb();
-  if (!db) return null;
-
   try {
+    const db = getDb();
+    if (!db) return null;
     const snapshot = await getDocs(collection(db, 'products'));
     if (snapshot.empty) return null;
     const items = [];
@@ -112,46 +131,43 @@ export async function fetchCloudProducts() {
     });
     return items;
   } catch (err) {
-    console.error('Error fetching cloud products:', err);
+    console.warn('Error fetching cloud products:', err);
     return null;
   }
 }
 
 export async function saveCloudProduct(product) {
-  const db = getDb();
-  if (!db || !product) return false;
-
   try {
+    const db = getDb();
+    if (!db || !product) return false;
     const docId = String(product.id || `prod-${Date.now()}`);
     const docRef = doc(db, 'products', docId);
     await setDoc(docRef, { ...product, id: docId, updatedAt: new Date().toISOString() }, { merge: true });
     return true;
   } catch (err) {
-    console.error('Error saving cloud product:', err);
+    console.warn('Error saving cloud product:', err);
     return false;
   }
 }
 
 export async function deleteCloudProduct(productId) {
-  const db = getDb();
-  if (!db || !productId) return false;
-
   try {
+    const db = getDb();
+    if (!db || !productId) return false;
     const docRef = doc(db, 'products', String(productId));
     await deleteDoc(docRef);
     return true;
   } catch (err) {
-    console.error('Error deleting cloud product:', err);
+    console.warn('Error deleting cloud product:', err);
     return false;
   }
 }
 
 // 4. Blogs
 export async function fetchCloudBlogs() {
-  const db = getDb();
-  if (!db) return null;
-
   try {
+    const db = getDb();
+    if (!db) return null;
     const snapshot = await getDocs(collection(db, 'blogs'));
     if (snapshot.empty) return null;
     const items = [];
@@ -160,46 +176,43 @@ export async function fetchCloudBlogs() {
     });
     return items;
   } catch (err) {
-    console.error('Error fetching cloud blogs:', err);
+    console.warn('Error fetching cloud blogs:', err);
     return null;
   }
 }
 
 export async function saveCloudBlog(blog) {
-  const db = getDb();
-  if (!db || !blog) return false;
-
   try {
+    const db = getDb();
+    if (!db || !blog) return false;
     const docId = String(blog.id || `blog-${Date.now()}`);
     const docRef = doc(db, 'blogs', docId);
     await setDoc(docRef, { ...blog, id: docId, updatedAt: new Date().toISOString() }, { merge: true });
     return true;
   } catch (err) {
-    console.error('Error saving cloud blog:', err);
+    console.warn('Error saving cloud blog:', err);
     return false;
   }
 }
 
 export async function deleteCloudBlog(blogId) {
-  const db = getDb();
-  if (!db || !blogId) return false;
-
   try {
+    const db = getDb();
+    if (!db || !blogId) return false;
     const docRef = doc(db, 'blogs', String(blogId));
     await deleteDoc(docRef);
     return true;
   } catch (err) {
-    console.error('Error deleting cloud blog:', err);
+    console.warn('Error deleting cloud blog:', err);
     return false;
   }
 }
 
 // 5. Certificates
 export async function fetchCloudCertificates() {
-  const db = getDb();
-  if (!db) return null;
-
   try {
+    const db = getDb();
+    if (!db) return null;
     const snapshot = await getDocs(collection(db, 'certificates'));
     if (snapshot.empty) return null;
     const items = [];
@@ -208,86 +221,80 @@ export async function fetchCloudCertificates() {
     });
     return items;
   } catch (err) {
-    console.error('Error fetching cloud certs:', err);
+    console.warn('Error fetching cloud certs:', err);
     return null;
   }
 }
 
 export async function saveCloudCertificate(cert) {
-  const db = getDb();
-  if (!db || !cert) return false;
-
   try {
+    const db = getDb();
+    if (!db || !cert) return false;
     const docId = String(cert.id || `cert-${Date.now()}`);
     const docRef = doc(db, 'certificates', docId);
     await setDoc(docRef, { ...cert, id: docId, updatedAt: new Date().toISOString() }, { merge: true });
     return true;
   } catch (err) {
-    console.error('Error saving cloud cert:', err);
+    console.warn('Error saving cloud cert:', err);
     return false;
   }
 }
 
 export async function deleteCloudCertificate(certId) {
-  const db = getDb();
-  if (!db || !certId) return false;
-
   try {
+    const db = getDb();
+    if (!db || !certId) return false;
     const docRef = doc(db, 'certificates', String(certId));
     await deleteDoc(docRef);
     return true;
   } catch (err) {
-    console.error('Error deleting cloud cert:', err);
+    console.warn('Error deleting cloud cert:', err);
     return false;
   }
 }
 
 // 6. Enquiries
 export async function fetchCloudEnquiries() {
-  const db = getDb();
-  if (!db) return null;
-
   try {
+    const db = getDb();
+    if (!db) return null;
     const snapshot = await getDocs(collection(db, 'enquiries'));
     if (snapshot.empty) return null;
     const items = [];
     snapshot.forEach(docSnap => {
       items.push({ id: docSnap.id, ...docSnap.data() });
     });
-    // Sort by date desc
     items.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
     return items;
   } catch (err) {
-    console.error('Error fetching cloud enquiries:', err);
+    console.warn('Error fetching cloud enquiries:', err);
     return null;
   }
 }
 
 export async function saveCloudEnquiry(enquiry) {
-  const db = getDb();
-  if (!db || !enquiry) return false;
-
   try {
+    const db = getDb();
+    if (!db || !enquiry) return false;
     const docId = String(enquiry.id || `enq-${Date.now()}`);
     const docRef = doc(db, 'enquiries', docId);
     await setDoc(docRef, { ...enquiry, id: docId }, { merge: true });
     return true;
   } catch (err) {
-    console.error('Error saving cloud enquiry:', err);
+    console.warn('Error saving cloud enquiry:', err);
     return false;
   }
 }
 
 export async function deleteCloudEnquiry(enquiryId) {
-  const db = getDb();
-  if (!db || !enquiryId) return false;
-
   try {
+    const db = getDb();
+    if (!db || !enquiryId) return false;
     const docRef = doc(db, 'enquiries', String(enquiryId));
     await deleteDoc(docRef);
     return true;
   } catch (err) {
-    console.error('Error deleting cloud enquiry:', err);
+    console.warn('Error deleting cloud enquiry:', err);
     return false;
   }
 }
