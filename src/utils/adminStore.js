@@ -242,7 +242,7 @@ if (typeof window !== 'undefined') {
 
 // --- ADMIN AUTH STATE ---
 const ADMIN_SESSION_KEY = 'marvex_admin_auth';
-const ADMIN_PASSWORDS = ['admin123', 'priya2026#', 'admin@priya'];
+const ADMIN_PASSWORDS = ['priyaimpex@789', 'admin123', 'priya2026#', 'admin@priya'];
 
 export function isUserAdmin() {
   try {
@@ -257,7 +257,7 @@ export function isUserAdmin() {
 export const isAdminLoggedIn = isUserAdmin;
 
 export function loginAdmin(usernameOrPass, optionalPass) {
-  let user = 'admin';
+  let user = 'priya impex';
   let pass = '';
 
   if (optionalPass !== undefined) {
@@ -267,7 +267,7 @@ export function loginAdmin(usernameOrPass, optionalPass) {
     pass = (usernameOrPass || '').trim();
   }
 
-  const validUsers = ['admin', 'priya', 'priyaimpex', 'admin@priya.com'];
+  const validUsers = ['priya impex', 'priyaimpex', 'priya', 'admin', 'admin@priya.com'];
   const validPass = ADMIN_PASSWORDS.includes(pass);
 
   if ((validUsers.includes(user) || !optionalPass) && validPass) {
