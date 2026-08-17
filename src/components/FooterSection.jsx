@@ -19,13 +19,13 @@ export default function FooterSection({ onNavigate }) {
               Priya Impex is a premier Indian exporter of high-grade food & agricultural products. Delivering trust, exporting excellence directly to global markets.
             </p>
             <div className="footer-social-row">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <a href="https://www.facebook.com/people/Priya-impex/61586308456903/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">
                 <Facebook size={16} />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <a href="https://www.instagram.com/priya_impex_in?igsh=OGtwdjdzeDdvOWZ6" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">
                 <Instagram size={16} />
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <a href="https://in.linkedin.com/company/priyaimpex-india" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
                 <Linkedin size={16} />
               </a>
             </div>

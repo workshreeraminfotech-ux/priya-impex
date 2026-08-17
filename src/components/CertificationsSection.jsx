@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Sparkles, X, Eye, ShieldCheck } from 'lucide-react';
+import { Sparkles, X, Eye, ShieldCheck, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useStoreCertificates } from '../utils/useStore';
 
 export default function CertificationsSection({ bgColor = '#F8FAFC' }) {
   const rawCerts = useStoreCertificates();
   const certs = Array.isArray(rawCerts) ? rawCerts : [];
   const [selectedCert, setSelectedCert] = useState(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   // Duplicate for seamless continuous infinite marquee
-  const marqueeCerts = [...certs, ...certs, ...certs, ...certs];
+  const marqueeCerts = [...certs, ...certs, ...certs, ...certs, ...certs, ...certs];
 
   return (
     <section className="py-50 certs-marquee-section" id="certifications" style={{ background: bgColor, borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0', padding: '56px 0 62px', overflow: 'hidden' }}>
@@ -36,34 +37,21 @@ export default function CertificationsSection({ bgColor = '#F8FAFC' }) {
       </div>
 
       {/* Auto Horizontal Scrolling Track of Certificate Photos (Adaptive for Portrait & Landscape) */}
-      <div className="certs-marquee-wrapper" style={{ overflow: 'hidden', width: '100%', position: 'relative', padding: '14px 0' }}>
-        <div className="certs-marquee-track">
+      <div 
+        className="certs-marquee-wrapper" 
+        onTouchStart={() => setIsPaused(true)}
+        onTouchEnd={() => setTimeout(() => setIsPaused(false), 2000)}
+        style={{ overflow: 'hidden', width: '100%', position: 'relative', padding: '14px 0' }}
+      >
+        <div className={`certs-marquee-track ${isPaused ? 'is-paused' : ''}`}>
           {marqueeCerts.map((c, i) => (
             <div
-              key={i}
+              key={`${c.id || 'cert'}-${i}`}
               className="cert-photo-card"
               onClick={() => setSelectedCert(c)}
-              style={{
-                flex: '0 0 auto',
-                width: '185px',
-                height: '235px',
-                background: '#FFFFFF',
-                borderRadius: '20px',
-                border: '1.5px solid #E2E8F0',
-                boxShadow: '0 6px 20px rgba(11, 34, 64, 0.06)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '16px',
-                margin: '0 12px',
-                transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
-                cursor: 'pointer',
-                position: 'relative'
-              }}
               title={`Click to view ${c.name}`}
             >
-              {/* Photo Box Container — Perfect for Vertical and Horizontal orientations */}
+              {/* Photo Box Container */}
               <div style={{
                 width: '100%',
                 height: '100%',
@@ -109,8 +97,6 @@ export default function CertificationsSection({ bgColor = '#F8FAFC' }) {
                   opacity: 0,
                   transition: 'opacity 0.25s ease'
                 }}
-                onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
-                onMouseOut={(e) => e.currentTarget.style.opacity = '0'}
               >
                 <Eye size={16} color="#F5C542" />
                 <span>View Full</span>

@@ -24,14 +24,14 @@ export default function AnnouncementBar() {
         <div className="announcement-right">
           <span style={{ fontSize: '12px', opacity: 0.8, fontWeight: 600 }}>Follow Us:</span>
           <div className="social-links">
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-icon" title="Instagram">
+            <a href="https://www.facebook.com/people/Priya-impex/61586308456903/" target="_blank" rel="noopener noreferrer" className="social-icon" title="Facebook">
+              <Facebook size={14} />
+            </a>
+            <a href="https://www.instagram.com/priya_impex_in?igsh=OGtwdjdzeDdvOWZ6" target="_blank" rel="noopener noreferrer" className="social-icon" title="Instagram">
               <Instagram size={14} />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-icon" title="LinkedIn">
+            <a href="https://in.linkedin.com/company/priyaimpex-india" target="_blank" rel="noopener noreferrer" className="social-icon" title="LinkedIn">
               <Linkedin size={14} />
-            </a>
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon" title="Facebook">
-              <Facebook size={14} />
             </a>
             <a href="https://api.whatsapp.com/send?phone=919328602931&text=Hi%20Priya%20Impex!%20I%20would%20like%20to%20enquire%20about%20your%20export%20commodities." target="_blank" rel="noopener noreferrer" className="social-icon" title="Business WhatsApp">
               <MessageCircle size={14} />
