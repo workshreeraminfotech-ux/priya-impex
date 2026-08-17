@@ -6,9 +6,28 @@ export default function Navbar({ activePage, onNavigate }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleNav = (id) => {
-    onNavigate(id);
+    if (onNavigate) onNavigate(id);
     setMobileOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      const heroEl = document.getElementById('home') || document.querySelector('.hero-redesign-section') || document.querySelector('.hero-section') || document.querySelector('.jrp-hero');
+      if (heroEl) {
+        heroEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 50);
+  };
+
+  const handleLogoClick = (e) => {
+    e.preventDefault();
+    if (onNavigate) onNavigate('home');
+    setMobileOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      const heroEl = document.getElementById('home') || document.querySelector('.hero-redesign-section') || document.querySelector('.hero-section') || document.querySelector('.jrp-hero');
+      if (heroEl) {
+        heroEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 50);
   };
 
   return (
@@ -16,8 +35,8 @@ export default function Navbar({ activePage, onNavigate }) {
       <header className="jrp-header">
         <div className="container">
           <div className="jrp-header-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '88px' }}>
-            {/* Logo */}
-            <a href="#" onClick={(e) => { e.preventDefault(); handleNav('home'); }} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            {/* Logo — Always scrolls to Hero Section */}
+            <a href="#" onClick={handleLogoClick} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', cursor: 'pointer' }} title="Priya Impex — Go to Home / Hero">
               <img 
                 src={logoImg} 
                 alt="Priya Impex" 
@@ -101,7 +120,9 @@ export default function Navbar({ activePage, onNavigate }) {
           <div className="jrp-offcanvas-overlay" onClick={() => setMobileOpen(false)} />
           <div className="jrp-offcanvas">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '30px' }}>
-              <img src={logoImg} alt="Priya Impex" style={{ height: '60px', width: 'auto', objectFit: 'contain', filter: 'contrast(1.08)' }} />
+              <div onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
+                <img src={logoImg} alt="Priya Impex" style={{ height: '60px', width: 'auto', objectFit: 'contain', filter: 'contrast(1.08)' }} />
+              </div>
               <button onClick={() => setMobileOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--navy)' }}>
                 <X size={24} />
               </button>

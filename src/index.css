@@ -3387,36 +3387,35 @@ img, video, iframe, canvas, svg {
   border-color: var(--gold);
 }
 
-.cert-photo-card:hover .cert-card-hover-overlay {
+.cert-swipe-card {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cert-swipe-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 16px 36px rgba(11, 34, 64, 0.14) !important;
+  border-color: var(--gold) !important;
+}
+
+.cert-swipe-card:hover .cert-card-hover-overlay {
   opacity: 1 !important;
 }
 
-/* Mobile & Tablet Optimizations */
 @media (max-width: 768px) {
-  .certs-marquee-wrapper {
-    padding: 10px 0;
-    mask-image: none;
-    -webkit-mask-image: none;
-  }
-  .certs-marquee-track {
-    animation-duration: 22s;
-  }
-  .cert-photo-card {
-    width: 145px;
-    height: 185px;
-    padding: 12px;
-    margin: 0 8px;
-    border-radius: 16px;
+  .cert-swipe-card {
+    width: 145px !important;
+    height: 185px !important;
+    padding: 12px !important;
+    border-radius: 16px !important;
   }
 }
 
 @media (max-width: 480px) {
-  .cert-photo-card {
-    width: 130px;
-    height: 165px;
-    padding: 10px;
-    margin: 0 6px;
-    border-radius: 14px;
+  .cert-swipe-card {
+    width: 130px !important;
+    height: 165px !important;
+    padding: 10px !important;
+    border-radius: 14px !important;
   }
 }
 
