@@ -244,16 +244,30 @@ export function isUserAdmin() {
 
 export const isAdminLoggedIn = isUserAdmin;
 
-export function loginAdmin(enteredPassword) {
-  if (ADMIN_PASSWORDS.includes(enteredPassword)) {
+export function loginAdmin(usernameOrPass, optionalPass) {
+  let user = 'admin';
+  let pass = '';
+
+  if (optionalPass !== undefined) {
+    user = (usernameOrPass || '').trim().toLowerCase();
+    pass = (optionalPass || '').trim();
+  } else {
+    pass = (usernameOrPass || '').trim();
+  }
+
+  const validUsers = ['admin', 'priya', 'priyaimpex', 'admin@priya.com'];
+  const validPass = ADMIN_PASSWORDS.includes(pass);
+
+  if ((validUsers.includes(user) || !optionalPass) && validPass) {
     try {
       if (typeof sessionStorage !== 'undefined') {
         sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
       }
     } catch (e) {}
-    return true;
+    return { success: true };
   }
-  return false;
+
+  return { success: false, message: 'Invalid username or password. Please try again.' };
 }
 
 export function logoutAdmin() {
