@@ -74,17 +74,17 @@ export default function AdminPanel() {
   }, [authenticated]);
 
   // --- ENQUIRY ACTIONS ---
-  const handleToggleEnquiryStatus = (id, currentStatus) => {
+  const handleToggleEnquiryStatus = async (id, currentStatus) => {
     const newStatus = currentStatus === 'New' ? 'Replied' : 'New';
-    const updated = updateEnquiryStatus(id, newStatus);
-    setEnquiriesState(updated);
+    const updated = await updateEnquiryStatus(id, newStatus);
+    setEnquiriesState(Array.isArray(updated) ? updated : getEnquiries());
     showNotification(`Enquiry status updated to ${newStatus}.`);
   };
 
-  const handleDeleteEnquiry = (id, name) => {
+  const handleDeleteEnquiry = async (id, name) => {
     if (window.confirm(`Delete enquiry from "${name}"?`)) {
-      const updated = deleteEnquiry(id);
-      setEnquiriesState(updated);
+      const updated = await deleteEnquiry(id);
+      setEnquiriesState(Array.isArray(updated) ? updated : getEnquiries());
       showNotification(`Enquiry deleted.`);
     }
   };
@@ -373,8 +373,9 @@ export default function AdminPanel() {
         
         {/* Dashboard Stats Row */}
         {(() => {
-          const productQuotesCount = enquiries.filter(e => (e.source || '').toLowerCase().includes('product') || (e.source || '').toLowerCase().includes('quote')).length;
-          const contactFormCount = enquiries.filter(e => (e.source || '').toLowerCase().includes('contact')).length;
+          const safeEnquiries = Array.isArray(enquiries) ? enquiries : [];
+          const productQuotesCount = safeEnquiries.filter(e => (e.source || '').toLowerCase().includes('product') || (e.source || '').toLowerCase().includes('quote')).length;
+          const contactFormCount = safeEnquiries.filter(e => (e.source || '').toLowerCase().includes('contact')).length;
 
           return (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '32px' }}>
@@ -433,8 +434,9 @@ export default function AdminPanel() {
 
         {/* Tab Navigation Controls */}
         {(() => {
-          const productQuotesCount = enquiries.filter(e => (e.source || '').toLowerCase().includes('product') || (e.source || '').toLowerCase().includes('quote')).length;
-          const contactFormCount = enquiries.filter(e => (e.source || '').toLowerCase().includes('contact')).length;
+          const safeEnquiries = Array.isArray(enquiries) ? enquiries : [];
+          const productQuotesCount = safeEnquiries.filter(e => (e.source || '').toLowerCase().includes('product') || (e.source || '').toLowerCase().includes('quote')).length;
+          const contactFormCount = safeEnquiries.filter(e => (e.source || '').toLowerCase().includes('contact')).length;
 
           return (
             <div style={{ display: 'flex', gap: '10px', marginBottom: '28px', borderBottom: '2px solid #E2E8F0', paddingBottom: '12px', flexWrap: 'wrap' }}>
@@ -723,7 +725,8 @@ export default function AdminPanel() {
 
         {/* TAB 4: PRODUCT QUOTE ENQUIRIES */}
         {activeTab === 'product_enquiries' && (() => {
-          const productQuotes = enquiries.filter(e => (e.source || '').toLowerCase().includes('product') || (e.source || '').toLowerCase().includes('quote'));
+          const safeEnqs = Array.isArray(enquiries) ? enquiries : [];
+          const productQuotes = safeEnqs.filter(e => (e.source || '').toLowerCase().includes('product') || (e.source || '').toLowerCase().includes('quote'));
 
           return (
             <div>
@@ -835,7 +838,8 @@ export default function AdminPanel() {
 
         {/* TAB 5: CONTACT US ENQUIRIES */}
         {activeTab === 'contact_enquiries' && (() => {
-          const contactFormEnqs = enquiries.filter(e => (e.source || '').toLowerCase().includes('contact'));
+          const safeEnqs = Array.isArray(enquiries) ? enquiries : [];
+          const contactFormEnqs = safeEnqs.filter(e => (e.source || '').toLowerCase().includes('contact'));
 
           return (
             <div>
