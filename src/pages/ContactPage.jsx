@@ -42,9 +42,9 @@ export default function ContactPage() {
 
   const handleChange = (e) => setForm(p => ({ ...p, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    addEnquiry({
+    await addEnquiry({
       source: 'Contact Us Form',
       name: form.name,
       company: form.company,

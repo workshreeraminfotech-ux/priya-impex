@@ -162,6 +162,18 @@ export function updateStoreFromCloud(type, items) {
   notifyStoreUpdate();
 }
 
+// Global listener for realtime snapshot events
+if (typeof window !== 'undefined') {
+  window.addEventListener('priya_store_updated', (e) => {
+    if (e && e.detail && e.detail.type && e.detail.items) {
+      if (e.detail.type === 'products') memoryProducts = e.detail.items;
+      if (e.detail.type === 'blogs') memoryBlogs = e.detail.items;
+      if (e.detail.type === 'certificates') memoryCerts = e.detail.items;
+      if (e.detail.type === 'enquiries') memoryEnquiries = e.detail.items;
+    }
+  });
+}
+
 // Background Cloud Sync on load
 export async function syncFromCloud() {
   try {

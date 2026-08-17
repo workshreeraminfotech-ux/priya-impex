@@ -20,9 +20,9 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = '' }) {
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    addEnquiry({
+    await addEnquiry({
       source: 'Product Quote Request',
       name: formData.name,
       company: formData.company,
