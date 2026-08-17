@@ -12,6 +12,7 @@ import {
   writeBatch,
   onSnapshot
 } from 'firebase/firestore';
+import { idbSet } from './idbStorage';
 
 const CONFIG_STORAGE_KEY = 'priya_firebase_config';
 
@@ -85,10 +86,10 @@ export function getDb() {
 }
 
 // Helper: Broadcast store update event to all components
-function notifyStoreUpdate() {
+function notifyStoreUpdate(detail = {}) {
   try {
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('priya_store_updated'));
+      window.dispatchEvent(new CustomEvent('priya_store_updated', { detail }));
     }
   } catch (e) {}
 }
@@ -111,10 +112,11 @@ export function setupRealtimeListeners(db) {
         snapshot.forEach(docSnap => {
           items.push({ id: docSnap.id, ...docSnap.data() });
         });
+        idbSet('marvex_products', items);
         try {
           localStorage.setItem('marvex_products', JSON.stringify(items));
         } catch(e) {}
-        notifyStoreUpdate();
+        notifyStoreUpdate({ type: 'products', items });
       }
     }, (err) => console.warn('Products sync notice:', err.message));
     unsubscribers.push(unsubProds);
@@ -126,10 +128,11 @@ export function setupRealtimeListeners(db) {
         snapshot.forEach(docSnap => {
           items.push({ id: docSnap.id, ...docSnap.data() });
         });
+        idbSet('marvex_blogs', items);
         try {
           localStorage.setItem('marvex_blogs', JSON.stringify(items));
         } catch(e) {}
-        notifyStoreUpdate();
+        notifyStoreUpdate({ type: 'blogs', items });
       }
     }, (err) => console.warn('Blogs sync notice:', err.message));
     unsubscribers.push(unsubBlogs);
@@ -141,10 +144,11 @@ export function setupRealtimeListeners(db) {
         snapshot.forEach(docSnap => {
           items.push({ id: docSnap.id, ...docSnap.data() });
         });
+        idbSet('marvex_certs', items);
         try {
           localStorage.setItem('marvex_certs', JSON.stringify(items));
         } catch(e) {}
-        notifyStoreUpdate();
+        notifyStoreUpdate({ type: 'certificates', items });
       }
     }, (err) => console.warn('Certs sync notice:', err.message));
     unsubscribers.push(unsubCerts);
@@ -157,10 +161,11 @@ export function setupRealtimeListeners(db) {
           items.push({ id: docSnap.id, ...docSnap.data() });
         });
         items.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+        idbSet('marvex_enquiries', items);
         try {
           localStorage.setItem('marvex_enquiries', JSON.stringify(items));
         } catch(e) {}
-        notifyStoreUpdate();
+        notifyStoreUpdate({ type: 'enquiries', items });
       }
     }, (err) => console.warn('Enquiries sync notice:', err.message));
     unsubscribers.push(unsubEnqs);

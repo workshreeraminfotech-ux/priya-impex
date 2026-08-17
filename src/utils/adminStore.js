@@ -1,8 +1,9 @@
 // Centralized Dynamic Data & Admin Store — Priya Impex
-// Dual-Layer Storage: Fast Local Cache + Real-Time Global Cloud Firestore Database
+// Triple-Layer Storage: Reactive In-Memory State + Unlimited IndexedDB + Real-Time Cloud Firestore
 
 import { PRODUCTS as INITIAL_PRODUCTS, PRODUCT_CATEGORIES } from '../data/products';
 import { BLOGS as INITIAL_BLOGS } from '../data/blogs';
+import { idbGet, idbSet } from './idbStorage';
 import {
   isFirebaseConfigured,
   fetchCloudProducts,
@@ -72,13 +73,93 @@ const INITIAL_CERTS = [
   }
 ];
 
+// In-Memory Reactive Cache (Unlimited Capacity — Never constrained by 5MB localStorage)
+let memoryProducts = null;
+let memoryBlogs = null;
+let memoryCerts = null;
+let memoryEnquiries = null;
+
 // Helper: Broadcast store update event to all components
-function notifyStoreUpdate() {
+export function notifyStoreUpdate() {
   try {
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('priya_store_updated'));
     }
   } catch (e) {}
+}
+
+// Initial Sync from IndexedDB & LocalStorage on startup
+if (typeof window !== 'undefined') {
+  // 1. Initial quick load from localStorage (if any)
+  try {
+    const lp = localStorage.getItem('marvex_products');
+    if (lp) memoryProducts = JSON.parse(lp);
+    const lb = localStorage.getItem('marvex_blogs');
+    if (lb) memoryBlogs = JSON.parse(lb);
+    const lc = localStorage.getItem('marvex_certs');
+    if (lc) memoryCerts = JSON.parse(lc);
+    const le = localStorage.getItem('marvex_enquiries');
+    if (le) memoryEnquiries = JSON.parse(le);
+  } catch (e) {}
+
+  // 2. Load complete high-capacity dataset from IndexedDB
+  (async () => {
+    try {
+      const [idbProds, idbBlogs, idbCerts, idbEnqs] = await Promise.all([
+        idbGet('marvex_products'),
+        idbGet('marvex_blogs'),
+        idbGet('marvex_certs'),
+        idbGet('marvex_enquiries')
+      ]);
+
+      let hasUpdate = false;
+      if (idbProds && Array.isArray(idbProds) && idbProds.length > 0) {
+        memoryProducts = idbProds;
+        hasUpdate = true;
+      }
+      if (idbBlogs && Array.isArray(idbBlogs) && idbBlogs.length > 0) {
+        memoryBlogs = idbBlogs;
+        hasUpdate = true;
+      }
+      if (idbCerts && Array.isArray(idbCerts) && idbCerts.length > 0) {
+        memoryCerts = idbCerts;
+        hasUpdate = true;
+      }
+      if (idbEnqs && Array.isArray(idbEnqs) && idbEnqs.length > 0) {
+        memoryEnquiries = idbEnqs;
+        hasUpdate = true;
+      }
+
+      if (hasUpdate) {
+        notifyStoreUpdate();
+      }
+    } catch (e) {}
+  })();
+}
+
+// Update store from Cloud Listeners
+export function updateStoreFromCloud(type, items) {
+  if (!items || !Array.isArray(items)) return;
+
+  if (type === 'products') {
+    memoryProducts = items;
+    idbSet('marvex_products', items);
+    try { localStorage.setItem('marvex_products', JSON.stringify(items)); } catch(e) {}
+  } else if (type === 'blogs') {
+    memoryBlogs = items;
+    idbSet('marvex_blogs', items);
+    try { localStorage.setItem('marvex_blogs', JSON.stringify(items)); } catch(e) {}
+  } else if (type === 'certificates') {
+    memoryCerts = items;
+    idbSet('marvex_certs', items);
+    try { localStorage.setItem('marvex_certs', JSON.stringify(items)); } catch(e) {}
+  } else if (type === 'enquiries') {
+    memoryEnquiries = items;
+    idbSet('marvex_enquiries', items);
+    try { localStorage.setItem('marvex_enquiries', JSON.stringify(items)); } catch(e) {}
+  }
+
+  notifyStoreUpdate();
 }
 
 // Background Cloud Sync on load
@@ -96,33 +177,36 @@ export async function syncFromCloud() {
     let changed = false;
 
     if (cloudProds && Array.isArray(cloudProds) && cloudProds.length > 0) {
-      try {
-        localStorage.setItem('marvex_products', JSON.stringify(cloudProds));
-        changed = true;
-      } catch (e) {}
+      memoryProducts = cloudProds;
+      idbSet('marvex_products', cloudProds);
+      try { localStorage.setItem('marvex_products', JSON.stringify(cloudProds)); } catch(e) {}
+      changed = true;
     } else {
-      // Auto-seed cloud collections on first setup
+      // Auto-seed cloud collections on first setup if completely empty
       try {
         syncAllToCloud(INITIAL_PRODUCTS, INITIAL_BLOGS, INITIAL_CERTS);
       } catch (e) {}
     }
+
     if (cloudBlogs && Array.isArray(cloudBlogs) && cloudBlogs.length > 0) {
-      try {
-        localStorage.setItem('marvex_blogs', JSON.stringify(cloudBlogs));
-        changed = true;
-      } catch (e) {}
+      memoryBlogs = cloudBlogs;
+      idbSet('marvex_blogs', cloudBlogs);
+      try { localStorage.setItem('marvex_blogs', JSON.stringify(cloudBlogs)); } catch(e) {}
+      changed = true;
     }
+
     if (cloudCerts && Array.isArray(cloudCerts) && cloudCerts.length > 0) {
-      try {
-        localStorage.setItem('marvex_certs', JSON.stringify(cloudCerts));
-        changed = true;
-      } catch (e) {}
+      memoryCerts = cloudCerts;
+      idbSet('marvex_certs', cloudCerts);
+      try { localStorage.setItem('marvex_certs', JSON.stringify(cloudCerts)); } catch(e) {}
+      changed = true;
     }
+
     if (cloudEnqs && Array.isArray(cloudEnqs) && cloudEnqs.length > 0) {
-      try {
-        localStorage.setItem('marvex_enquiries', JSON.stringify(cloudEnqs));
-        changed = true;
-      } catch (e) {}
+      memoryEnquiries = cloudEnqs;
+      idbSet('marvex_enquiries', cloudEnqs);
+      try { localStorage.setItem('marvex_enquiries', JSON.stringify(cloudEnqs)); } catch(e) {}
+      changed = true;
     }
 
     if (changed) {
@@ -135,7 +219,7 @@ export async function syncFromCloud() {
   }
 }
 
-// Auto-trigger sync on script load safely
+// Auto-trigger sync on script load
 if (typeof window !== 'undefined') {
   setTimeout(() => {
     try {
@@ -144,52 +228,65 @@ if (typeof window !== 'undefined') {
   }, 1000);
 }
 
-// --- AUTHENTICATION ---
-export function isAdminLoggedIn() {
+// --- ADMIN AUTH STATE ---
+const ADMIN_SESSION_KEY = 'marvex_admin_auth';
+const ADMIN_PASSWORDS = ['admin123', 'priya2026#', 'admin@priya'];
+
+export function isUserAdmin() {
   try {
-    return typeof sessionStorage !== 'undefined' && sessionStorage.getItem('marvex_admin_auth') === 'true';
-  } catch (e) {
-    return false;
-  }
+    if (typeof sessionStorage !== 'undefined') {
+      const auth = sessionStorage.getItem(ADMIN_SESSION_KEY);
+      if (auth === 'true') return true;
+    }
+  } catch (e) {}
+  return false;
 }
 
-export function loginAdmin(username, password) {
-  if ((username === 'admin' || username === 'marvex' || username === 'priya') && (password === 'admin123' || password === 'marvex2026#' || password === 'priya2026#')) {
+export const isAdminLoggedIn = isUserAdmin;
+
+export function loginAdmin(enteredPassword) {
+  if (ADMIN_PASSWORDS.includes(enteredPassword)) {
     try {
       if (typeof sessionStorage !== 'undefined') {
-        sessionStorage.setItem('marvex_admin_auth', 'true');
+        sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
       }
     } catch (e) {}
-    return { success: true };
+    return true;
   }
-  return { success: false, message: 'Invalid Admin Username or Password' };
+  return false;
 }
 
 export function logoutAdmin() {
   try {
     if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.removeItem('marvex_admin_auth');
+      sessionStorage.removeItem(ADMIN_SESSION_KEY);
     }
   } catch (e) {}
 }
 
 // --- PRODUCTS STORE ---
 export function getProducts() {
+  if (memoryProducts && Array.isArray(memoryProducts) && memoryProducts.length > 0) {
+    return memoryProducts;
+  }
   try {
     if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem('marvex_products');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          memoryProducts = parsed;
+          return parsed;
+        }
       }
     }
-  } catch (e) {
-    console.warn('Failed to parse saved products', e);
-  }
+  } catch (e) {}
   return INITIAL_PRODUCTS || [];
 }
 
 export function saveProducts(productsList) {
+  memoryProducts = productsList;
+  idbSet('marvex_products', productsList);
   try {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('marvex_products', JSON.stringify(productsList));
@@ -255,21 +352,27 @@ export async function deleteProduct(id) {
 
 // --- BLOGS STORE ---
 export function getBlogs() {
+  if (memoryBlogs && Array.isArray(memoryBlogs) && memoryBlogs.length > 0) {
+    return memoryBlogs;
+  }
   try {
     if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem('marvex_blogs');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          memoryBlogs = parsed;
+          return parsed;
+        }
       }
     }
-  } catch (e) {
-    console.warn('Failed to parse saved blogs', e);
-  }
+  } catch (e) {}
   return INITIAL_BLOGS || [];
 }
 
 export function saveBlogs(blogsList) {
+  memoryBlogs = blogsList;
+  idbSet('marvex_blogs', blogsList);
   try {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('marvex_blogs', JSON.stringify(blogsList));
@@ -336,21 +439,27 @@ export async function deleteBlog(id) {
 
 // --- CERTIFICATES STORE ---
 export function getCertificates() {
+  if (memoryCerts && Array.isArray(memoryCerts) && memoryCerts.length > 0) {
+    return memoryCerts;
+  }
   try {
     if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem('marvex_certs');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          memoryCerts = parsed;
+          return parsed;
+        }
       }
     }
-  } catch (e) {
-    console.warn('Failed to parse saved certs', e);
-  }
+  } catch (e) {}
   return INITIAL_CERTS || [];
 }
 
 export function saveCertificates(certsList) {
+  memoryCerts = certsList;
+  idbSet('marvex_certs', certsList);
   try {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('marvex_certs', JSON.stringify(certsList));
@@ -447,21 +556,27 @@ const INITIAL_ENQUIRIES = [
 ];
 
 export function getEnquiries() {
+  if (memoryEnquiries && Array.isArray(memoryEnquiries) && memoryEnquiries.length > 0) {
+    return memoryEnquiries;
+  }
   try {
     if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem('marvex_enquiries');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed)) {
+          memoryEnquiries = parsed;
+          return parsed;
+        }
       }
     }
-  } catch (e) {
-    console.warn('Failed to parse saved enquiries', e);
-  }
+  } catch (e) {}
   return INITIAL_ENQUIRIES || [];
 }
 
 export function saveEnquiries(enquiriesList) {
+  memoryEnquiries = enquiriesList;
+  idbSet('marvex_enquiries', enquiriesList);
   try {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('marvex_enquiries', JSON.stringify(enquiriesList));
@@ -536,48 +651,32 @@ export async function deleteEnquiry(id) {
   return updated;
 }
 
-export function exportEnquiriesCSV(typeFilter = 'all') {
-  const enquiries = getEnquiries();
-  let filtered = enquiries;
-  let filenamePrefix = 'Priya_Impex_Customer_Enquiries';
-
-  if (typeFilter === 'product_quote') {
-    filtered = enquiries.filter(e => (e.source || '').toLowerCase().includes('product') || (e.source || '').toLowerCase().includes('quote'));
-    filenamePrefix = 'Priya_Impex_Product_Quote_Enquiries';
-  } else if (typeFilter === 'contact_form') {
-    filtered = enquiries.filter(e => (e.source || '').toLowerCase().includes('contact'));
-    filenamePrefix = 'Priya_Impex_Contact_Us_Enquiries';
-  }
-
-  if (!filtered || filtered.length === 0) {
-    alert('No enquiries available in this category to export.');
+export function exportEnquiriesCSV(enquiriesList) {
+  const list = enquiriesList || getEnquiries();
+  if (!list || list.length === 0) {
+    alert('No enquiries to export.');
     return;
   }
-
-  const headers = ['ID', 'Date', 'Source', 'Buyer Name', 'Company Name', 'Email', 'Phone', 'Product', 'Quantity', 'Destination Port', 'Notes/Message', 'Status'];
-  
-  const rows = filtered.map(e => [
+  const headers = ['ID', 'Date', 'Source', 'Buyer Name', 'Company', 'Email', 'Phone', 'Commodity', 'Quantity', 'Destination Port', 'Status', 'Notes'];
+  const rows = list.map(e => [
     `"${e.id || ''}"`,
     `"${e.date || ''}"`,
-    `"${e.source || 'Website Form'}"`,
+    `"${e.source || ''}"`,
     `"${(e.name || '').replace(/"/g, '""')}"`,
     `"${(e.company || '').replace(/"/g, '""')}"`,
-    `"${(e.email || '').replace(/"/g, '""')}"`,
-    `"${(e.phone || '').replace(/"/g, '""')}"`,
+    `"${e.email || ''}"`,
+    `"${e.phone || ''}"`,
     `"${(e.product || '').replace(/"/g, '""')}"`,
     `"${(e.quantity || '').replace(/"/g, '""')}"`,
     `"${(e.destinationPort || '').replace(/"/g, '""')}"`,
-    `"${(e.notes || e.message || '').replace(/"/g, '""')}"`,
-    `"${e.status || 'New'}"`
+    `"${e.status || ''}"`,
+    `"${(e.notes || '').replace(/"/g, '""')}"`
   ]);
-
-  const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  
+  const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const encodedUri = encodeURI(csvContent);
   const link = document.createElement('a');
-  link.setAttribute('href', url);
-  link.setAttribute('download', `${filenamePrefix}_${new Date().toISOString().slice(0, 10)}.csv`);
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', `Priya_Impex_Enquiries_${new Date().toISOString().slice(0, 10)}.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

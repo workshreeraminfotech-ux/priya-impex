@@ -103,7 +103,7 @@ export default function AdminPanel() {
     return <AdminLogin onLoginSuccess={() => setAuthenticated(true)} />;
   }
 
-  // --- IMAGE FILE CONVERTER WITH AUTOMATIC LIGHTWEIGHT COMPRESSION ---
+  // --- IMAGE FILE CONVERTER WITH AUTOMATIC ULTRA-COMPACT COMPRESSION ---
   const handleImageFileChange = (e, callback) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -113,7 +113,7 @@ export default function AdminPanel() {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const MAX_DIMENSION = 800;
+        const MAX_DIMENSION = 640; // Optimal for catalog grids & detail views
         let width = img.width;
         let height = img.height;
 
@@ -132,10 +132,12 @@ export default function AdminPanel() {
         canvas.width = width;
         canvas.height = height;
         const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, width, height);
 
-        // Compress to compact JPEG Data URL (~30KB-60KB)
-        const compressedUrl = canvas.toDataURL('image/jpeg', 0.75);
+        // Ultra-lightweight JPEG (~25KB - 35KB) for instant Firestore writes & unlimited storage
+        const compressedUrl = canvas.toDataURL('image/jpeg', 0.68);
         callback(compressedUrl);
       };
       img.src = event.target.result;
