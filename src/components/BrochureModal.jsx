@@ -107,7 +107,7 @@ export default function BrochureModal({ isOpen, onClose }) {
               marginBottom: '14px' 
             }}>
               <FileText size={13} />
-              <span>Official 2026 Export Catalog</span>
+              <span>Official Export Catalog</span>
             </div>
 
             <h3 style={{ 

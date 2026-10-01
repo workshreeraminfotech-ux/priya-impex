@@ -103,15 +103,12 @@ export default function Navbar({ activePage, onNavigate, onOpenBrochure }) {
 
             {/* Actions: CTA + Mobile Toggle */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
-              <div style={{ position: 'relative' }} className="d-none-mobile">
+              <div className="d-none-mobile">
                 <button
                   className="btn-brochure-highlight"
                   onClick={handleDownloadBrochure}
-                  title="Download Priya Impex Official Export Brochure (PDF)"
+                  title="Download Priya Impex Official Export Brochure"
                 >
-                  <span className="brochure-badge">
-                    <Sparkles size={10} /> 2026 PDF
-                  </span>
                   <Download size={17} style={{ color: '#F5C542' }} />
                   <span>Download Brochure</span>
                 </button>
@@ -171,15 +168,12 @@ export default function Navbar({ activePage, onNavigate, onOpenBrochure }) {
                 </div>
               </div>
 
-              <div style={{ marginTop: '22px', position: 'relative' }}>
+              <div style={{ marginTop: '20px' }}>
                 <button 
                   className="btn-brochure-highlight" 
                   onClick={handleDownloadBrochure} 
                   style={{ width: '100%', justifyContent: 'center', padding: '13px 20px !important' }}
                 >
-                  <span className="brochure-badge" style={{ top: '-10px', right: '14px' }}>
-                    <Sparkles size={10} /> 2026 PDF
-                  </span>
                   <Download size={18} style={{ color: '#F5C542' }} />
                   <span>Download Brochure</span>
                 </button>
