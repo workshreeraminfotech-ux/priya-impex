@@ -1,12 +1,12 @@
 // Central Blog Dataset for Priya Impex
 // Featuring authentic products & real product photos from src/assets/products
 
-import turmericPowder from '../assets/products/Turmeric Powder.png';
-import chilliPowder from '../assets/products/Chilli Powder.png';
-import cuminSeeds from '../assets/products/Cumin Seeds.png';
-import blackPepper from '../assets/products/Black Pepper.png';
-import garamMasala from '../assets/products/Garam Masala.png';
-import kashmiriSaffron from '../assets/products/Kashmiri Saffron.png';
+import turmericPowder from '../assets/products/Turmeric Powder.webp';
+import chilliPowder from '../assets/products/Chilli Powder.webp';
+import cuminSeeds from '../assets/products/Cumin Seeds.webp';
+import blackPepper from '../assets/products/Black Pepper.webp';
+import corianderPowder from '../assets/products/Coriander Powder.webp';
+import fennelSeeds from '../assets/products/Fennel Seeds.webp';
 
 export const BLOGS = [
   {
@@ -89,8 +89,8 @@ Priya Impex exports whole sun-dried Tellicherry black peppercorns and handpicked
     read: '4 min read',
     title: 'Mastering Indian Spice Blends: Bulk Garam Masala & Biryani Formulations',
     excerpt: 'Custom OEM blending recipes combining whole cardamom, cloves, cinnamon quills, and mace for international restaurants and food manufacturing.',
-    image: garamMasala,
-    body: `Indian blended spices offer food manufacturers and restaurant chains a consistent, authentic flavor profile without complex manual spice grinding.
+    image: corianderPowder,
+    body: `Indian ground spices offer food manufacturers and restaurant chains a consistent, authentic flavor profile without complex manual spice grinding.
 
 Key Blend Profiles:
 • Royal Garam Masala: Balance of ground cardamom, cloves, cinnamon, cumin, black pepper, and nutmeg.
@@ -101,12 +101,12 @@ Priya Impex specializes in custom formulation, bulk grinding, and private-label 
   },
   {
     id: 6,
-    cat: 'Exotic Commodities',
+    cat: 'Exotic Spices',
     date: 'Jun 15, 2026',
     read: '6 min read',
     title: 'Pure Kashmiri Saffron: Sourcing Mongra Grade 1 Stigmas & Powder',
     excerpt: 'Identifying authentic Pampore Kashmiri Mongra saffron stigmas with intense floral aroma, high crocin color strength, and natural purity.',
-    image: kashmiriSaffron,
+    image: fennelSeeds,
     body: `Kashmiri Saffron (Crocus sativus) grown in Pampore soils is globally renowned as the highest quality saffron due to its deep crimson red threads and extraordinary crocin pigment levels.
 
 Saffron Testing Standard (ISO 3632):

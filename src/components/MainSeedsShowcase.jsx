@@ -1,13 +1,10 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, Eye, ShieldCheck, MapPin, Sparkles, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
+import React from 'react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { useStoreProducts } from '../utils/useStore';
 
-export default function MainSeedsShowcase({ onSelectProduct, onOpenQuote, onNavigate }) {
+export default function MainSeedsShowcase({ onOpenQuote }) {
   const storeProds = useStoreProducts();
   const allProducts = Array.isArray(storeProds) ? storeProds : [];
-  const scrollContainerRef = useRef(null);
-  const [isPaused, setIsPaused] = useState(false);
 
   // All seed products & seed spices
   const seedProducts = allProducts.filter(p => {
@@ -30,38 +27,8 @@ export default function MainSeedsShowcase({ onSelectProduct, onOpenQuote, onNavi
     );
   });
 
-  const handleScroll = (direction) => {
-    if (scrollContainerRef.current) {
-      const cardEl = scrollContainerRef.current.querySelector('.seeds-showcase-card');
-      const scrollAmount = cardEl ? cardEl.offsetWidth + 18 : 310;
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  // Automatic Horizontal Scrolling
-  useEffect(() => {
-    if (isPaused) return;
-
-    const interval = setInterval(() => {
-      if (scrollContainerRef.current) {
-        const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-        const cardEl = scrollContainerRef.current.querySelector('.seeds-showcase-card');
-        const scrollAmount = cardEl ? cardEl.offsetWidth + 18 : 310;
-
-        // If reached end, scroll smoothly back to start, else scroll next card
-        if (scrollLeft + clientWidth >= scrollWidth - 25) {
-          scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-        }
-      }
-    }, 2800);
-
-    return () => clearInterval(interval);
-  }, [isPaused]);
+  // Duplicate 4x to guarantee continuous infinite smooth scrolling marquee across all screen sizes
+  const marqueeSeedProducts = seedProducts.length > 0 ? [...seedProducts, ...seedProducts, ...seedProducts, ...seedProducts] : [];
 
   return (
     <section 
@@ -84,83 +51,50 @@ export default function MainSeedsShowcase({ onSelectProduct, onOpenQuote, onNavi
           {/* Eyebrow Badge */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(200, 148, 10, 0.14)', border: '1px solid rgba(200, 148, 10, 0.45)', padding: '6px 20px', borderRadius: '100px', fontSize: '13px', fontWeight: 800, color: '#A37505', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '14px', boxShadow: '0 2px 10px rgba(200, 148, 10, 0.08)' }}>
             <Sparkles size={14} color="#C8940A" />
-            <span>OUR SIGNATURE COMMODITIES • 100% SORTEX CLEANED</span>
+            <span>OUR SIGNATURE SEED SPICES • 100% SORTEX CLEANED</span>
           </div>
 
           {/* Centered Main Title */}
           <h2 style={{ fontFamily: 'var(--font-h)', fontSize: 'clamp(28px, 4.2vw, 42px)', fontWeight: 900, color: 'var(--navy)', lineHeight: 1.2, margin: '0 0 14px' }}>
-            Our Main Export Products — <span style={{ color: 'var(--gold)' }}>Premium Seeds</span>
+            Our Flagship Export Spices — <span style={{ color: 'var(--gold)' }}>Premium Seed Spices</span>
           </h2>
 
           {/* Centered Subtitle */}
           <p style={{ fontSize: '15.5px', color: '#57534E', lineHeight: 1.6, margin: '0 auto', maxWidth: '640px' }}>
-            Specialized farm sourcing from Unjha (Gujarat) & major Mandis with guaranteed high essential oil, sortex grading & international export packing.
+            Direct farm sourcing from Unjha (Gujarat) and prime origin mandis with guaranteed high essential oil content, 99.5% Sortex purity & international export packaging.
           </p>
         </div>
 
-        {/* Horizontal Auto-Scrolling Track (No visible scrollbar line) */}
-        <div
-          ref={scrollContainerRef}
-          className="seeds-horizontal-scroll-track"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-          onTouchStart={() => setIsPaused(true)}
-          onTouchEnd={() => setIsPaused(false)}
-          style={{
-            display: 'flex',
-            gap: '24px',
-            overflowX: 'auto',
-            scrollSnapType: 'x mandatory',
-            scrollBehavior: 'smooth',
-            paddingBottom: '8px',
-            paddingTop: '6px',
-            WebkitOverflowScrolling: 'touch',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none'
-          }}
-        >
-          {seedProducts.map((item, idx) => (
-            <motion.div
-              key={item.id || idx}
-              className="seeds-showcase-card"
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.35, delay: (idx % 4) * 0.05 }}
-              style={{
-                borderRadius: '22px',
-                overflow: 'hidden',
-                boxShadow: '0 8px 24px rgba(11, 34, 64, 0.06)',
-                display: 'flex',
-                flexDirection: 'column',
-                border: '1.5px solid #E8DFCE',
-                background: '#FFFFFF',
-                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
-              }}
-              whileHover={{ y: -6, boxShadow: '0 16px 36px rgba(200, 148, 10, 0.2)', borderColor: 'var(--gold)' }}
+      </div>
+
+      {/* Continuous Hardware-Accelerated Infinite Marquee Scroller (Like Certificates) */}
+      <div className="seeds-marquee-wrapper">
+        <div className="seeds-marquee-track">
+          {marqueeSeedProducts.map((item, idx) => (
+            <div
+              key={`${item.id || 'seed'}-${idx}`}
+              className="seeds-marquee-card"
             >
               {/* Product Image Box */}
               <div
                 style={{
-                  height: '230px',
+                  height: '220px',
                   background: 'radial-gradient(circle, #FFFFFF 50%, #F9F7F2 100%)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: '24px',
+                  padding: '20px',
                   position: 'relative',
-                  cursor: 'pointer',
                   borderBottom: '1px solid #F0E8D9'
                 }}
-                onClick={() => onSelectProduct ? onSelectProduct(item) : null}
               >
                 <img
                   src={item.image}
                   alt={item.title}
                   loading="lazy"
                   style={{
-                    maxWidth: '90%',
-                    maxHeight: '90%',
+                    maxWidth: '88%',
+                    maxHeight: '88%',
                     objectFit: 'contain',
                     transition: 'transform 0.4s ease'
                   }}
@@ -170,44 +104,32 @@ export default function MainSeedsShowcase({ onSelectProduct, onOpenQuote, onNavi
               </div>
 
               {/* Product Info Body */}
-              <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+              <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <h3 
-                  style={{ fontSize: '18px', fontWeight: 800, color: 'var(--navy)', marginBottom: '10px', lineHeight: 1.3, cursor: 'pointer' }}
-                  onClick={() => onSelectProduct ? onSelectProduct(item) : null}
+                  style={{ fontSize: '18px', fontWeight: 800, color: 'var(--navy)', marginBottom: '8px', lineHeight: 1.3 }}
                 >
                   {item.title}
                 </h3>
 
-                <p style={{ fontSize: '14px', color: '#6B7280', lineHeight: 1.55, marginBottom: '22px', flex: 1, fontWeight: 500 }}>
+                <p style={{ fontSize: '13.5px', color: '#6B7280', lineHeight: 1.55, marginBottom: '18px', flex: 1, fontWeight: 500 }}>
                   {item.desc || item.description}
                 </p>
 
-                {/* Actions */}
-                <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
+                {/* Action */}
+                <div style={{ marginTop: 'auto' }}>
                   <button
                     onClick={() => onOpenQuote ? onOpenQuote(item.title) : null}
                     className="btn btn-primary"
-                    style={{ flex: 1, padding: '10px 14px', fontSize: '13.5px', fontWeight: 700, justifyContent: 'center', borderRadius: '8px' }}
+                    style={{ width: '100%', padding: '11px 16px', fontSize: '13.5px', fontWeight: 700, justifyContent: 'center', borderRadius: '8px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                   >
-                    <span>Quote</span>
+                    <span>Request Quote</span>
                     <ArrowRight size={15} />
-                  </button>
-                  
-                  <button
-                    onClick={() => onSelectProduct ? onSelectProduct(item) : null}
-                    className="btn btn-outline"
-                    style={{ padding: '10px 14px', fontSize: '13.5px', borderRadius: '8px', background: '#FFFFFF' }}
-                    title="Quick View Details"
-                  >
-                    <Eye size={15} />
-                    <span>View</span>
                   </button>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
-
       </div>
     </section>
   );

@@ -4,7 +4,7 @@ export default function WhatsAppFloat() {
   return (
     <div className="wa-float-container">
       <a
-        href="https://api.whatsapp.com/send?phone=919328602931&text=Hello%20Priya%20Impex,%20I%20am%20interested%20in%20your%20export%20commodities."
+        href="https://api.whatsapp.com/send?phone=919328602931&text=Hello%20Priya%20Impex,%20I%20am%20interested%20in%20your%20wholesale%20Indian%20spices."
         target="_blank"
         rel="noopener noreferrer"
         className="wa-float-btn"

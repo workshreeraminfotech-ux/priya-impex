@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const faqs = [
   {
-    q: "Are your agro products certified and quality tested?",
-    a: "Yes, all our products undergo multi-stage laboratory testing and come with necessary export certifications (FSSAI, APEDA, ISO, Phytosanitary) to guarantee compliance with international food safety standards."
+    q: "Are your spice export products certified and quality tested?",
+    a: "Yes, all our products undergo multi-stage laboratory testing and come with necessary export certifications (FSSAI, Spices Board / APEDA, ISO, Phytosanitary) to guarantee compliance with international food safety standards."
   },
   {
     q: "What is the typical delivery timeframe for international shipments?",
@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     q: "How do you ensure product freshness and aroma during long transit?",
-    a: "We utilize multi-layer food-grade eco packaging, vacuum sealing, and humidity-controlled storage to protect commodities against moisture, pests, and ambient degradation during sea voyages."
+    a: "We utilize multi-layer food-grade eco packaging, vacuum sealing, and humidity-controlled storage to protect whole spices, seed spices, and ground spices against moisture, pests, and ambient degradation during sea voyages."
   },
   {
     q: "Do you offer private labeling and custom packaging sizes?",
@@ -45,7 +45,7 @@ export default function FAQ({ onNavigate }) {
                 Got Questions? <span>We Have Answers</span>
               </h2>
               <p>
-                Find answers to common questions about our agro product certifications, bulk export shipping, packaging, and quality guarantees.
+                Find answers to common questions about our spice export certifications, bulk export shipping, packaging, and quality guarantees.
               </p>
             </div>
 
@@ -62,7 +62,7 @@ export default function FAQ({ onNavigate }) {
                   className="btn btn-primary"
                   style={{ padding: '10px 20px', fontSize: '13.5px', marginTop: '12px' }}
                 >
-                  <span>Contact Export Desk</span>
+                  <span>Contact Us</span>
                   <ArrowRight size={14} />
                 </button>
               </div>

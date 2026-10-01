@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, ShieldCheck, Globe2, Sparkles, MessageCircle } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 export default function CtaBanner({ onOpenQuote, onNavigate }) {
   return (
@@ -33,19 +33,8 @@ export default function CtaBanner({ onOpenQuote, onNavigate }) {
               </h2>
 
               <p className="cta-banner-desc">
-                Partner with Priya Impex for premium spices, oil seeds, herbs, and agricultural produce delivered to your port with guaranteed purity and complete export compliance.
+                Partner with Priya Impex for premium seed spices, whole spices, and ground spices delivered to your port with guaranteed purity, high essential oils, and complete export compliance.
               </p>
-
-              <div className="cta-features-pill-row">
-                <span className="cta-pill-item">
-                  <ShieldCheck size={14} color="#F5C542" />
-                  <span>ISO & APEDA Certified</span>
-                </span>
-                <span className="cta-pill-item">
-                  <ShieldCheck size={14} color="#F5C542" />
-                  <span>Worldwide Port Dispatch</span>
-                </span>
-              </div>
 
               <div className="cta-actions-row">
                 <button 
@@ -55,15 +44,6 @@ export default function CtaBanner({ onOpenQuote, onNavigate }) {
                 >
                   <span>Request Container Quote</span>
                   <ArrowRight size={17} />
-                </button>
-
-                <button
-                  onClick={() => onNavigate && onNavigate('contact')}
-                  className="btn-outline"
-                  style={{ padding: '13px 24px', fontSize: '14px', display: 'inline-flex', alignItems: 'center', gap: '8px', borderRadius: '10px', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.4)', backgroundColor: 'rgba(255,255,255,0.06)' }}
-                >
-                  <Globe2 size={16} />
-                  <span>Contact Export Desk</span>
                 </button>
               </div>
             </div>

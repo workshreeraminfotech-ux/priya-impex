@@ -97,8 +97,8 @@ export default function NewArrivalsSlider({ onSelectProduct }) {
                 <p>{item.subtitle}</p>
               </div>
               <div className="arrow-link-black">
-                <a href="#contact-us" onClick={(e) => { e.preventDefault(); onSelectProduct(item); }}>
-                  <span>Quick View</span>
+                <a href="#contact" onClick={(e) => { e.preventDefault(); if (onOpenQuote) onOpenQuote(item.title); }}>
+                  <span>Request Quote</span>
                   <ArrowRight size={14} />
                 </a>
               </div>

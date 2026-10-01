@@ -70,8 +70,10 @@ export default function ContactPage() {
       }}>
         {/* Background Image */}
         <img 
-          src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1920&q=80" 
+          src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1200&q=70" 
           alt="Contact Priya Impex Background" 
+          loading="lazy"
+          decoding="async"
           style={{
             position: 'absolute',
             inset: 0,

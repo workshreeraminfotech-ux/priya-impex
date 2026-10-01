@@ -16,7 +16,7 @@ export default function FooterSection({ onNavigate }) {
               <img src={logoImg} alt="Priya Impex" />
             </div>
             <p className="footer-bio-text">
-              Priya Impex is a premier Indian exporter of high-grade food & agricultural products. Delivering trust, exporting excellence directly to global markets.
+              Priya Impex is a premier Indian exporter of pure Whole Spices, Seed Spices, and Ground Spices. Delivering trust, exporting excellence directly to global markets.
             </p>
             <div className="footer-social-row">
               <a href="https://www.facebook.com/people/Priya-impex/61586308456903/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">
@@ -69,7 +69,7 @@ export default function FooterSection({ onNavigate }) {
             <ul className="footer-links-list">
               <li>
                 <a href="#" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate('products'); }}>
-                  <ChevronRight size={14} className="link-arrow" /> Ground Spices
+                  <ChevronRight size={14} className="link-arrow" /> Seed Spices
                 </a>
               </li>
               <li>
@@ -79,12 +79,7 @@ export default function FooterSection({ onNavigate }) {
               </li>
               <li>
                 <a href="#" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate('products'); }}>
-                  <ChevronRight size={14} className="link-arrow" /> Seed Spices
-                </a>
-              </li>
-              <li>
-                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate('products'); }}>
-                  <ChevronRight size={14} className="link-arrow" /> Blended Spices
+                  <ChevronRight size={14} className="link-arrow" /> Ground Spices
                 </a>
               </li>
             </ul>

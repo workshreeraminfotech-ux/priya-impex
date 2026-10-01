@@ -8,9 +8,9 @@ export default function ProductModal({ product, onClose, onOpenQuote }) {
     <div style={{
       position: 'fixed',
       inset: 0,
-      backgroundColor: 'rgba(7, 23, 46, 0.8)',
+      backgroundColor: 'rgba(7, 23, 46, 0.82)',
       backdropFilter: 'blur(4px)',
-      zIndex: 1000,
+      zIndex: 99999,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',

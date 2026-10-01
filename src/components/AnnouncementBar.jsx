@@ -33,7 +33,7 @@ export default function AnnouncementBar() {
             <a href="https://in.linkedin.com/company/priyaimpex-india" target="_blank" rel="noopener noreferrer" className="social-icon" title="LinkedIn">
               <Linkedin size={14} />
             </a>
-            <a href="https://api.whatsapp.com/send?phone=919328602931&text=Hi%20Priya%20Impex!%20I%20would%20like%20to%20enquire%20about%20your%20export%20commodities." target="_blank" rel="noopener noreferrer" className="social-icon" title="Business WhatsApp">
+            <a href="https://api.whatsapp.com/send?phone=919328602931&text=Hi%20Priya%20Impex!%20I%20would%20like%20to%20enquire%20about%20your%20wholesale%20Indian%20spices." target="_blank" rel="noopener noreferrer" className="social-icon" title="Business WhatsApp">
               <MessageCircle size={14} />
             </a>
           </div>

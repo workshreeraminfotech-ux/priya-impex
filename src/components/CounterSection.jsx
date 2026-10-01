@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Globe2, Ship, Building2, ShieldCheck } from 'lucide-react';
+import { Award, Ship, Building2, ShieldCheck } from 'lucide-react';
 import AnimatedCounter from './AnimatedCounter';
 
 export default function CounterSection() {
@@ -20,11 +20,11 @@ export default function CounterSection() {
       desc: 'Seamless port & customs clearing'
     },
     {
-      end: 30,
-      suffix: '+',
-      title: 'Countries Reached',
-      icon: Globe2,
-      desc: 'Trusted global trade network'
+      end: 99,
+      suffix: '%+',
+      title: 'Sortex Purity Standards',
+      icon: Award,
+      desc: 'Machine graded & optical sorted'
     },
     {
       end: 100,

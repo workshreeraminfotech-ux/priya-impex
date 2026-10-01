@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logoImg from '../assets/logo.png';
 
-export default function Preloader({ minDuration = 1800, onFinish }) {
+export default function Preloader({ minDuration = 350, onFinish }) {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Smooth progress counter from 0 to 100
+    // Smooth fast progress counter from 0 to 100
     const startTime = Date.now();
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTime;
@@ -19,9 +19,9 @@ export default function Preloader({ minDuration = 1800, onFinish }) {
         setTimeout(() => {
           setLoading(false);
           if (onFinish) onFinish();
-        }, 200);
+        }, 100);
       }
-    }, 25);
+    }, 15);
 
     return () => clearInterval(interval);
   }, [minDuration, onFinish]);

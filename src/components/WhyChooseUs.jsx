@@ -6,7 +6,7 @@ export default function WhyChooseUs({ onNavigate }) {
   const services = [
     {
       title: 'Global Sourcing',
-      desc: 'Procuring premium spices, herbs, seeds & agricultural commodities directly from certified Indian farms and verified origins.',
+      desc: 'Procuring pure whole spices, seed spices, and ground spices directly from certified Indian farms and verified origins.',
       img: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
       icon: Globe,
       tag: 'Farm Sourcing',
@@ -36,10 +36,10 @@ export default function WhyChooseUs({ onNavigate }) {
         <div className="section-title">
           <span className="eyebrow">OUR SERVICES</span>
           <h2>
-            Agro Expertise Driving <span>Global Nourishment</span>
+            Spice Expertise Driving <span>Global Flavors</span>
           </h2>
           <p>
-            Delivering world-class sourcing, supply management, and international export solutions tailored for global buyers.
+            Delivering world-class Indian spice sourcing, Sortex processing, and international export solutions tailored for global buyers.
           </p>
         </div>
 

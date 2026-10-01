@@ -783,8 +783,10 @@ button, input, select, textarea { font: inherit; }
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.65);
-  z-index: 2000;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1694,7 +1696,9 @@ button, input, select, textarea { font: inherit; }
    ====================================================================== */
 .services-redesign-section {
   padding: 54px 0;
-  background: #ffffff;
+  background: var(--cream);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   position: relative;
 }
 
@@ -2425,9 +2429,9 @@ button, input, select, textarea { font: inherit; }
    ====================================================================== */
 .faq-redesign-section {
   padding: 54px 0;
-  background: #F1F5F9;
-  border-top: 1px solid #CBD5E1;
-  border-bottom: 1px solid #CBD5E1;
+  background: var(--cream);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   position: relative;
 }
 
@@ -2791,7 +2795,7 @@ button, input, select, textarea { font: inherit; }
   background: rgba(7, 21, 46, 0.82);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  z-index: 9999;
+  z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3434,6 +3438,101 @@ img, video, iframe, canvas, svg {
     border-radius: 14px !important;
   }
 }
+
+/* ======================================================================
+   SIGNATURE SEED SPICES CONTINUOUS INFINITE MARQUEE SCROLLER
+   ====================================================================== */
+.seeds-marquee-wrapper {
+  overflow: hidden !important;
+  width: 100% !important;
+  position: relative !important;
+  padding: 14px 0 20px !important;
+  mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+}
+
+.seeds-marquee-track {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 24px !important;
+  width: max-content !important;
+  animation: seedsMarqueeScroll 28s linear infinite !important;
+  -webkit-animation: seedsMarqueeScroll 28s linear infinite !important;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+}
+
+.seeds-marquee-wrapper:hover .seeds-marquee-track {
+  animation-play-state: paused !important;
+}
+
+@keyframes seedsMarqueeScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+    -webkit-transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@-webkit-keyframes seedsMarqueeScroll {
+  0% {
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+  100% {
+    -webkit-transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.seeds-marquee-card {
+  flex: 0 0 auto !important;
+  width: 310px !important;
+  border-radius: 22px !important;
+  overflow: hidden !important;
+  box-shadow: 0 8px 24px rgba(11, 34, 64, 0.06) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border: 1.5px solid #E8DFCE !important;
+  background: #FFFFFF !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.seeds-marquee-card:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 16px 36px rgba(200, 148, 10, 0.2) !important;
+  border-color: var(--gold) !important;
+}
+
+@media (max-width: 768px) {
+  .seeds-marquee-wrapper {
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+  }
+  .seeds-marquee-track {
+    gap: 18px !important;
+    animation-duration: 22s !important;
+    -webkit-animation-duration: 22s !important;
+  }
+  .seeds-marquee-card {
+    width: 270px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .seeds-marquee-track {
+    gap: 14px !important;
+    animation-duration: 18s !important;
+    -webkit-animation-duration: 18s !important;
+  }
+  .seeds-marquee-card {
+    width: 250px !important;
+  }
+}
+
 
 
 

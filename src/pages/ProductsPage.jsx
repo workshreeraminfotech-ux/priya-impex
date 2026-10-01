@@ -1,12 +1,17 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ArrowRight, Eye, Sparkles, Filter, CheckCircle2 } from 'lucide-react';
+import { Search, ArrowRight, Sparkles, Filter, CheckCircle2 } from 'lucide-react';
 import { PRODUCT_CATEGORIES } from '../data/products';
 import { useStoreProducts } from '../utils/useStore';
 
-export default function ProductsPage({ onSelectProduct, onOpenQuote }) {
-  const [activeTab, setActiveTab] = useState('All');
-  const [searchTerm, setSearchTerm] = useState('');
+export default function ProductsPage({ onSelectProduct, onOpenQuote, initialCategory = 'All', initialSearch = '' }) {
+  const [activeTab, setActiveTab] = useState(initialCategory || 'All');
+  const [searchTerm, setSearchTerm] = useState(initialSearch || '');
+
+  useEffect(() => {
+    if (initialCategory) setActiveTab(initialCategory);
+    if (initialSearch !== undefined) setSearchTerm(initialSearch);
+  }, [initialCategory, initialSearch]);
 
   const productsList = useStoreProducts();
 
@@ -19,10 +24,10 @@ export default function ProductsPage({ onSelectProduct, onOpenQuote }) {
       const cat = String(product.category || product.cat || '');
 
       const matchesCategory = activeTab === 'All' || cat === activeTab;
-      const matchesSearch = searchTerm.trim() === '' || 
-        title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      const matchesSearch = searchTerm.trim() === '' ||
+        title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         desc.toLowerCase().includes(searchTerm.toLowerCase());
-      
+
       return matchesCategory && matchesSearch;
     });
   }, [activeTab, searchTerm, productsList]);
@@ -40,7 +45,7 @@ export default function ProductsPage({ onSelectProduct, onOpenQuote }) {
 
   return (
     <div style={{ backgroundColor: '#F8FAFC', minHeight: '100vh', paddingBottom: '100px' }}>
-      
+
       {/* Dynamic Hero Section — Guaranteed Background Image Overlay */}
       <section style={{
         position: 'relative',
@@ -50,9 +55,11 @@ export default function ProductsPage({ onSelectProduct, onOpenQuote }) {
         backgroundColor: '#1C1917'
       }}>
         {/* Background Image */}
-        <img 
-          src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1920&q=80" 
-          alt="Products Catalogue Background" 
+        <img
+          src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1200&q=70"
+          alt="Products Catalogue Background"
+          loading="lazy"
+          decoding="async"
           style={{
             position: 'absolute',
             inset: 0,
@@ -95,7 +102,7 @@ export default function ProductsPage({ onSelectProduct, onOpenQuote }) {
               backdropFilter: 'blur(6px)'
             }}>
               <Sparkles size={14} style={{ color: '#F5C542' }} />
-              100% Pure Indian Commodity Exporter • {productsList.length} Products
+              100% Pure Indian Spices Exporter • {productsList.length} Products
             </span>
 
             <h1 style={{
@@ -108,7 +115,7 @@ export default function ProductsPage({ onSelectProduct, onOpenQuote }) {
               color: '#FFFFFF'
             }}>
               Explore Our Complete <br />
-              <span style={{ color: '#F5C542' }}>Agro Commodity Catalogue</span>
+              <span style={{ color: '#F5C542' }}>Pure Indian Spices Catalogue</span>
             </h1>
 
             <p style={{
@@ -119,7 +126,7 @@ export default function ProductsPage({ onSelectProduct, onOpenQuote }) {
               margin: '0 auto 36px',
               fontWeight: 500
             }}>
-              High-purity Indian ground spices, whole spices, seed commodities & custom blends packed for global export markets.
+              High-purity Indian ground spices, whole spices, seed spices & custom blends packed for global export markets.
             </p>
 
             {/* Quick Stats Bar */}
@@ -151,7 +158,7 @@ export default function ProductsPage({ onSelectProduct, onOpenQuote }) {
 
       {/* Main Catalog Content */}
       <div className="container" style={{ marginTop: '-40px', position: 'relative', zIndex: 10 }}>
-        
+
         {/* Search & Category Filter Controls */}
         <div style={{
           backgroundColor: '#FFFFFF',
@@ -401,8 +408,8 @@ export default function ProductsPage({ onSelectProduct, onOpenQuote }) {
                     {product.description || product.desc}
                   </p>
 
-                  {/* Action Buttons */}
-                  <div style={{ display: 'flex', gap: '10px', marginTop: 'auto' }}>
+                  {/* Action Button */}
+                  <div style={{ marginTop: 'auto' }}>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -410,30 +417,19 @@ export default function ProductsPage({ onSelectProduct, onOpenQuote }) {
                       }}
                       className="btn btn-primary"
                       style={{
-                        flex: 1,
-                        padding: '11px 16px',
-                        fontSize: '13.5px',
-                        justifyContent: 'center'
+                        width: '100%',
+                        padding: '12px 18px',
+                        fontSize: '14px',
+                        fontWeight: 700,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        borderRadius: '10px'
                       }}
                     >
                       <span>Request Quote</span>
-                      <ArrowRight size={14} />
-                    </button>
-                    
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (onSelectProduct) onSelectProduct(product);
-                      }}
-                      className="btn btn-outline"
-                      style={{
-                        padding: '11px 16px',
-                        fontSize: '13.5px',
-                        justifyContent: 'center'
-                      }}
-                    >
-                      <Eye size={14} />
-                      <span>Details</span>
+                      <ArrowRight size={15} />
                     </button>
                   </div>
                 </div>
@@ -466,7 +462,7 @@ export default function ProductsPage({ onSelectProduct, onOpenQuote }) {
                 fontSize: '14px'
               }}
             >
-              View All 38 Products
+              View All {productsList.length} Products
             </button>
           </div>
         )}

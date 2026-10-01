@@ -139,7 +139,7 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = '' }) {
 
               <div className="rfq-field-group">
                 <div>
-                  <label className="rfq-label">Required Spice Commodity *</label>
+                  <label className="rfq-label">Required Spice Product *</label>
                   <input 
                     type="text" 
                     required

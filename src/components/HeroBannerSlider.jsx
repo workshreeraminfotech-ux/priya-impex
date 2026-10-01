@@ -1,9 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
 import heroBgVideo from '../assets/hero-bg.mp4';
+import heroPosterImg from '../assets/hero-poster.webp';
 
 export default function HeroBannerSlider({ onOpenQuote, onNavigate }) {
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+
+  useEffect(() => {
+    // Check if user is on data saver mode or very slow 2G
+    const isDataSaver = typeof navigator !== 'undefined' && (
+      navigator.connection?.saveData === true ||
+      navigator.connection?.effectiveType === '2g'
+    );
+
+    if (!isDataSaver) {
+      // Delay video request slightly so initial page HTML/CSS/Poster render with zero latency
+      const timer = setTimeout(() => setShouldLoadVideo(true), 120);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   return (
     <section 
       className="jrp-hero-section" 
@@ -19,27 +37,52 @@ export default function HeroBannerSlider({ onOpenQuote, onNavigate }) {
         padding: '78px 0 82px'
       }}
     >
-      {/* Background Video — Highlighted & Clear with Natural Tone */}
-      <video 
-        className="hero-video-bg" 
-        autoPlay 
-        loop 
-        muted 
-        playsInline
-        style={{ 
-          position: 'absolute', 
-          top: 0, 
-          left: 0, 
-          width: '100%', 
-          height: '100%', 
-          objectFit: 'cover', 
-          opacity: 0.92,
+      {/* Instant Eager-Loaded Lightweight Poster Image (Renders in ~30ms on 2G/3G) */}
+      <img
+        src={heroPosterImg}
+        alt="Priya Impex Global Spices"
+        fetchPriority="high"
+        loading="eager"
+        decoding="async"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          opacity: 0.94,
           filter: 'brightness(1.04) contrast(1.12) saturate(1.05)',
-          zIndex: 1 
+          zIndex: 1
         }}
-      >
-        <source src={heroBgVideo} type="video/mp4" />
-      </video>
+      />
+
+      {/* Progressive Background Video (Streams only when browser is ready) */}
+      {shouldLoadVideo && (
+        <video 
+          className="hero-video-bg" 
+          autoPlay 
+          loop 
+          muted 
+          playsInline
+          preload="auto"
+          onLoadedData={() => setVideoLoaded(true)}
+          style={{ 
+            position: 'absolute', 
+            top: 0, 
+            left: 0, 
+            width: '100%', 
+            height: '100%', 
+            objectFit: 'cover', 
+            opacity: videoLoaded ? 0.94 : 0,
+            transition: 'opacity 0.8s ease-in-out',
+            filter: 'brightness(1.04) contrast(1.12) saturate(1.05)',
+            zIndex: 2 
+          }}
+        >
+          <source src={heroBgVideo} type="video/mp4" />
+        </video>
+      )}
 
       {/* Clean Subtle Dark Gradient Overlay */}
       <div 
@@ -48,11 +91,11 @@ export default function HeroBannerSlider({ onOpenQuote, onNavigate }) {
           position: 'absolute', 
           inset: 0, 
           background: 'linear-gradient(180deg, rgba(7, 11, 20, 0.42) 0%, rgba(7, 11, 20, 0.58) 55%, rgba(5, 8, 16, 0.82) 100%)', 
-          zIndex: 2 
+          zIndex: 3 
         }}
       ></div>
 
-      <div className="container" style={{ position: 'relative', zIndex: 3 }}>
+      <div className="container" style={{ position: 'relative', zIndex: 4 }}>
         <div style={{ maxWidth: '820px' }}>
           
           {/* Top Tagline Badge */}
@@ -101,7 +144,7 @@ export default function HeroBannerSlider({ onOpenQuote, onNavigate }) {
           >
             Premium Indian Spices & <br />
             <span style={{ background: 'linear-gradient(135deg, #FFFFFF 0%, #F5C542 50%, #D4AF37 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Agro Commodities Exporter
+              Seed Spices Exporter
             </span>
           </motion.h1>
 
@@ -119,7 +162,7 @@ export default function HeroBannerSlider({ onOpenQuote, onNavigate }) {
               textShadow: '0 2px 10px rgba(0,0,0,0.45)' 
             }}
           >
-            Direct sourcing from Gujarat & India's top growing regions. Supplying premium whole spices, ground powders, oil seeds, and agro products with 100% purity and fast worldwide port dispatch.
+            Direct sourcing from Gujarat & India's top spice growing hubs. Supplying export-grade seed spices, whole spices, and fine ground powders with 100% purity and fast worldwide port dispatch.
           </motion.p>
 
           {/* CTA Action Buttons */}

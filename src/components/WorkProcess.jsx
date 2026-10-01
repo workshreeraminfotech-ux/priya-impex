@@ -7,7 +7,7 @@ export default function WorkProcess() {
     {
       num: '01',
       title: 'Sourcing & Selection',
-      desc: 'Procuring pure, high-grade agricultural commodities directly from audited Indian farm networks.',
+      desc: 'Procuring pure, high-grade spices and seed spices directly from audited Indian farm networks.',
       icon: SearchCheck
     },
     {
@@ -31,7 +31,7 @@ export default function WorkProcess() {
   ];
 
   return (
-    <section style={{ padding: '54px 0', background: 'var(--cream)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }} id="process">
+    <section style={{ padding: '54px 0', background: '#FFFFFF', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }} id="process">
       <div className="container">
         
         {/* Header */}
@@ -43,7 +43,7 @@ export default function WorkProcess() {
             Our Export Journey: <span style={{ color: 'var(--gold)' }}>From Source to Overseas Port</span>
           </h2>
           <p style={{ fontSize: '16px', color: 'var(--gray)', maxWidth: '620px', margin: '0 auto', lineHeight: 1.6 }}>
-            We ensure the smooth journey of your agro commodities from trusted Indian origins to global destination ports with zero compromise on quality and speed.
+            We ensure the smooth journey of your premium Indian spices from trusted farm origins to global destination ports with zero compromise on purity, aroma, and speed.
           </p>
         </div>
 

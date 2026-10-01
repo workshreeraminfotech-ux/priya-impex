@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, Send, CheckCircle2 } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, CheckCircle2, Globe2 } from 'lucide-react';
+import { addEnquiry } from '../utils/adminStore';
 
 export default function ContactUs() {
   const [submitted, setSubmitted] = useState(false);
@@ -16,8 +17,17 @@ export default function ContactUs() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    await addEnquiry({
+      source: 'Homepage Contact Form',
+      name: formData.fullName,
+      company: formData.company,
+      email: formData.email,
+      phone: `${formData.countryCode} ${formData.phone}`,
+      product: 'General Export Inquiry',
+      notes: formData.message
+    });
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);
@@ -37,12 +47,12 @@ export default function ContactUs() {
       <div className="container">
         <div className="contact-grid">
           <div>
-            <span className="eyebrow green" style={{ color: 'var(--silver-light)' }}>Contact Export Desk</span>
+            <span className="eyebrow green" style={{ color: 'var(--silver-light)' }}>Get In Touch</span>
             <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '38px', fontWeight: 900, color: '#fff', marginBottom: '20px', lineHeight: 1.2 }}>
               Get In Touch With <span>Priya Impex Team</span>
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255, 255, 255, 0.85)', marginBottom: '36px', lineHeight: 1.6 }}>
-              Have inquiries regarding bulk agro prices, container availability, or private label packaging? Send us a message and our team will respond within 24 hours.
+              Have inquiries regarding bulk spice prices, container availability, or private label packaging? Send us a message and our team will respond within 24 hours.
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -78,11 +88,11 @@ export default function ContactUs() {
 
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
                 <div style={{ width: 44, height: 44, borderRadius: 10, backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'var(--silver-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <MapPin size={20} />
+                  <Globe2 size={20} />
                 </div>
                 <div>
-                  <strong style={{ display: 'block', fontSize: 14, color: '#fff' }}>South Africa Hub:</strong>
-                  <p style={{ fontSize: 14, color: 'rgba(255, 255, 255, 0.85)' }}>Unit F8, Supreme Industrial Park, 410 Southern Klipriviersberg Rd, Steeldale, Johannesburg, Gauteng 2197</p>
+                  <strong style={{ display: 'block', fontSize: 14, color: '#fff' }}>Global Trade Representatives:</strong>
+                  <p style={{ fontSize: 14, color: 'rgba(255, 255, 255, 0.85)' }}>Dedicated Client Relationship Executives in Germany 🇩🇪, USA 🇺🇸, and UK 🇬🇧</p>
                 </div>
               </div>
             </div>

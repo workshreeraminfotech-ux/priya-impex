@@ -2,52 +2,31 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Target, Eye, ShieldCheck, CheckCircle2, Globe2, Sparkles, Building2, Factory, TestTube, Package, Ship } from 'lucide-react';
 import AboutUs from '../components/AboutUs';
-import CounterSection from '../components/CounterSection';
 import CertificationsSection from '../components/CertificationsSection';
 import CtaBanner from '../components/CtaBanner';
+
+import hygienicPackagingImg from '../assets/hygienic-packaging.webp';
+import containerDispatchImg from '../assets/container-dispatch.webp';
 
 export default function AboutPage({ onNavigate, onOpenQuote }) {
   const values = [
     {
       icon: Target,
       title: 'Our Mission',
-      desc: 'To deliver 100% pure, unadulterated Indian spices and agricultural commodities directly from farm origin to global sea ports with complete quality transparency, zero adulteration, and guaranteed on-time ocean delivery.',
-      img: 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&w=600&q=80'
+      desc: 'To deliver 100% pure, unadulterated Indian spices and seed spices directly from farm origin to global sea ports with complete quality transparency, zero adulteration, and guaranteed on-time ocean delivery.',
+      img: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80'
     },
     {
       icon: Eye,
       title: 'Our Vision',
-      desc: 'To stand as the most respected Indian agro-export brand globally, recognized across 50+ countries for uncompromising quality standards, modern processing infrastructure, and long-term client trust.',
-      img: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=600&q=80'
+      desc: 'To stand as the most respected Indian spices export brand globally, recognized across 50+ countries for uncompromising quality standards, modern processing infrastructure, and long-term client trust.',
+      img: 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&w=800&q=80'
     },
     {
       icon: ShieldCheck,
       title: 'Quality Assurance Policy',
       desc: 'Every single export container batch undergoes rigorous multi-tier laboratory testing (curcumin %, piperine %, moisture levels, pesticide MRLs), Sortex machine cleaning, and APEDA/Phytosanitary inspection.',
-      img: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=600&q=80'
-    }
-  ];
-
-  const highlights = [
-    {
-      title: 'Direct Farm Sourcing',
-      desc: 'Partnering directly with audited farming communities across Gujarat (Unjha), Rajasthan (Kota), Tamil Nadu (Erode), and Kerala (Idukki) to ensure 100% farm freshness.',
-      img: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80'
-    },
-    {
-      title: 'Cool-Temperature Milling',
-      desc: 'Utilizing modern cool-grinding machinery that preserves volatile essential oils, natural flavor pigments, and spicy heat without thermal degradation.',
-      img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=600&q=80'
-    },
-    {
-      title: 'Export-Grade Packaging',
-      desc: 'Multi-layer PP woven bags, bulk jute sacks with PE liners, vacuum foil pouches, and OEM private-label packaging built to withstand long maritime sea transit.',
-      img: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=600&q=80'
-    },
-    {
-      title: 'Global Logistics Network',
-      desc: 'Fast container dispatch via Mundra Port (Gujarat) with complete Phytosanitary, Certificate of Origin (COO), and customs documentation support.',
-      img: 'https://images.unsplash.com/photo-1509358217951-4fd2d6d8fb03?auto=format&fit=crop&w=600&q=80'
+      img: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=800&q=80'
     }
   ];
 
@@ -68,13 +47,13 @@ export default function AboutPage({ onNavigate, onOpenQuote }) {
       title: 'Hygienic Bulk Packaging',
       desc: 'Food-grade moisture barrier packaging preserving natural freshness.',
       icon: Package,
-      img: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=600&q=80'
+      img: hygienicPackagingImg
     },
     {
       title: 'Port Container Dispatch',
       desc: 'Seamless ocean freight stuffing and port customs clearance at Mundra.',
       icon: Ship,
-      img: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=600&q=80'
+      img: containerDispatchImg
     }
   ];
 
@@ -91,8 +70,10 @@ export default function AboutPage({ onNavigate, onOpenQuote }) {
       }}>
         {/* Background Image */}
         <img 
-          src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1920&q=80" 
+          src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1200&q=70" 
           alt="About Priya Impex Background" 
+          loading="lazy"
+          decoding="async"
           style={{
             position: 'absolute',
             inset: 0,
@@ -130,7 +111,7 @@ export default function AboutPage({ onNavigate, onOpenQuote }) {
               backdropFilter: 'blur(6px)'
             }}>
               <Sparkles size={14} style={{ color: 'var(--gold-light)' }} />
-              PRIYA IMPEX • B2B AGRO EXPORTS
+              PRIYA IMPEX • B2B SPICES EXPORTS
             </span>
 
             <h1 style={{
@@ -142,7 +123,7 @@ export default function AboutPage({ onNavigate, onOpenQuote }) {
               color: '#FFFFFF'
             }}>
               Pioneering Excellence in <br />
-              <span style={{ color: 'var(--gold-light)' }}>Global Commodity Exports</span>
+              <span style={{ color: 'var(--gold-light)' }}>Global Spices Exports</span>
             </h1>
 
             <p style={{ fontSize: '17px', color: 'rgba(255, 255, 255, 0.9)', lineHeight: 1.65, maxWidth: '720px', margin: '0 auto', fontWeight: 500 }}>
@@ -155,56 +136,62 @@ export default function AboutPage({ onNavigate, onOpenQuote }) {
       {/* Main AboutUs Showcase */}
       <AboutUs />
 
-      {/* Corporate Offices & Infrastructure — Rich Photo Cards */}
-      <section className="py-50" style={{ backgroundColor: '#FFFDF7', padding: '54px 0' }}>
+      {/* Corporate Presence & Global Trade Desks */}
+      <section className="py-50" style={{ backgroundColor: '#FFFDF7', padding: '56px 0', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <div className="section-title text-center" style={{ marginBottom: '44px' }}>
             <span className="eyebrow">
               GLOBAL FOOTPRINT
             </span>
             <h2 style={{ color: 'var(--navy)', marginTop: '10px' }}>
-              Our International <span style={{ color: 'var(--gold)' }}>Business Desks</span>
+              Main Headquarters & <span style={{ color: 'var(--gold)' }}>Global Representatives</span>
             </h2>
+            <p style={{ color: 'var(--gray)', maxWidth: '680px', margin: '10px auto 0', fontSize: '15.5px', lineHeight: 1.6 }}>
+              Centralized export operations based in Rajkot, Gujarat (India), backed by dedicated international trade executives in Germany, USA, and UK for direct buyer support.
+            </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '30px' }}>
-            {/* Office 1: Rajkot India */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 1fr))', gap: '24px' }}>
+            
+            {/* Card 1: Main Headquarters (Rajkot, India) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               style={{
                 backgroundColor: '#FFFFFF',
-                borderRadius: '24px',
+                borderRadius: '20px',
                 overflow: 'hidden',
                 border: '1.5px solid var(--border)',
-                boxShadow: '0 8px 24px rgba(200, 148, 10, 0.06)',
+                boxShadow: '0 8px 24px rgba(11, 34, 64, 0.05)',
                 display: 'flex',
                 flexDirection: 'column'
               }}
             >
-              <div style={{ height: '200px', overflow: 'hidden', position: 'relative' }}>
+              <div style={{ height: '180px', overflow: 'hidden', position: 'relative' }}>
                 <img 
                   src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80" 
-                  alt="Rajkot India Facility" 
+                  alt="Main Office & Facility Rajkot India" 
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                 />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 30%, rgba(42,29,8,0.85) 100%)' }}></div>
-                <div style={{ position: 'absolute', bottom: '16px', left: '20px', display: 'flex', alignItems: 'center', gap: '10px', color: '#FFFFFF' }}>
-                  <Building2 size={22} style={{ color: '#F5C542' }} />
-                  <span style={{ fontWeight: 800, fontSize: '18px' }}>India Headquarters</span>
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 30%, rgba(11, 34, 64, 0.88) 100%)' }}></div>
+                <div style={{ position: 'absolute', bottom: '14px', left: '18px', display: 'flex', alignItems: 'center', gap: '8px', color: '#FFFFFF' }}>
+                  <Building2 size={20} style={{ color: 'var(--gold)' }} />
+                  <span style={{ fontWeight: 800, fontSize: '16.5px' }}>Main Head Office 🇮🇳</span>
                 </div>
               </div>
 
-              <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '12.5px', color: 'var(--gold-deep)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Rajkot, Gujarat, INDIA</span>
-                <p style={{ fontSize: '14.5px', color: 'var(--gray)', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
-                  Main procurement, Sortex processing, lab testing, and container stuffing hub. Proximity to Mundra Port ensures fast container dispatch.
+              <div style={{ padding: '22px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '12px', color: 'var(--gold-deep)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>
+                  RAJKOT, GUJARAT, INDIA
+                </span>
+                <p style={{ fontSize: '14px', color: 'var(--gray)', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
+                  Central procurement, Sortex processing, lab analysis, export packaging, and container stuffing hub with rapid dispatch to Mundra & Pipavav ports.
                 </p>
               </div>
             </motion.div>
 
-            {/* Office 2: Johannesburg South Africa */}
+            {/* Card 2: Germany Executive */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -212,34 +199,115 @@ export default function AboutPage({ onNavigate, onOpenQuote }) {
               transition={{ delay: 0.1 }}
               style={{
                 backgroundColor: '#FFFFFF',
-                borderRadius: '24px',
+                borderRadius: '20px',
                 overflow: 'hidden',
                 border: '1.5px solid var(--border)',
-                boxShadow: '0 8px 24px rgba(200, 148, 10, 0.06)',
+                boxShadow: '0 8px 24px rgba(11, 34, 64, 0.05)',
                 display: 'flex',
                 flexDirection: 'column'
               }}
             >
-              <div style={{ height: '200px', overflow: 'hidden', position: 'relative' }}>
+              <div style={{ height: '180px', overflow: 'hidden', position: 'relative' }}>
                 <img 
-                  src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=800&q=80" 
-                  alt="Johannesburg South Africa Desk" 
+                  src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80" 
+                  alt="Germany Trade Executive" 
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                 />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 30%, rgba(42,29,8,0.85) 100%)' }}></div>
-                <div style={{ position: 'absolute', bottom: '16px', left: '20px', display: 'flex', alignItems: 'center', gap: '10px', color: '#FFFFFF' }}>
-                  <Globe2 size={22} style={{ color: '#F5C542' }} />
-                  <span style={{ fontWeight: 800, fontSize: '18px' }}>International Desk</span>
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 30%, rgba(11, 34, 64, 0.88) 100%)' }}></div>
+                <div style={{ position: 'absolute', bottom: '14px', left: '18px', display: 'flex', alignItems: 'center', gap: '8px', color: '#FFFFFF' }}>
+                  <Globe2 size={20} style={{ color: 'var(--gold)' }} />
+                  <span style={{ fontWeight: 800, fontSize: '16.5px' }}>Germany Executive 🇩🇪</span>
                 </div>
               </div>
 
-              <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '12.5px', color: 'var(--gold-deep)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Johannesburg, SOUTH AFRICA</span>
-                <p style={{ fontSize: '14.5px', color: 'var(--gray)', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
-                  African continent client relations, distribution logistics, and trade finance desk serving African and Middle East buyers.
+              <div style={{ padding: '22px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '12px', color: 'var(--gold-deep)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>
+                  GERMANY & EUROPE DESK
+                </span>
+                <p style={{ fontSize: '14px', color: 'var(--gray)', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
+                  Dedicated trade representative coordinating European buyer relations, EU food safety compliance (EU MRLs), sample dispatches, and import documentation.
                 </p>
               </div>
             </motion.div>
+
+            {/* Card 3: USA Executive */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.15 }}
+              style={{
+                backgroundColor: '#FFFFFF',
+                borderRadius: '20px',
+                overflow: 'hidden',
+                border: '1.5px solid var(--border)',
+                boxShadow: '0 8px 24px rgba(11, 34, 64, 0.05)',
+                display: 'flex',
+                flexDirection: 'column'
+              }}
+            >
+              <div style={{ height: '180px', overflow: 'hidden', position: 'relative' }}>
+                <img 
+                  src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?auto=format&fit=crop&w=800&q=80" 
+                  alt="USA Trade Executive" 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 30%, rgba(11, 34, 64, 0.88) 100%)' }}></div>
+                <div style={{ position: 'absolute', bottom: '14px', left: '18px', display: 'flex', alignItems: 'center', gap: '8px', color: '#FFFFFF' }}>
+                  <Globe2 size={20} style={{ color: 'var(--gold)' }} />
+                  <span style={{ fontWeight: 800, fontSize: '16.5px' }}>USA Executive 🇺🇸</span>
+                </div>
+              </div>
+
+              <div style={{ padding: '22px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '12px', color: 'var(--gold-deep)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>
+                  USA & NORTH AMERICA DESK
+                </span>
+                <p style={{ fontSize: '14px', color: 'var(--gray)', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
+                  Dedicated regional representative managing commercial inquiries, FDA & USDA compliance, container shipments, and direct relationship support for American buyers.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Card 4: UK Executive */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              style={{
+                backgroundColor: '#FFFFFF',
+                borderRadius: '20px',
+                overflow: 'hidden',
+                border: '1.5px solid var(--border)',
+                boxShadow: '0 8px 24px rgba(11, 34, 64, 0.05)',
+                display: 'flex',
+                flexDirection: 'column'
+              }}
+            >
+              <div style={{ height: '180px', overflow: 'hidden', position: 'relative' }}>
+                <img 
+                  src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80" 
+                  alt="UK Trade Executive" 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 30%, rgba(11, 34, 64, 0.88) 100%)' }}></div>
+                <div style={{ position: 'absolute', bottom: '14px', left: '18px', display: 'flex', alignItems: 'center', gap: '8px', color: '#FFFFFF' }}>
+                  <Globe2 size={20} style={{ color: 'var(--gold)' }} />
+                  <span style={{ fontWeight: 800, fontSize: '16.5px' }}>UK Executive 🇬🇧</span>
+                </div>
+              </div>
+
+              <div style={{ padding: '22px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '12px', color: 'var(--gold-deep)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>
+                  UNITED KINGDOM (UK) DESK
+                </span>
+                <p style={{ fontSize: '14px', color: 'var(--gray)', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
+                  Dedicated client relationship executive catering to British spice distributors, ethnic food markets, and food manufacturers with localized buyer assistance.
+                </p>
+              </div>
+            </motion.div>
+
           </div>
         </div>
       </section>
@@ -307,7 +375,7 @@ export default function AboutPage({ onNavigate, onOpenQuote }) {
               Driven by Purpose, <span style={{ color: 'var(--gold)' }}>Guided by Integrity</span>
             </h2>
             <p style={{ color: 'var(--gray)', maxWidth: '600px', margin: '10px auto 0' }}>
-              Discover the core principles that power Priya Impex's global reputation as a premier agro commodity exporter.
+              Discover the core principles that power Priya Impex's global reputation as a premier Indian spices exporter.
             </p>
           </div>
 
@@ -353,63 +421,6 @@ export default function AboutPage({ onNavigate, onOpenQuote }) {
           </div>
         </div>
       </section>
-
-      {/* Why We Excel Section — Rich Visual Feature Cards */}
-      <section className="py-50" style={{ backgroundColor: '#FFFFFF', padding: '54px 0', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
-        <div className="container">
-          <div className="section-title text-center" style={{ marginBottom: '48px' }}>
-            <span className="eyebrow">
-              OUR ADVANTAGES
-            </span>
-            <h2 style={{ color: 'var(--navy)', marginTop: '10px' }}>
-              Why Importers Choose <span style={{ color: 'var(--gold)' }}>Priya Impex</span>
-            </h2>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
-            {highlights.map((hl, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.08 }}
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  borderRadius: '20px',
-                  overflow: 'hidden',
-                  border: '1.5px solid var(--border)',
-                  boxShadow: '0 6px 20px rgba(200, 148, 10, 0.04)',
-                  display: 'flex',
-                  flexDirection: 'column'
-                }}
-              >
-                <div style={{ height: '150px', overflow: 'hidden', position: 'relative' }}>
-                  <img src={hl.img} alt={hl.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  <div style={{ position: 'absolute', top: 12, right: 12, background: 'linear-gradient(135deg, #C8940A 0%, #D4AF37 100%)', color: '#1C1917', padding: '4px 10px', borderRadius: '100px', fontSize: '11px', fontWeight: 800 }}>
-                    Verified Advantage
-                  </div>
-                </div>
-                
-                <div style={{ padding: '22px', flex: 1, display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                  <CheckCircle2 size={20} style={{ color: 'var(--gold)', flexShrink: 0, marginTop: '2px' }} />
-                  <div>
-                    <h3 style={{ fontFamily: 'var(--font-h, Outfit, sans-serif)', fontSize: '17px', fontWeight: 800, color: 'var(--navy)', marginBottom: '6px' }}>
-                      {hl.title}
-                    </h3>
-                    <p style={{ fontSize: '13.5px', color: 'var(--gray)', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
-                      {hl.desc}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Live Animated Statistics Counter */}
-      <CounterSection />
 
       {/* Certifications Section */}
       <CertificationsSection bgColor="#FFFFFF" />

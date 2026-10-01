@@ -1,73 +1,43 @@
 import { useState, useEffect } from 'react';
 import { getProducts, getBlogs, getCertificates, getEnquiries } from './adminStore';
+import { PRODUCTS } from '../data/products';
+import { BLOGS } from '../data/blogs';
 
 export function useStoreProducts() {
-  const [products, setProducts] = useState(() => {
-    const list = getProducts();
-    return Array.isArray(list) ? list : [];
-  });
+  const [products, setProducts] = useState(() => getProducts() || PRODUCTS);
 
   useEffect(() => {
-    const handleUpdate = () => {
-      const list = getProducts();
-      setProducts(Array.isArray(list) ? list : []);
-    };
-    window.addEventListener('priya_store_updated', handleUpdate);
-    return () => window.removeEventListener('priya_store_updated', handleUpdate);
+    setProducts(getProducts() || PRODUCTS);
   }, []);
 
-  return Array.isArray(products) ? products : [];
+  return Array.isArray(products) && products.length > 0 ? products : PRODUCTS;
 }
 
 export function useStoreBlogs() {
-  const [blogs, setBlogs] = useState(() => {
-    const list = getBlogs();
-    return Array.isArray(list) ? list : [];
-  });
+  const [blogs, setBlogs] = useState(() => getBlogs() || BLOGS);
 
   useEffect(() => {
-    const handleUpdate = () => {
-      const list = getBlogs();
-      setBlogs(Array.isArray(list) ? list : []);
-    };
-    window.addEventListener('priya_store_updated', handleUpdate);
-    return () => window.removeEventListener('priya_store_updated', handleUpdate);
+    setBlogs(getBlogs() || BLOGS);
   }, []);
 
-  return Array.isArray(blogs) ? blogs : [];
+  return Array.isArray(blogs) && blogs.length > 0 ? blogs : BLOGS;
 }
 
 export function useStoreCertificates() {
-  const [certs, setCerts] = useState(() => {
-    const list = getCertificates();
-    return Array.isArray(list) ? list : [];
-  });
+  const [certs, setCerts] = useState(() => getCertificates());
 
   useEffect(() => {
-    const handleUpdate = () => {
-      const list = getCertificates();
-      setCerts(Array.isArray(list) ? list : []);
-    };
-    window.addEventListener('priya_store_updated', handleUpdate);
-    return () => window.removeEventListener('priya_store_updated', handleUpdate);
+    setCerts(getCertificates());
   }, []);
 
-  return Array.isArray(certs) ? certs : [];
+  return Array.isArray(certs) && certs.length > 0 ? certs : getCertificates();
 }
 
 export function useStoreEnquiries() {
-  const [enquiries, setEnquiries] = useState(() => {
-    const list = getEnquiries();
-    return Array.isArray(list) ? list : [];
-  });
+  const [enquiries, setEnquiries] = useState(() => getEnquiries());
 
   useEffect(() => {
-    const handleUpdate = () => {
-      const list = getEnquiries();
-      setEnquiries(Array.isArray(list) ? list : []);
-    };
-    window.addEventListener('priya_store_updated', handleUpdate);
-    return () => window.removeEventListener('priya_store_updated', handleUpdate);
+    setEnquiries(getEnquiries());
   }, []);
 
   return Array.isArray(enquiries) ? enquiries : [];

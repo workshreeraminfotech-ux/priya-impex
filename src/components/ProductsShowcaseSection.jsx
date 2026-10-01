@@ -1,16 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Eye } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useStoreProducts } from '../utils/useStore';
 
-// Top 6 most exported spices from India
+// Top 6 most exported spices from India (Seed Spices & Whole Spices First)
 const TOP_6_EXPORT_IDS = [
-  'turmeric-powder',
-  'chilli-powder',
   'cumin-seeds',
+  'coriander-seeds',
+  'fennel-seeds',
   'black-pepper',
-  'green-cardamom',
-  'ginger-powder'
+  'dry-red-chilli',
+  'turmeric-fingers'
 ];
 
 export default function ProductsShowcaseSection({ onSelectProduct, onOpenQuote, onNavigate }) {
@@ -30,13 +30,13 @@ export default function ProductsShowcaseSection({ onSelectProduct, onOpenQuote, 
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <div className="section-title">
             <span className="eyebrow">
-              TOP EXPORT COMMODITIES FROM INDIA
+              TOP EXPORT SPICES FROM INDIA
             </span>
             <h2 style={{ color: 'var(--navy)', marginTop: '12px' }}>
-              Our Featured <span style={{ color: 'var(--gold)' }}>Indian Commodities</span>
+              Our Featured <span style={{ color: 'var(--gold)' }}>Indian Spices</span>
             </h2>
             <p style={{ marginTop: '10px', color: 'var(--gray)', maxWidth: '600px', margin: '10px auto 0' }}>
-              India's most demanded premium export commodities — machine cleaned, Sortex sorted, and packed for international trade.
+              India's most demanded premium export spices — machine cleaned, Sortex sorted, and packed for international trade.
             </p>
           </div>
         </div>
@@ -105,24 +105,15 @@ export default function ProductsShowcaseSection({ onSelectProduct, onOpenQuote, 
                   {item.desc || item.description}
                 </p>
 
-                {/* Action Buttons */}
-                <div style={{ display: 'flex', gap: '10px', marginTop: 'auto' }}>
+                {/* Action Button */}
+                <div style={{ marginTop: 'auto' }}>
                   <button
                     onClick={() => onOpenQuote ? onOpenQuote(item.title) : null}
                     className="btn btn-primary"
-                    style={{ flex: 1, padding: '12px 18px', fontSize: '13.5px', justifyContent: 'center' }}
+                    style={{ width: '100%', padding: '12px 18px', fontSize: '13.5px', justifyContent: 'center', display: 'inline-flex', alignItems: 'center', gap: '8px', borderRadius: '10px' }}
                   >
                     <span>Request Quote</span>
                     <ArrowRight size={15} />
-                  </button>
-                  
-                  <button
-                    onClick={() => onSelectProduct ? onSelectProduct(item) : null}
-                    className="btn btn-outline"
-                    style={{ padding: '12px 18px', fontSize: '13.5px' }}
-                  >
-                    <Eye size={15} />
-                    <span>View</span>
                   </button>
                 </div>
               </div>
@@ -137,7 +128,7 @@ export default function ProductsShowcaseSection({ onSelectProduct, onOpenQuote, 
             className="btn btn-primary"
             style={{ padding: '14px 32px', fontSize: '15px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
           >
-            <span>Explore All 38 Commodity Products</span>
+            <span>Explore All {allProducts.length} Spices Products</span>
             <ArrowRight size={18} />
           </button>
         </div>

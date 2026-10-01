@@ -127,7 +127,7 @@ export default function RecentBlogs({ onNavigate }) {
               fontSize: '14.5px'
             }}
           >
-            <span>View All Knowledge Posts</span>
+            <span>Explore All Articles</span>
             <ArrowRight size={16} />
           </button>
         </div>

@@ -31,7 +31,7 @@ export default function BlogPage() {
         {/* Background Image */}
         <img 
           src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1920&q=80" 
-          alt="Priya Impex Agro Blog Background" 
+          alt="Priya Impex Spice Blog Background" 
           style={{
             position: 'absolute',
             inset: 0,
@@ -85,7 +85,7 @@ export default function BlogPage() {
             </h1>
 
             <p style={{ fontSize: '17px', color: 'rgba(255, 255, 255, 0.9)', lineHeight: 1.6, maxWidth: '680px', margin: '0 auto', fontWeight: 500 }}>
-              Expert articles on Indian spice quality parameters, curcumin testing, ASTA color ratings, purity standards, and global commodity exports.
+              Expert articles on Indian spice quality parameters, curcumin testing, ASTA color ratings, purity standards, and global spice trade & exports.
             </p>
           </motion.div>
         </div>
@@ -309,11 +309,11 @@ export default function BlogPage() {
           inset: 0,
           backgroundColor: 'rgba(7, 23, 46, 0.82)',
           backdropFilter: 'blur(4px)',
-          zIndex: 1000,
+          zIndex: 99999,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: 20
+          padding: '20px 16px'
         }} onClick={() => setActiveArticle(null)}>
           <div
             onClick={(e) => e.stopPropagation()}

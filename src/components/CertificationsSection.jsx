@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Sparkles, X, Eye, ShieldCheck } from 'lucide-react';
+import { Sparkles, X, ShieldCheck } from 'lucide-react';
 import { useStoreCertificates } from '../utils/useStore';
 
-export default function CertificationsSection({ bgColor = '#F8FAFC' }) {
+export default function CertificationsSection({ bgColor = 'var(--cream)' }) {
   const rawCerts = useStoreCertificates();
   const certs = Array.isArray(rawCerts) ? rawCerts : [];
   const [selectedCert, setSelectedCert] = useState(null);
@@ -11,7 +11,7 @@ export default function CertificationsSection({ bgColor = '#F8FAFC' }) {
   const marqueeCerts = certs.length > 0 ? [...certs, ...certs, ...certs, ...certs] : [];
 
   return (
-    <section className="py-50 certs-marquee-section" id="certifications" style={{ background: bgColor, borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0', padding: '56px 0 62px', overflow: 'hidden' }}>
+    <section className="py-50 certs-marquee-section" id="certifications" style={{ background: bgColor, borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', padding: '56px 0 62px', overflow: 'hidden' }}>
       <div className="container">
         
         {/* Header */}
@@ -91,8 +91,8 @@ export default function CertificationsSection({ bgColor = '#F8FAFC' }) {
                   transition: 'opacity 0.25s ease'
                 }}
               >
-                <Eye size={16} color="#F5C542" />
-                <span>View Full</span>
+                <ShieldCheck size={16} color="#F5C542" />
+                <span>Verified Certificate</span>
               </div>
             </div>
           ))}
