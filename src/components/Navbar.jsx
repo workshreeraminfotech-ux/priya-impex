@@ -30,6 +30,17 @@ export default function Navbar({ activePage, onNavigate, onOpenBrochure }) {
     }, 50);
   };
 
+  const handleDownloadBrochure = (e) => {
+    if (e) e.preventDefault();
+    const link = document.createElement('a');
+    link.href = '/Priya%20Impex%20brochure.pdf';
+    link.download = 'Priya_Impex_Brochure.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setMobileOpen(false);
+  };
+
   return (
     <>
       <header className="jrp-header">
@@ -94,7 +105,7 @@ export default function Navbar({ activePage, onNavigate, onOpenBrochure }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
               <button
                 className="btn btn-primary d-none-mobile"
-                onClick={() => onOpenBrochure ? onOpenBrochure() : null}
+                onClick={handleDownloadBrochure}
                 style={{ fontSize: '15px', padding: '12px 22px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
               >
                 <Download size={16} />
@@ -158,7 +169,7 @@ export default function Navbar({ activePage, onNavigate, onOpenBrochure }) {
               <div style={{ marginTop: '20px' }}>
                 <button 
                   className="btn btn-primary" 
-                  onClick={() => { setMobileOpen(false); if (onOpenBrochure) onOpenBrochure(); }} 
+                  onClick={handleDownloadBrochure} 
                   style={{ width: '100%', justifyContent: 'center', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                 >
                   <Download size={16} />
