@@ -19,7 +19,6 @@ export default function App() {
   const [activePage, setActivePage] = useState('home');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quoteProduct, setQuoteProduct] = useState('');
-  const [isQuoteOpen, setIsQuoteOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [productSearch, setProductSearch] = useState('');
 
@@ -32,7 +31,16 @@ export default function App() {
 
   const handleOpenQuote = (productName = '') => {
     setQuoteProduct(productName);
-    setIsQuoteOpen(true);
+    setSelectedProduct(null);
+    setActivePage('contact');
+    setTimeout(() => {
+      const formEl = document.getElementById('contact-form') || document.querySelector('.contact-form-card');
+      if (formEl) {
+        formEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        window.scrollTo({ top: 300, behavior: 'smooth' });
+      }
+    }, 120);
   };
 
   return (
@@ -71,6 +79,7 @@ export default function App() {
         )}
         {activePage === 'contact' && (
           <ContactPage 
+            initialProduct={quoteProduct}
             onOpenQuote={() => handleOpenQuote()} 
           />
         )}
@@ -81,12 +90,6 @@ export default function App() {
       {selectedProduct && (
         <QuickViewModal product={selectedProduct} onClose={() => setSelectedProduct(null)} onOpenQuote={(prod) => handleOpenQuote(prod)} />
       )}
-
-      <QuoteModal 
-        isOpen={isQuoteOpen} 
-        initialProduct={quoteProduct} 
-        onClose={() => setIsQuoteOpen(false)} 
-      />
 
       <WhatsAppFloat />
       <Preloader />

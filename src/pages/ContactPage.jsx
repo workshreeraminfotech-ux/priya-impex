@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, MessageCircle, ArrowRight, Clock, Globe, Send } from 'lucide-react';
 import { addEnquiry } from '../utils/adminStore';
@@ -36,9 +36,28 @@ const contactCards = [
   },
 ];
 
-export default function ContactPage() {
-  const [form, setForm] = useState({ name: '', company: '', email: '', countryCode: '+91', phone: '', product: '', quantity: '', message: '' });
+export default function ContactPage({ initialProduct = '' }) {
+  const [form, setForm] = useState({ 
+    name: '', 
+    company: '', 
+    email: '', 
+    countryCode: '+91', 
+    phone: '', 
+    product: initialProduct || '', 
+    quantity: '', 
+    message: initialProduct ? `Inquiry for export pricing, specifications, and packaging of ${initialProduct}.` : '' 
+  });
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (initialProduct) {
+      setForm(prev => ({
+        ...prev,
+        product: initialProduct,
+        message: prev.message || `Inquiry for export pricing, specifications, and packaging of ${initialProduct}.`
+      }));
+    }
+  }, [initialProduct]);
 
   const handleChange = (e) => setForm(p => ({ ...p, [e.target.name]: e.target.value }));
 
@@ -177,6 +196,7 @@ export default function ContactPage() {
           <div className="contact-page-grid">
             {/* Form */}
             <motion.div
+              id="contact-form"
               className="contact-form-card"
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
