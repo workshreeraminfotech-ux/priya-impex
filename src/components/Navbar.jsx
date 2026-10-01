@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, X, ArrowRight, MapPin, Mail, Phone, Download } from 'lucide-react';
+import { Menu, X, ArrowRight, MapPin, Mail, Phone, Download, Sparkles } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 
 export default function Navbar({ activePage, onNavigate, onOpenBrochure }) {
@@ -103,14 +103,19 @@ export default function Navbar({ activePage, onNavigate, onOpenBrochure }) {
 
             {/* Actions: CTA + Mobile Toggle */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
-              <button
-                className="btn btn-primary d-none-mobile"
-                onClick={handleDownloadBrochure}
-                style={{ fontSize: '15px', padding: '12px 22px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-              >
-                <Download size={16} />
-                <span>Download Brochure</span>
-              </button>
+              <div style={{ position: 'relative' }} className="d-none-mobile">
+                <button
+                  className="btn-brochure-highlight"
+                  onClick={handleDownloadBrochure}
+                  title="Download Priya Impex Official Export Brochure (PDF)"
+                >
+                  <span className="brochure-badge">
+                    <Sparkles size={10} /> 2026 PDF
+                  </span>
+                  <Download size={17} style={{ color: '#F5C542' }} />
+                  <span>Download Brochure</span>
+                </button>
+              </div>
 
               <button
                 className="mobile-menu-toggle-btn"
@@ -166,13 +171,16 @@ export default function Navbar({ activePage, onNavigate, onOpenBrochure }) {
                 </div>
               </div>
 
-              <div style={{ marginTop: '20px' }}>
+              <div style={{ marginTop: '22px', position: 'relative' }}>
                 <button 
-                  className="btn btn-primary" 
+                  className="btn-brochure-highlight" 
                   onClick={handleDownloadBrochure} 
-                  style={{ width: '100%', justifyContent: 'center', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                  style={{ width: '100%', justifyContent: 'center', padding: '13px 20px !important' }}
                 >
-                  <Download size={16} />
+                  <span className="brochure-badge" style={{ top: '-10px', right: '14px' }}>
+                    <Sparkles size={10} /> 2026 PDF
+                  </span>
+                  <Download size={18} style={{ color: '#F5C542' }} />
                   <span>Download Brochure</span>
                 </button>
               </div>

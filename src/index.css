@@ -3533,6 +3533,113 @@ img, video, iframe, canvas, svg {
   }
 }
 
+/* ======================================================================
+   HIGHLIGHTED DOWNLOAD BROCHURE BUTTON (Pulsing Glow, Badge & Shimmer)
+   ====================================================================== */
+.btn-brochure-highlight {
+  position: relative;
+  background: linear-gradient(135deg, #0B2240 0%, #16365C 50%, #0B2240 100%) !important;
+  color: #FFFFFF !important;
+  border: 2px solid #C8940A !important;
+  border-radius: 12px !important;
+  font-weight: 800 !important;
+  font-size: 14.5px !important;
+  padding: 11px 22px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 18px rgba(200, 148, 10, 0.35), 0 0 0 0 rgba(200, 148, 10, 0.6) !important;
+  animation: brochurePulseGlow 2.4s infinite cubic-bezier(0.4, 0, 0.6, 1) !important;
+  transition: all 0.3s ease !important;
+  text-decoration: none !important;
+}
+
+.btn-brochure-highlight:hover {
+  transform: translateY(-2px) scale(1.03) !important;
+  background: linear-gradient(135deg, #C8940A 0%, #D4AF37 100%) !important;
+  color: #0B2240 !important;
+  border-color: #F5C542 !important;
+  box-shadow: 0 8px 25px rgba(200, 148, 10, 0.55) !important;
+}
+
+.btn-brochure-highlight:hover .brochure-badge {
+  background: #0B2240 !important;
+  color: #F5C542 !important;
+}
+
+/* Pulsing Floating Badge */
+.brochure-badge {
+  position: absolute;
+  top: -10px;
+  right: -8px;
+  background: linear-gradient(135deg, #C8940A 0%, #F5C542 100%);
+  color: #0B2240;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 100px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1.5px solid #FFFFFF;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  animation: badgeBounce 2.2s infinite ease-in-out;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Shimmer Light Bar Sweep */
+.btn-brochure-highlight::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.32), transparent);
+  transform: skewX(-20deg);
+  animation: brochureShimmerSweep 3.2s infinite ease-in-out;
+  pointer-events: none;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+@keyframes brochurePulseGlow {
+  0% {
+    box-shadow: 0 4px 15px rgba(200, 148, 10, 0.35), 0 0 0 0 rgba(200, 148, 10, 0.65);
+  }
+  50% {
+    box-shadow: 0 6px 22px rgba(200, 148, 10, 0.55), 0 0 0 9px rgba(200, 148, 10, 0);
+  }
+  100% {
+    box-shadow: 0 4px 15px rgba(200, 148, 10, 0.35), 0 0 0 0 rgba(200, 148, 10, 0);
+  }
+}
+
+@keyframes brochureShimmerSweep {
+  0% {
+    left: -75%;
+  }
+  60% {
+    left: 125%;
+  }
+  100% {
+    left: 125%;
+  }
+}
+
+@keyframes badgeBounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.08);
+  }
+}
+
 
 
 
