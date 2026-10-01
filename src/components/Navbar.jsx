@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Menu, X, ArrowRight, MapPin, Mail, Phone } from 'lucide-react';
+import { Menu, X, ArrowRight, MapPin, Mail, Phone, Download } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 
-export default function Navbar({ activePage, onNavigate }) {
+export default function Navbar({ activePage, onNavigate, onOpenBrochure }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleNav = (id) => {
@@ -94,11 +94,11 @@ export default function Navbar({ activePage, onNavigate }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
               <button
                 className="btn btn-primary d-none-mobile"
-                onClick={() => handleNav('contact')}
-                style={{ fontSize: '15px', padding: '12px 24px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                onClick={() => onOpenBrochure ? onOpenBrochure() : null}
+                style={{ fontSize: '15px', padding: '12px 22px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
               >
-                <span>Freight Quote</span>
-                <ArrowRight size={16} />
+                <Download size={16} />
+                <span>Download Brochure</span>
               </button>
 
               <button
@@ -156,9 +156,13 @@ export default function Navbar({ activePage, onNavigate }) {
               </div>
 
               <div style={{ marginTop: '20px' }}>
-                <button className="btn btn-primary" onClick={() => handleNav('contact')} style={{ width: '100%', justifyContent: 'center' }}>
-                  <span>Get A Quote</span>
-                  <ArrowRight size={16} />
+                <button 
+                  className="btn btn-primary" 
+                  onClick={() => { setMobileOpen(false); if (onOpenBrochure) onOpenBrochure(); }} 
+                  style={{ width: '100%', justifyContent: 'center', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                >
+                  <Download size={16} />
+                  <span>Download Brochure</span>
                 </button>
               </div>
             </div>

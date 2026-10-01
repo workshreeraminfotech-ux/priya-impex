@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import HeaderTop from './components/HeaderTop';
 import Navbar from './components/Navbar';
 import FooterSection from './components/FooterSection';
 import QuickViewModal from './components/QuickViewModal';
-import QuoteModal from './components/QuoteModal';
+import BrochureModal from './components/BrochureModal';
 import WhatsAppFloat from './components/WhatsAppFloat';
 import Preloader from './components/Preloader';
 
@@ -19,8 +19,18 @@ export default function App() {
   const [activePage, setActivePage] = useState('home');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quoteProduct, setQuoteProduct] = useState('');
+  const [isBrochureOpen, setIsBrochureOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [productSearch, setProductSearch] = useState('');
+
+  // 10-Second Auto Popup for Brochure
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsBrochureOpen(true);
+    }, 10000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleNavigate = (pageId, category = 'All', search = '') => {
     setActivePage(pageId);
@@ -49,7 +59,7 @@ export default function App() {
       <Navbar 
         activePage={activePage} 
         onNavigate={handleNavigate} 
-        onOpenQuote={() => handleOpenQuote()} 
+        onOpenBrochure={() => setIsBrochureOpen(true)} 
       />
 
       <main>
@@ -90,6 +100,11 @@ export default function App() {
       {selectedProduct && (
         <QuickViewModal product={selectedProduct} onClose={() => setSelectedProduct(null)} onOpenQuote={(prod) => handleOpenQuote(prod)} />
       )}
+
+      <BrochureModal 
+        isOpen={isBrochureOpen} 
+        onClose={() => setIsBrochureOpen(false)} 
+      />
 
       <WhatsAppFloat />
       <Preloader />
