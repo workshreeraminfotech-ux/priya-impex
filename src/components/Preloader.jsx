@@ -2,12 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logoImg from '../assets/logo.png';
 
-export default function Preloader({ minDuration = 350, onFinish }) {
-  const [loading, setLoading] = useState(true);
+export default function Preloader({ minDuration = 120, onFinish }) {
+  const [loading, setLoading] = useState(() => {
+    // If already seen in this session, skip preloader for instant page display
+    if (typeof window !== 'undefined' && sessionStorage.getItem('priya_preloader_done')) {
+      return false;
+    }
+    return true;
+  });
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Smooth fast progress counter from 0 to 100
+    if (!loading) {
+      if (onFinish) onFinish();
+      return;
+    }
+
+    // Ultra-fast progress counter from 0 to 100
     const startTime = Date.now();
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTime;
@@ -18,13 +29,16 @@ export default function Preloader({ minDuration = 350, onFinish }) {
         clearInterval(interval);
         setTimeout(() => {
           setLoading(false);
+          try {
+            sessionStorage.setItem('priya_preloader_done', 'true');
+          } catch (e) {}
           if (onFinish) onFinish();
-        }, 100);
+        }, 60);
       }
-    }, 15);
+    }, 10);
 
     return () => clearInterval(interval);
-  }, [minDuration, onFinish]);
+  }, [loading, minDuration, onFinish]);
 
   return (
     <AnimatePresence>

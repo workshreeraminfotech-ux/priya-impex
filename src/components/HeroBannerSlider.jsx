@@ -9,15 +9,15 @@ export default function HeroBannerSlider({ onOpenQuote, onNavigate }) {
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
 
   useEffect(() => {
-    // Check if user is on data saver mode or very slow 2G
-    const isDataSaver = typeof navigator !== 'undefined' && (
-      navigator.connection?.saveData === true ||
-      navigator.connection?.effectiveType === '2g'
-    );
+    if (typeof window === 'undefined') return;
 
-    if (!isDataSaver) {
-      // Delay video request slightly so initial page HTML/CSS/Poster render with zero latency
-      const timer = setTimeout(() => setShouldLoadVideo(true), 120);
+    // Mobile screens (< 768px) and Data Saver users stay on the lightweight 31KB poster for instant load
+    const isMobile = window.innerWidth < 768;
+    const isDataSaver = navigator.connection?.saveData === true || navigator.connection?.effectiveType === '2g' || navigator.connection?.effectiveType === '3g';
+
+    if (!isMobile && !isDataSaver) {
+      // Defer video stream on desktop so initial LCP/FCP renders in 30ms
+      const timer = setTimeout(() => setShouldLoadVideo(true), 1200);
       return () => clearTimeout(timer);
     }
   }, []);
