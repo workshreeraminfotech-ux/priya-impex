@@ -186,7 +186,7 @@ export default function HeroBannerSlider({ onOpenQuote, onNavigate }) {
                 borderRadius: '8px'
               }}
             >
-              <span>Request Quote / CIF Price</span>
+              <span>Request Quote</span>
               <ArrowRight size={18} />
             </button>
 
