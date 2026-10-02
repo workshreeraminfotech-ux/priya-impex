@@ -2973,24 +2973,26 @@ img, video, iframe, canvas, svg {
     gap: 6px 14px !important;
   }
 
-  /* Hero Section Mobile Typography & Spacing */
+  /* Hero Section Mobile Typography & Spacing - Increased Height for Mobile */
   .jrp-hero-section {
-    min-height: auto !important;
-    padding: 38px 0 !important;
+    min-height: 520px !important;
+    padding: 64px 0 70px !important;
+    display: flex !important;
+    align-items: center !important;
   }
 
   .jrp-hero-section h1 {
-    font-size: 36px !important;
-    line-height: 1.15 !important;
+    font-size: 34px !important;
+    line-height: 1.18 !important;
     font-weight: 900 !important;
     margin-bottom: 16px !important;
     text-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
   }
 
   .jrp-hero-section p {
-    font-size: 16px !important;
-    line-height: 1.55 !important;
-    margin-bottom: 22px !important;
+    font-size: 15.5px !important;
+    line-height: 1.58 !important;
+    margin-bottom: 24px !important;
   }
 
   /* BIG PROMINENT HEADINGS FOR ALL SECTIONS ON MOBILE */
@@ -3107,21 +3109,7 @@ img, video, iframe, canvas, svg {
     justify-content: center !important;
   }
 
-  /* Mobile Hero Section Height & Padding Reduction */
-  .jrp-hero-section {
-    min-height: auto !important;
-    padding: 44px 0 48px !important;
-  }
-  .jrp-hero-section h1 {
-    font-size: 30px !important;
-    line-height: 1.2 !important;
-    margin-bottom: 14px !important;
-  }
-  .jrp-hero-section p {
-    font-size: 14.5px !important;
-    line-height: 1.55 !important;
-    margin-bottom: 24px !important;
-  }
+
 
   .footer-top-grid {
     grid-template-columns: 1fr !important;
