@@ -20,7 +20,7 @@ export default function Home({ onSelectProduct, onNavigate, onOpenQuote }) {
       <MainSeedsShowcase onSelectProduct={onSelectProduct} onOpenQuote={(product) => onOpenQuote(product)} onNavigate={onNavigate} />
       <SpiceCategoryExplorer onNavigate={onNavigate} />
       <WhyChooseUs onNavigate={onNavigate} />
-      <WorkProcess />
+      <WorkProcess onOpenQuote={onOpenQuote} onNavigate={onNavigate} />
       <CertificationsSection />
       <TestimonialsSection />
       <FAQ />
