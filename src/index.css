@@ -3641,10 +3641,10 @@ img, video, iframe, canvas, svg {
 }
 
 /* ======================================================================
-   EXPORT ROADMAP & ORDER-TO-DELIVERY SCROLL-FILL TIMELINE
+   EXPORT ROADMAP & ORDER-TO-DELIVERY WAVE TIMELINE
    ====================================================================== */
 .wave-roadmap-section {
-  padding: 68px 0;
+  padding: 64px 0;
   background: linear-gradient(180deg, #FFFFFF 0%, #FAF8F2 50%, #FFFFFF 100%);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
@@ -3657,8 +3657,8 @@ img, video, iframe, canvas, svg {
   position: absolute;
   top: -120px;
   right: -80px;
-  width: 400px;
-  height: 400px;
+  width: 380px;
+  height: 380px;
   background: radial-gradient(circle, rgba(200, 148, 10, 0.06) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
@@ -3669,8 +3669,8 @@ img, video, iframe, canvas, svg {
   position: absolute;
   bottom: -120px;
   left: -80px;
-  width: 400px;
-  height: 400px;
+  width: 380px;
+  height: 380px;
   background: radial-gradient(circle, rgba(11, 34, 64, 0.05) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
@@ -3680,7 +3680,7 @@ img, video, iframe, canvas, svg {
 .roadmap-header {
   text-align: center;
   max-width: 800px;
-  margin: 0 auto 52px;
+  margin: 0 auto 48px;
 }
 
 .roadmap-eyebrow-wrap {
@@ -3713,7 +3713,7 @@ img, video, iframe, canvas, svg {
   font-size: 38px;
   font-weight: 900;
   color: var(--navy);
-  margin-bottom: 14px;
+  margin-bottom: 8px;
   line-height: 1.2;
   font-family: var(--font-h);
 }
@@ -3724,367 +3724,256 @@ img, video, iframe, canvas, svg {
   -webkit-text-fill-color: transparent;
 }
 
-.roadmap-subtitle {
-  font-size: 16px;
-  color: var(--gray);
-  line-height: 1.6;
-  max-width: 660px;
-  margin: 0 auto;
-}
-
 /* ========================================================
-   TIMELINE WRAPPER & CENTRAL SCROLL LINE
+   WAVE TIMELINE CONTAINER & SVG S-CURVE
    ======================================================== */
-.wave-timeline-wrapper {
+.wave-timeline-container {
   position: relative;
-  max-width: 1040px;
-  margin: 0 auto 54px;
-  padding: 10px 0;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 20px 0;
 }
 
-/* Base Track Line */
-.wave-track-line {
+/* Desktop SVG Wave Layer */
+.desktop-wave-svg-wrap {
   position: absolute;
-  left: 50%;
-  top: 30px;
-  bottom: 30px;
-  width: 4px;
-  background: #E2E8F0;
-  transform: translateX(-50%);
-  border-radius: 4px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 1;
+  pointer-events: none;
 }
 
-/* Active Glowing Scroll Fill Line */
-.wave-fill-line {
-  position: absolute;
-  left: 50%;
-  top: 30px;
-  width: 4px;
-  background: linear-gradient(180deg, #0B2240 0%, #C8940A 60%, #F5C542 100%);
-  transform: translateX(-50%);
-  border-radius: 4px;
-  z-index: 2;
-  box-shadow: 0 0 14px rgba(200, 148, 10, 0.6), 0 0 4px rgba(200, 148, 10, 0.8);
-  transform-origin: top center;
+.wave-svg-canvas {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
 }
 
-/* Glowing Particle at Line Tip */
-.wave-line-tip-glow {
-  position: absolute;
-  bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #F5C542;
-  box-shadow: 0 0 16px #F5C542, 0 0 24px #C8940A;
-  border: 2.5px solid #FFFFFF;
+/* Mobile SVG Wave Layer */
+.mobile-wave-svg-wrap {
+  display: none;
 }
 
-/* Timeline Items List */
-.wave-timeline-list {
+/* Steps List */
+.wave-steps-list {
   display: flex;
   flex-direction: column;
-  gap: 46px;
+  gap: 36px;
   position: relative;
   z-index: 3;
 }
 
-/* Timeline Item (Row) */
-.wave-timeline-item {
+/* Step Row */
+.wave-step-row {
   display: flex;
   align-items: center;
   position: relative;
   width: 100%;
 }
 
-.wave-timeline-item.left-align {
+.wave-step-row.row-left {
   justify-content: flex-start;
 }
 
-.wave-timeline-item.right-align {
+.wave-step-row.row-right {
   justify-content: flex-end;
 }
 
-/* Center Milestone Node */
-.wave-center-node {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 4;
-}
-
-.wave-node-circle {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: #FFFFFF;
-  border: 3px solid #0B2240;
-  color: #0B2240;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-shadow: 0 6px 18px rgba(11, 34, 64, 0.12);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.wave-timeline-item:hover .wave-node-circle {
-  border-color: #C8940A;
-  background: linear-gradient(135deg, #0B2240 0%, #133A6B 100%);
-  color: #F5C542;
-  transform: scale(1.1);
-  box-shadow: 0 8px 24px rgba(200, 148, 10, 0.4);
-}
-
-.wave-node-num {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background: linear-gradient(135deg, #C8940A 0%, #F5C542 100%);
-  color: #0B2240;
-  font-size: 10px;
-  font-weight: 900;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #FFFFFF;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-/* Step Content Card */
-.wave-card-box {
+/* Step Card */
+.wave-step-card {
   width: 44%;
   background: #FFFFFF;
   border: 1.5px solid #E2E8F0;
-  border-radius: 18px;
-  padding: 24px 26px;
-  box-shadow: 0 8px 26px rgba(11, 34, 64, 0.05);
+  border-radius: 16px;
+  padding: 22px 24px;
+  box-shadow: 0 6px 22px rgba(11, 34, 64, 0.05);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
 }
 
-.wave-timeline-item.left-align .wave-card-box {
+.wave-step-row.row-left .wave-step-card {
   margin-right: auto;
 }
 
-.wave-timeline-item.right-align .wave-card-box {
+.wave-step-row.row-right .wave-step-card {
   margin-left: auto;
 }
 
-.wave-card-box:hover {
+.wave-step-card:hover {
   transform: translateY(-4px);
   border-color: #C8940A;
-  box-shadow: 0 14px 34px rgba(200, 148, 10, 0.15);
+  box-shadow: 0 12px 30px rgba(200, 148, 10, 0.16);
 }
 
-/* Card Elements */
-.wave-card-top {
+.wave-card-badge {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
-.wave-step-badge {
+.step-num-tag {
   background: #FFF8E7;
   color: #92400E;
   border: 1px solid #FDE68A;
   font-size: 11px;
   font-weight: 800;
-  padding: 4px 12px;
+  padding: 3px 12px;
   border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.wave-step-num-label {
-  font-size: 11px;
-  font-weight: 900;
-  color: #94A3B8;
-  letter-spacing: 0.8px;
+.wave-card-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.wave-card-title {
-  font-size: 19px;
+.wave-card-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #FFF8E7 0%, #FFEAB0 100%);
+  border: 1.5px solid #E6CA65;
+  color: #0B2240;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(200, 148, 10, 0.12);
+  transition: all 0.3s ease;
+}
+
+.wave-step-card:hover .wave-card-icon-wrap {
+  background: linear-gradient(135deg, #0B2240 0%, #133A6B 100%);
+  border-color: #C8940A;
+  color: #F5C542;
+  transform: scale(1.06);
+}
+
+.wave-step-title {
+  font-size: 17px;
   font-weight: 800;
   color: #0B2240;
-  margin-bottom: 8px;
-  line-height: 1.3;
-}
-
-.wave-card-desc {
-  font-size: 14px;
-  color: #475569;
-  line-height: 1.6;
-  margin-bottom: 16px;
-}
-
-.wave-tags-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.wave-tag-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
-  color: #334155;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 6px;
-}
-
-.tag-check {
-  color: #16A34A;
-  flex-shrink: 0;
-}
-
-/* ========================================================
-   BOTTOM ROADMAP CTA BAR
-   ======================================================== */
-.wave-roadmap-bottom-cta {
-  background: linear-gradient(145deg, #0B2240 0%, #061426 100%);
-  border-radius: 20px;
-  padding: 28px 36px;
-  color: #FFFFFF;
-  box-shadow: 0 12px 36px rgba(11, 34, 64, 0.2);
-  border: 1px solid rgba(200, 148, 10, 0.25);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
-.cta-left-text h4 {
-  font-size: 20px;
-  font-weight: 800;
-  color: #FFFFFF;
-  margin-bottom: 4px;
-}
-
-.cta-left-text p {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.35;
   margin: 0;
+  font-family: var(--font-h);
 }
 
-.cta-right-btns {
+/* Center / Wave Crest Node Point */
+.wave-step-node-point {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+}
+
+.wave-step-row.row-left .wave-step-node-point {
+  left: 50%;
+}
+
+.wave-step-row.row-right .wave-step-node-point {
+  left: 50%;
+}
+
+.wave-point-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 2.5px solid #0B2240;
+  color: #0B2240;
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(11, 34, 64, 0.12);
+  transition: all 0.3s ease;
 }
 
-.wave-cta-btn {
-  padding: 12px 24px !important;
-  font-size: 14px !important;
+.wave-point-num {
+  font-size: 12px;
+  font-weight: 900;
+  font-family: var(--font-h);
 }
 
-.wave-brochure-btn {
-  color: #FFFFFF !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  padding: 11px 22px !important;
-  font-size: 14px !important;
-}
-
-.wave-brochure-btn:hover {
-  background: rgba(255, 255, 255, 0.16) !important;
-  border-color: #F5C542 !important;
-  color: #F5C542 !important;
+.wave-step-row:hover .wave-point-circle {
+  background: linear-gradient(135deg, #0B2240 0%, #133A6B 100%);
+  border-color: #C8940A;
+  color: #F5C542;
+  transform: scale(1.12);
+  box-shadow: 0 6px 20px rgba(200, 148, 10, 0.35);
 }
 
 /* ========================================================
    RESPONSIVE MEDIA QUERIES (Mobile & Tablet)
    ======================================================== */
-@media (max-width: 860px) {
+@media (max-width: 768px) {
   .roadmap-title {
-    font-size: 28px;
+    font-size: 26px;
   }
 
-  /* Move vertical line to left side on mobile */
-  .wave-track-line,
-  .wave-fill-line {
-    left: 28px;
-    transform: none;
-  }
-
-  .wave-line-tip-glow {
-    left: 50%;
-  }
-
-  .wave-center-node {
-    left: 28px;
-    top: 32px;
-    transform: translate(-50%, 0);
-  }
-
-  .wave-node-circle {
-    width: 46px;
-    height: 46px;
-  }
-
-  .wave-timeline-item {
-    justify-content: flex-start !important;
-  }
-
-  .wave-timeline-item.left-align .wave-card-box,
-  .wave-timeline-item.right-align .wave-card-box {
-    width: calc(100% - 64px);
-    margin-left: 64px;
-    margin-right: 0;
-  }
-
-  .wave-card-box {
-    padding: 20px;
-  }
-
-  .wave-card-title {
-    font-size: 17px;
-  }
-
-  .wave-roadmap-bottom-cta {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 24px 20px;
-  }
-}
-
-@media (max-width: 520px) {
-  .roadmap-title {
-    font-size: 24px;
-  }
-
-  .wave-timeline-list {
-    gap: 32px;
-  }
-
-  .wave-step-num-label {
+  .desktop-wave-svg-wrap {
     display: none;
   }
 
-  .cta-right-btns {
-    width: 100%;
-    flex-direction: column;
+  .mobile-wave-svg-wrap {
+    display: block;
+    position: absolute;
+    left: 18px;
+    top: 0;
+    bottom: 0;
+    width: 36px;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
   }
 
-  .cta-right-btns button,
-  .cta-right-btns a {
+  .mobile-wave-svg-canvas {
     width: 100%;
-    justify-content: center;
+    height: 100%;
+  }
+
+  .wave-steps-list {
+    gap: 24px;
+  }
+
+  .wave-step-row {
+    flex-direction: row;
+    justify-content: flex-start !important;
+    padding-left: 54px;
+  }
+
+  .wave-step-card {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 16px 18px;
+  }
+
+  .wave-step-node-point {
+    left: 18px !important;
+  }
+
+  .wave-point-circle {
+    width: 34px;
+    height: 34px;
+  }
+
+  .wave-point-num {
+    font-size: 10px;
+  }
+
+  .wave-card-icon-wrap {
+    width: 38px;
+    height: 38px;
+  }
+
+  .wave-step-title {
+    font-size: 14px;
   }
 }
+
 
 
 
