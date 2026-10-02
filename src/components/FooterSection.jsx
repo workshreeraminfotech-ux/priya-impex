@@ -13,7 +13,7 @@ export default function FooterSection({ onNavigate }) {
               className="footer-logo-wrap" 
               onClick={() => { if (onNavigate) onNavigate('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             >
-              <img src={logoImg} alt="Priya Impex" />
+              <img src={logoImg} alt="Priya Impex" style={{ height: '52px', width: 'auto', objectFit: 'contain', filter: 'brightness(1.05)' }} />
             </div>
             <p className="footer-bio-text">
               Priya Impex is a premier Indian exporter of pure Whole Spices, Seed Spices, and Ground Spices. Delivering trust, exporting excellence directly to global markets.

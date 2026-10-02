@@ -45,7 +45,7 @@ export default function Navbar({ activePage, onNavigate, onOpenBrochure }) {
     <>
       <header className="jrp-header">
         <div className="container">
-          <div className="jrp-header-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '88px' }}>
+          <div className="jrp-header-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '80px' }}>
             {/* Logo — Always scrolls to Hero Section */}
             <a href="#" onClick={handleLogoClick} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', cursor: 'pointer' }} title="Priya Impex — Go to Home / Hero">
               <img 
@@ -53,7 +53,7 @@ export default function Navbar({ activePage, onNavigate, onOpenBrochure }) {
                 alt="Priya Impex" 
                 className="jrp-header-logo-img" 
                 style={{ 
-                  height: '74px', 
+                  height: '58px', 
                   width: 'auto', 
                   objectFit: 'contain',
                   filter: 'contrast(1.08) drop-shadow(0 2px 8px rgba(0,0,0,0.06))',
@@ -134,7 +134,7 @@ export default function Navbar({ activePage, onNavigate, onOpenBrochure }) {
           <div className="jrp-offcanvas">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '30px' }}>
               <div onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
-                <img src={logoImg} alt="Priya Impex" style={{ height: '60px', width: 'auto', objectFit: 'contain', filter: 'contrast(1.08)' }} />
+                <img src={logoImg} alt="Priya Impex" style={{ height: '46px', width: 'auto', objectFit: 'contain', filter: 'contrast(1.08)' }} />
               </div>
               <button onClick={() => setMobileOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--navy)' }}>
                 <X size={24} />

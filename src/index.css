@@ -2943,13 +2943,13 @@ img, video, iframe, canvas, svg {
     transition: all 0.3s ease !important;
   }
 
-  /* Prominent Big Logo & Header Bar on Mobile */
+  /* Clean Header Bar & Balanced Logo on Mobile */
   .jrp-header-inner {
-    height: 92px !important;
+    height: 68px !important;
   }
   .jrp-header-logo-img {
-    height: 78px !important;
-    max-height: 78px !important;
+    height: 48px !important;
+    max-height: 50px !important;
     width: auto !important;
     filter: contrast(1.08) drop-shadow(0 2px 6px rgba(0,0,0,0.06)) !important;
   }
